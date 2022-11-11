@@ -1,0 +1,57 @@
+<style>
+	.ec-layoutRole__contentTop {
+		padding: 9.5rem 1.5rem 0  1.5rem!important;
+		margin-right: auto;
+		margin-left: auto;
+		width: 100%;
+		max-width: 1080px;
+	}
+
+	.breadcrumb__link {
+		padding-right: 1rem;
+		margin-right: 1rem;
+		border-right: solid 1px #004f99;
+		font-weight: 500;
+		font-size: 16px;
+		color: #004f99;
+
+	}
+	.breadcrumb__link:last-child {
+		border-right: none;
+	}
+
+	.breadcrumb__area {
+		display: flex;
+	}
+
+	@media only screen and(max-width: 768px) {
+		.ec-layoutRole__contentTop {
+			padding-left: 20px !important;
+			padding-right: 20px !important;
+		}
+
+		.breadcrumb__link {
+
+			font-size: 14px;
+
+		}
+	}
+</style>
+
+
+
+
+<div class="breadcrumb__area">
+	<a class="breadcrumb__link" href="{{ url('homepage') }}">TOP</a>
+	{# 現在のページリンクを変数に定義 #}
+	{% set request_uri = app.request.server.get('REQUEST_URI') %}
+{# 現在のページリンクをhrefに追加 #}
+	<a class="breadcrumb__link" href="{{request_uri}}">
+	{# 現在のページ名を出力管理画面で変更可能 #}
+		{% if title %}
+		{{ title }}
+		{% else %}
+		{{ Product.name }}
+		{% endif %}
+		</a>
+</div>

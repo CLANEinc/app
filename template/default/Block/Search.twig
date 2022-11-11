@@ -1,0 +1,202 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+<style>
+.search{
+    position: relative;
+}
+
+.search::before{
+    position: absolute;
+    content: "";
+    background-image: url('html/user_data/assets/option_image/search_bg.jpg');
+    top: 0;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    width: 100%;
+    height: 110%;
+}
+
+.search__inner{
+    position: relative;
+    z-index: 1;
+    padding-bottom: 5.2rem !important;
+}
+
+.category{
+    display: flex;
+    justify-content: space-between;
+}
+
+.category__link{
+    width: 31%;
+}
+
+.category__link:hover{
+    text-decoration: none;
+}
+
+.category__text{
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4A4A4A;
+    margin-top: 2.1rem
+}
+
+@media only screen and (max-width: 768px){
+    .search::before{
+        background-image: none
+    }
+    
+    .category{
+        flex-wrap: wrap;
+    }
+    
+    .category__link:first-of-type{
+        width: 70%;
+        margin: auto;
+    }
+    
+    .category__link:first-of-type .category__img{
+        height: 200px;
+    }
+    
+    .category__img img{
+        object-fit: cover;
+    }
+    
+    
+    .category__link:not(:first-of-type){
+        width: 48%
+    }
+    
+    .category__link:first-of-type{
+        margin-bottom: 3.2rem;
+    }
+    
+    .category__text{
+        font-size: 1.6rem;
+        margin-top: 0.8rem
+    }
+
+}
+
+@media only screen and (max-width: 480px){
+    .category__link:first-of-type .category__img{
+        height: 150px;
+    }
+}
+
+
+
+</style>
+
+<div class="search">
+	<div class="search__inner">
+	    {#  #}
+	    <div class="ni-pageHeader">
+            <h3 class="ranking__title">SEARCH</h3>
+			<h4 class="ranking__subtitle">カーテンを探す</h4>
+        </div>
+		
+<div class="category">
+     <a class="category__link" href="{{ url('product_list') }}?category_id=1">
+         <figure class="category__img">
+                    <img src="html/user_data/assets/option_image/search_1.png">
+         </figure>
+                    <p class="category__text">ドレープカーテン</p>
+    </a>
+     <a class="category__link" href="{{ url('product_list') }}?category_id=5">
+          <figure class="category__img">
+                    <img src="html/user_data/assets/option_image/search_2.png">
+                    </figure>
+                    <p class="category__text">レースカーテン</p>
+    </a>
+     <a class="category__link" href="{{ url('product_list') }}?category_id=7">
+          <figure class="category__img">
+                    <img src="html/user_data/assets/option_image/search_3.png">
+                    </figure>
+                     <p class="category__text">シェードカーテン</p>
+    </a>
+</div>
+		{#<div class="search__byColors">#}
+		{#	<div class="search__byColorsTitlePart">#}
+		{#		<p class="search__byColorsTitle">カラーで探す</p>#}
+		{#	</div>#}
+		{#	<div class="search__byColorsItems">#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -red"></a>#}
+		{#			<p class="search__byColorsItemName">レッド</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -orange"></a>#}
+		{#			<p class="search__byColorsItemName">オレンジ</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -yellow"></a>#}
+		{#			<p class="search__byColorsItemName">イエロー</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -green"></a>#}
+		{#			<p class="search__byColorsItemName">グリーン</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -blue"></a>#}
+		{#			<p class="search__byColorsItemName">ブルー</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -navy"></a>#}
+		{#			<p class="search__byColorsItemName">ネイビー</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -purple"></a>#}
+		{#			<p class="search__byColorsItemName">パープル</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -pink"></a>#}
+		{#			<p class="search__byColorsItemName">ピンク</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -ivory"></a>#}
+		{#			<p class="search__byColorsItemName">アイボリー</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -brown"></a>#}
+		{#			<p class="search__byColorsItemName">ブラウン</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -gray"></a>#}
+		{#			<p class="search__byColorsItemName">グレー</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -white"></a>#}
+		{#			<p class="search__byColorsItemName">ホワイト</p>#}
+		{#		</div>#}
+		{#		<div class="search__byColorsItem">#}
+		{#			<a href="" class="search__byColorsItemColor -black"></a>#}
+		{#			<p class="search__byColorsItemName">ブラック</p>#}
+		{#		</div>#}
+		{#	</div>#}
+		{#</div>#}
+		{#<div class="search__byFunctions">#}
+		{#	<div class="search__byFunctionsTitlePart">#}
+		{#		<p class="search__byFunctionsTitle">機能で探す</p>#}
+		{#	</div>#}
+		{#	<div class="search__byFunctionsItems">#}
+		{#		<a href="__TBD__" class="search__byFunctionsItemName">遮光1級</a>#}
+		{#		<a href="__TBD__" class="search__byFunctionsItemName">遮光2級</a>#}
+		{#		<a href="__TBD__" class="search__byFunctionsItemName">遮光3級</a>#}
+		{#		<a href="__TBD__" class="search__byFunctionsItemName">防炎</a>#}
+		{#		<a href="__TBD__" class="search__byFunctionsItemName">洗濯可</a>#}
+		{#	</div>#}
+		{#</div>#}
+	</div>
+</div>

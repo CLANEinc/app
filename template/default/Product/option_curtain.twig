@@ -1,0 +1,449 @@
+
+<div class="order-ui">
+
+    <form id="form2" name="form2">
+
+        {% set productStr = app.session.flashbag.get('eccube.front.request.product') %}
+        {% for error in app.session.flashbag.get('eccube.front.request.error') %}
+            {% set idx = loop.index0 %}
+            <div class="ec-cartRole__error">
+                <div class="ec-alert-warning">
+                    <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
+                    <div class="ec-alert-warning__text">
+                        {% if productStr[idx] is defined %}
+                            {{ error|trans({'%product%':productStr[idx]})|nl2br }}
+                        {% else %}
+                            {{ error|trans|nl2br }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {# 縫製グレード　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                縫製グレード
+            </div>
+            <div class="option-form-body">
+                <div class="ec-radio" style="margin-top: 10px;">
+                    {% for optionValue, optionItem in optionList['houseigrade'].items %}
+                        <div style="display: inline-block">
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-houseigrade-{{ optionValue }}"
+                                name="order-ui-houseigrade"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-houseigrade-{{ optionValue }}">
+                                <img src="{{ asset('assets/option_image/curtain_houseigrade_' ~ optionValue ~ '.jpg', 'user_data') }}"
+                                    id="img-houseigrade-{{ optionValue }}"
+                                />
+                                {{ optionItem.label }}
+                            </label>
+                            <div class="show-description"
+                                data-title="{{ optionItem.label }}"
+                                data-content="#description-houseigrade-{{ optionValue }}"
+                                data-toggle="modal"
+                                data-target="#description-modal"
+                            >
+                                <div style="width: 1em;">
+                                    <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <template id="description-houseigrade-deluxe">
+                <div>仕上がり幅の約2倍の生地を使用。</div>
+                <div>たっぷりしたウェーブの豪華な仕上がり。</div>
+            </template>
+            <template id="description-houseigrade-simple">
+                <div>仕上がり幅の約1.5倍の生地を使用。</div>
+                <div>標準的なプリーツの仕上がり。</div>
+            </template>
+            <template id="description-houseigrade-flat">
+                <div>ヒダを取らず、レールの約1.2倍の幅の仕上がり。</div>
+                <div>よりシンプルで自然なウェーブ。</div>
+            </template>
+        </div>
+
+        {# サイズ　#}
+        <div class="option-form" id="option-form-size">
+            <div class="option-form-title">
+                サイズ
+            </div>
+            <div class="option-form-body">
+                <div>
+                    測り方を確認して採寸してください。
+                </div>
+                <div class="ec-grid2">
+                    <div class="ec-grid2__cell">
+                        <div class="ec-numberInput">
+                            <div>
+                                <label for="order-ui-width">幅</label>
+                                <input type="number" class="form-control order-ui-input" required="required"
+                                    name="order-ui-width"
+                                    id="order-ui-width"
+                                    min="{{ optionList.width.min }}"
+                                    max="{{ optionList.width.max }}"
+                                    maxlength="3"
+                                >
+                                cm
+																<span class="my-runner">レール両端のランナー（フックをかける穴）間の長さ</span>
+                            </div>
+                        </div>
+                        <div class="ec-numberInput">
+                            <div>
+                                <label for="order-ui-height">高さ</label>
+                                <input type="number" class="form-control order-ui-input" required="required"
+                                    name="order-ui-height"
+                                    id="order-ui-height"
+                                    min="{{ optionList.height.min }}"
+                                    max="{{ optionList.height.max }}"
+                                    maxlength="3"
+                                >
+                                cm
+                                <span class="my-runner">ランナーの穴からカーテンの裾までの長さ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ec-grid2__cell">
+                        <div style="border: 1px solid lightgrey">
+                            <div id="yutori" style="color:red; font-weight: bold; font-size:120%;">ゆとり分を含めた仕上がり幅サイズ</div>
+                            <div style="font-weight: bold; font-size:140%;" class="finish-width">
+                                {# 仕上がり幅がJSで生成されます#}
+                            </div>
+                            cm
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 開き方　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                開き方
+            </div>
+            <div class="option-form-body">
+                <div class="ec-radio" style="margin-top: 10px;">
+                    {% for optionValue, optionItem in optionList['handing'].items %}
+                        <div style="display: inline-block">
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-handing-{{ optionValue }}"
+                                name="order-ui-handing"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-handing-{{ optionValue }}">
+                                <img src="{{ asset('assets/option_image/curtain_handing_' ~ optionValue ~ '.jpg', 'user_data') }}"
+                                    id="img-handing-{{ optionValue }}"
+                                />
+                                {{ optionItem.label }}
+                            </label>
+                            <div class="show-description"
+                                data-title="{{ optionItem.label }}"
+                                data-content="#description-handing-{{ optionValue }}"
+                                data-toggle="modal"
+                                data-target="#description-modal"
+                            >
+                                <div style="width: 1em;">
+                                    <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <template id="description-handing-double">
+                <div>両開きの場合、数量1で"仕上がり幅サイズの半分の幅のカーテン"を2枚セットでお届け</div>
+                <div>開き方によって、“洗濯ラベルの位置”が異なります。</div>
+                <div>■両開きの場合、洗濯ラベルは「両端の裾部分」につきます。</div>
+            </template>
+            <template id="description-handing-left">
+                <div>開き方によって、“洗濯ラベルの位置”が異なります。</div>
+                <div>■左開きの場合、洗濯ラベルは「左端の裾部分」になります。</div>
+            </template>
+            <template id="description-handing-right">
+                <div>開き方によって、“洗濯ラベルの位置”が異なります。</div>
+                <div>■右開きの場合、洗濯ラベルは「右端の裾部分」になります。</div>
+            </template>
+        </div>
+
+        {# フック　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                フック
+            </div>
+            <div class="option-form-body">
+                <div class="ec-radio" style="margin-top: 10px;">
+                    {% for optionValue, optionItem in optionList['hook'].items %}
+                        <div style="display: inline-block">
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-hook-{{ optionValue }}"
+                                name="order-ui-hook"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-hook-{{ optionValue }}">
+                                <img src="{{ asset('assets/option_image/curtain_hook_' ~ optionValue ~ '1.jpg', 'user_data') }}"
+                                    id="img-hook-{{ optionValue }}"
+                                />
+                                <img src="{{ asset('assets/option_image/curtain_hook_' ~ optionValue ~ '2.jpg', 'user_data') }}"
+                                    id="img-hook-{{ optionValue }}"
+                                />
+                                {{ optionItem.label }}
+                            </label>
+                            <div class="show-description"
+                                data-title="{{ optionItem.label }}"
+                                data-content="#description-hook-{{ optionValue }}"
+                                data-toggle="modal"
+                                data-target="#description-modal"
+                            >
+                                <div style="width: 1em;">
+                                    <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <template id="description-hook-a">
+                <div>レールを見せるタイプ。</div>
+                <div>天付けレールやダブルレールの窓側、装飾レールの場合。</div>
+                <div>※詳しくは、レールの種類別・おすすめフック　で御確認下さい。</div>
+            </template>
+            <template id="description-hook-b">
+                <div>レールを隠すタイプ。</div>
+                <div>正面付け機能レールやダブルレール（機能レール）の部屋側の場合。</div>
+                <div>※レールを隠す分、総丈が約3～4cm長い仕上げになります。</div>
+                <div>※詳しくは、レールの種類別・おすすめフック　で御確認下さい。</div>
+            </template>
+        </div>
+
+        {# オプション設定　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                オプション設定
+            </div>
+            <div class="option-form-body">
+                <div>
+                    ご希望のオプションを選んでください。
+                </div>
+                <div class="option-subform">
+                    <div class="option-subform-title">
+                        共生地タッセル
+                        <div class="option-form-title-description">
+                            カーテンと同じ生地で製作するカーテンを束ねるバンド
+                        </div>
+                    </div>
+                    <div class="ec-radio" style="margin-top: 10px;">
+                        {% for optionValue, optionItem in optionList['tassel'].items %}
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-tassel-{{ optionValue }}"
+                                name="order-ui-tassel"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-tassel-{{ optionValue }}">
+                                {{ optionItem.label }}
+                                <span id="tassel-price"></span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div class="show-description"
+                        data-title="共生地タッセル"
+                        data-content="#description-tassel"
+                        data-toggle="modal"
+                        data-target="#description-modal"
+                    >
+                        <div style="width: 1em;">
+                            <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                        </div>
+                    </div>
+                    <template id="description-tassel">
+                        <div>（イメージ　上：レース生地、下：ドレープ生地）</div>
+                    </template>
+                </div>
+                <div class="option-subform">
+                    <div class="option-subform-title">
+                        プリーツ加工
+                        <div class="option-form-title-description">
+                            カーテンのウェーブを綺麗にみせる加工
+                        </div>
+                    </div>
+                    <div class="ec-radio" style="margin-top: 10px;">
+                        {% for optionValue, optionItem in optionList['pleat'].items %}
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-pleat-{{ optionValue }}"
+                                name="order-ui-pleat"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-pleat-{{ optionValue }}">
+                                {{ optionItem.label }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div class="show-description"
+                        data-title="プリーツ加工"
+                        data-content="#description-pleat"
+                        data-toggle="modal"
+                        data-target="#description-modal"
+                    >
+                        <div style="width: 1em;">
+                            <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                        </div>
+                    </div>
+                    <template id="description-pleat">
+                        <div>形状安定加工を施すことにより、カーテンの裾が広がらず、
+                        すっきりとまとまり、美しいウェーブを演出します(洗濯5回程度まで効果が持続)。</div>
+                        <div>幅サイズによって料金が変わります。</div>
+                    </template>
+                </div>
+                <div class="option-subform">
+                    <div class="option-subform-title">
+                        リターン付き
+                    </div>
+                    <div class="ec-radio" style="margin-top: 10px;">
+                        {% for optionValue, optionItem in optionList['return'].items %}
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-return-{{ optionValue }}"
+                                name="order-ui-return"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-return-{{ optionValue }}">
+                                {{ optionItem.label }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div class="show-description"
+                        data-title="リターン付き"
+                        data-content="#description-return"
+                        data-toggle="modal"
+                        data-target="#description-modal"
+                    >
+                        <div style="width: 1em;">
+                            <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                        </div>
+                    </div>
+                    <template id="description-return">
+                        <div>リターン付きの説明</div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+{# 仕上がりイメージ #}
+<div style="background-color: white; padding:2em;">
+    <div class="ec-grid2">
+        <div class="ec-grid2__cell">
+            <div id="rendering-box" class="ec-grid2">
+                <div id="detail-cell1" class="ec-grid2__cell">
+                    <div>
+                        縫製グレード
+                        <span id="rendering-houseigrade"></span>
+                    </div>
+                    <div>
+                        開き方
+                        <span id="rendering-handing"></span>
+                    </div>
+                    <div>
+                        フック
+                        <span id="rendering-hook"></span>
+                    </div>
+                    <div style="border: 1px solid grey">
+                        オプション
+                        <div>
+                            タッセル：
+                            <span id="rendering-tassel"></span>
+                        </div>
+                        <div>
+                            プリーツ加工：
+                            <span id="rendering-pleat"></span>
+                        </div>
+                        <div>
+                            リターン付き：
+                            <span id="rendering-return"></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="detail-cell2" class="ec-grid2__cell">
+                    <div>レールの両端</div>
+                    <div>ランナー間の長さ</div>
+                    <div>
+                        仕上がり幅サイズ約
+                        <span id="finish-width" class="finish-width">
+                            {# 仕上がり幅がJSで生成されます#}
+                        </span>
+                        cm ※1
+                    </div>
+                    <div>
+                        <img id="rendering-image" />
+                    </div>
+                    <div>ランナーの下部から</div>
+                    <div>カーテン裾までの長さ</div>
+                    <div>
+                        <span id="finish-height" class="finish-height">
+                            {# 仕上がり高さがJSで生成されます#}
+                        </span>
+                        cm ※2
+                    </div>
+                    <div class="annotation">
+                        <div>
+                            ※制作するサイズによっては巾継ぎが入る場合がございます。詳しくは巾継ぎの位置はご指定いただけません。
+                        </div>
+                        <div>
+                            ※生地の性質により、カーテンの丈サイズはご指定サイズから±0.5cm変動する場合があります。
+                        </div>
+                        <div>
+                            ※1：仕上がり幅サイズはカーテンの両端フック間の長さです。実際のカーテン幅サイズは、耳部分の長さ（左右約2.5cmずつ）が加算されます。
+                        </div>
+                        <div>
+                            ※2：実際のカーテン丈サイズは、Aフックの場合上記長さに＋約1cm、Bフックの場合は＋約4cmが加算されます。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ec-grid2__cell">
+            <div class="ec-productRole__price">
+                <div class="ec-price">
+								<span class="my-yen">¥</span>
+                    <span class="ec-price__price price02-default finish-price">
+                        {# 計算された価格が出力されます #}
+                    </span>
+                    <span class="ec-price__tax">{{ '税込'|trans }}</span>
+                </div>
+            </div>
+            <div class="ec-productRole__btn">
+                <button id="order-ui-submit" class="ec-blockBtn--action add-cart">
+                    カートに入れる
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

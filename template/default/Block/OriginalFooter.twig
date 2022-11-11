@@ -1,0 +1,201 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+
+<footer id="footer" class="footer">
+	<div class="footer__inner">
+		<div class="footer__skyblue">
+			<div class="footer__skyblueItems">
+				<a href="/guide" class="footer__skyblueItem">
+					<span class="footer__skyblueItemIcon -guide"></span>
+					<span class="footer__skyblueItemCharacter">ご利用ガイド</span>
+				</a>
+				<a href="/faq" class="footer__skyblueItem">
+					<span class="footer__skyblueItemIcon -qanda"></span>
+					<span class="footer__skyblueItemCharacter">Q&A</span>
+				</a>
+				<a href="/contact" class="footer__skyblueItem">
+					<span class="footer__skyblueItemIcon -inquiry"></span>
+					<span class="footer__skyblueItemCharacter">お問い合わせ</span>
+				</a>
+			</div>
+		</div>
+		<div class="footer__blue"><!-- 1440 -->
+			<div class="footer__blueTop"><!-- 1140 -->
+				<div class="footer__blueItems"><!-- 821 -->
+					<div class="footer__blueItem -shippingDate"><!-- 266.5 -->
+						<div class="footer__blueItemInner -shippingDate"><!-- 213 -->
+							<div class="footer__blueItemIconAndTitleWrapper">
+								
+								<span class="footer__blueItemIconHeightNormalizer">
+									<span class="footer__blueItemIcon -shippingDate"></span>
+								</span>
+								<span class="footer__blueItemTitle">出荷日</span>
+							</div>
+							<p class="footer__blueItemDescription">
+								カーテンは最短ご注文の<span class="footer__redCharacter">3日後</span>に出荷<br>※正午までの注文、プリーツなしの場合<br><a href="" class="footer__descriptionLink">詳細はこちら</a>
+							</p>
+						</div>
+					</div>
+					<div class="footer__blueItem -postage"><!-- 348 -->
+						<div class="footer__blueItemInner -postage"><!-- 250 -->
+							<div class="footer__blueItemIconAndTitleWrapper">
+
+								<span class="footer__blueItemIconHeightNormalizer">
+									<span class="footer__blueItemIcon -postage"></span>
+								</span>
+								<span class="footer__blueItemTitle">送料</span>
+							</div>
+							<p class="footer__blueItemDescription">
+								送料一律<span class="footer__redCharacter">825円（税込）</span><br>北海道・沖縄・離島は1,650円（税込）<br>1配送につき<span class="footer__redCharacter">22,000円 (税込)以上で送料無料</span>
+							</p>
+						</div>
+					</div>
+					<div class="footer__blueItem -paymentMethod"><!-- 206.5 -->
+						<div class="footer__blueItemInner -paymentMethod"><!-- 158 -->
+							<div class="footer__blueItemIconAndTitleWrapper">
+								<span class="footer__blueItemIconHeightNormalizer">
+									<span class="footer__blueItemIcon -paymentMethod"></span>
+								</span>
+								<span class="footer__blueItemTitle">お支払方法</span>
+							</div>
+							<p class="footer__blueItemDescription">
+								現金（代金引換・銀行振込）<br>クレジットカード<br>後払い
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="footer__calendarPart"><!-- 222 -->
+					<p class="footer__calendarLink" id="openCalendar" >営業日カレンダー</p>
+					<p class="footer__calendarDescription">ご購入の場合は異なります。<br>ご利用店舗までお問い合わせください。</p>
+				</div>
+			</div>
+			<div class="footer__blueBottom">
+				<p class="footer__logoWrapper">
+					<img src="/logo/logo.svg" alt="ロゴ" class="footer__logo">
+				</p>
+				<div class="footer__copyrightPart">
+					<small class="footer__copyright">Copyright&copy;インテリアパートナーズ All Rights Reserved.</small>
+				</div>
+				<div class="footer__blueBottomLinks">
+					{# <a href="" class="footer__blueBottomLink">当サイトについて</a> #}
+					<a href="/help/privacy" class="footer__blueBottomLink">プライバシーポリシー</a>
+					<a href="/help/tradelaw" class="footer__blueBottomLink">特定商取引法に基づく表記</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</footer>
+<div class="spFooter">
+	<div class="spFooter__imageItem">
+		<div class="spFooter__imageWrapper">
+			<img class="spFooter__image" src="{{ asset('assets/img/block/footer/footer_loupe_08.png') }}" alt="ルーペ">
+		</div>
+	</div>
+	<div class="spFooter__item">
+		<a class="spFooter__itemLink" href="{{ url('product_list') }}?category_id=7" >シェード</a>
+	</div>
+	<div class="spFooter__item">
+		<a class="spFooter__itemLink" href="{{ url('product_list') }}?category_id=5" >レース<br>カーテン</a>
+	</div>
+	<div class="spFooter__item">
+		<a class="spFooter__itemLink" href="{{ url('product_list') }}?category_id=1" >ドレープ<br>カーテン</a>
+	</div>
+</div>
+<div class="originalMask originalHidden" id="originalMask"></div>
+<div class="originalModal originalHidden" id="originalModal">
+<p class="originalModal__title">
+	<span class="originalModal__titleCharacter">スーマートオーダーの出荷日</span>
+	<span class="originalModal__originalCloseWrapper">
+		<span class="originalModal__originalClose" id="originalClose"></span>
+	</span>
+</p>
+
+	<div class="originalModal__inner">
+		<div class="originalModal__items">
+			<div class="originalModal__threeItemsWrapper">
+				<div class="originalModal__item -first">
+					<div class="originalModal__itemTitle -first">ご注文商品</div>
+					<div class="originalModal__itemContents">受注日から<br>出荷日までの<br>目安</div>
+				</div>
+				<div class="originalModal__item -second">
+					<div class="originalModal__itemTitle -second">・カーテン<br><span class="originalModal__itemTitleAnnotation">(プリーツ加工なし)</span></div>
+					<div class="originalModal__itemContents"><span class="originalModal__itemContentsFirstRow"><span class="originalModal__itemContentsRed">中2営業日</span>で</span>出荷</div>
+				</div>
+				<div class="originalModal__item -third -flex1">
+					<div class="originalModal__itemTitle -third">・カーテン<br><span class="originalModal__itemTitleAnnotation">(プリーツ加工あり)</span>・カフェカーテン<br>・シェード<br>・クッションカバー</div>
+					<div class="originalModal__itemContents"><span class="originalModal__itemContentsFirstRow"><span class="originalModal__itemContentsRed">中3営業日</span>で</span>出荷</div>
+				</div>
+			</div>
+			<div class="originalModal__twoItemsWrapper">
+				<div class="originalModal__item -fourth -flex1">
+					<div class="originalModal__itemTitle -fourth">・既製カフェカーテン<br>・タッセル<br>・ふさかけ<br>・カット生地</div>
+					<div class="originalModal__itemContents"><span class="originalModal__itemContentsFirstRow"><span class="originalModal__itemContentsRed">翌3営業日</span>で</span>出荷</div>
+				</div>
+				<div class="originalModal__item -fifth -flex1">
+					<div class="originalModal__itemTitle -fifth">・ブラインド/<br>スクリーン類<br>・カーテンレール</div>
+					<div class="originalModal__itemContents"><span class="originalModal__itemContentsFirstRow"><span class="originalModal__itemContentsRed">1週間程度</span>で出荷</span><span class="originalModal__itemContentsAnnotation">(メーカーからの発送)</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="originalModal__descriptionAndCalenderWrapper">
+			<div class="originalModal__description">
+				<p class="originalModal__aboutOrderDateTitle">受注日の設定について</p>
+				<p class="originalModal__aboutOrderDate">営業日の正午(12時)までのご注文を当日の受注扱いとします。<br>営業日の正午以降や休業日のご注文は翌営業日の受注扱いとなりますのでご了承ください。</p>
+				<p class="originalModal__aboutOrderExample">例)カーテン(プリーツ加工なし)の場合<br>・月曜11:00のオーダー:月曜日受注→木曜日出荷<br>・月曜21:00のオーダー:火曜日受注→金曜日出荷<br>・日曜10:00のオーダー:月曜日受注→木曜日出荷</p>
+				<p class="originalModal__aboutOrderDateBottomTitle">ブラインド/スクリーン/レールについて</p>
+			</div>
+			{# <div class="originalModal__calenderPart">
+				<div class="originalModal__calenderWrapper">
+				</div>
+				<p class="originalModal__calenderAnnotation">※赤色は休業日</p>
+			</div> #}
+		</div>
+	</div>
+
+</div>
+
+
+
+
+<script>
+//ハンバーガーメニュー、グローバルナビ
+	const ham = document.querySelector('.js__Header__hamburger');
+const hamLine = document.querySelector('.Header__hamburgerLine');
+const gNav = document.getElementById('g-nav');
+const hamWrapper = document.querySelector(".header__hamburgerWrapper");
+
+ham.addEventListener("click", () => {
+hamLine.classList.toggle("active");
+gNav.classList.toggle('panelactive');
+hamWrapper.classList.toggle("active");
+});
+//モーダル
+const openCalendar=document.getElementById("openCalendar");
+const originalClose=document.getElementById("originalClose");
+const originalModal=document.getElementById("originalModal");
+const originalMask=document.getElementById("originalMask");
+
+
+openCalendar.addEventListener("click",()=>{
+	originalModal.classList.remove("originalHidden");
+	originalMask.classList.remove("originalHidden");
+});
+originalClose.addEventListener("click",()=>{
+	originalModal.classList.add("originalHidden");
+	originalMask.classList.add("originalHidden");
+
+});
+originalMask.addEventListener("click",()=>{
+	originalClose.click();
+});
+</script>

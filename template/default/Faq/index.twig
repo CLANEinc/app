@@ -1,0 +1,666 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('assets/css/style_faq.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/_goodcomassetQa.css') }}">
+{% endblock %}
+
+{% set body_class = 'faq_page' %}
+
+{% block main %}
+
+	<style>
+	.ec-layoutRole__contentTop {
+		max-width: 1180px;
+	}
+
+
+		.ec-layoutRole .ec-layoutRole__contents {
+			padding: 4.5rem 0;
+		}
+
+		@media only screen and(max-width: 768px) {
+			.ec-layoutRole .ec-layoutRole__contents {
+				padding: 6.5rem 0;
+			}
+		}
+
+
+		.ec-layoutRole .ec-layoutRole__mainWithColumn {
+			padding-top: 8rem;
+		}
+
+
+		.ec-.ec-headerSearch .ec-headerSearch__keyword {
+			border-radius: 0 !important;
+		}
+	</style>
+
+	<body id="page_user_data" class="faq">
+
+
+		<div class="container-fluid">
+
+
+			<div id="main">
+				<div id="main_middle"><link rel="stylesheet" href="/user_data/justcurtain/common/css/page.css"><link rel="stylesheet" href="/user_data/justcurtain/common/css/side.css?20210625"><script src="/user_data/justcurtain/common/js/category.js"></script>
+					<script src="/user_data/justcurtain/common/js/jquery.lmodal.js"></script><!-- コンテンツページ --><div id="page" class="in qa">
+						<div class="wrap">
+							<p class="underpage-heading-title">FAQ</p>
+							<p class="underpage-heading">よくあるご質問</p>
+							<p class="under-page-first-txt">
+								お客様より多くご質問いただく内容を掲載しております。<br>
+								お問い合わせ前に一度、「よくあるご質問　Q&A」の各項目をお確かめくださいませ。<br>
+								ご購入前の参考にはもちろん、ご購入後のカーテンのお取り扱い方法に関しても是非参考にしてください。
+							</p>
+						</div>
+						{# <ul
+													class="tabnav">
+													 <li class="tabnav-lifirst">
+																												<a href="#tab1">オンラインショップ<br class="spv">に関して</a>
+																												<span class="sankaku"></span>
+																											</li>
+																											<li>
+																												<a href="#tab2">実店舗に関して</a>
+																												<span class="sankaku"></span>
+																											</li>
+																										</ul> #}
+						<div class="gray-layer">
+							<div class="tabcontent">
+								<div class="tabcontent_list">
+									<div class="under-sec under-sec01">
+										<div class="wrap">
+
+
+											<div class="under-sec under-sec02">
+												<div class="wrap">
+													<div class="under-sec-wrap">
+														<div class="pagelinkbox">
+
+															<a href="#under-sec02" class="pagelinkitem">
+																<p class="pagelinkitem__text">よくあるご質問</p>
+																<img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+
+
+															<a href="#under-sec03" class="pagelinkitem">
+																<p class="pagelinkitem__text">返品・交換について</p>
+																<img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt="">
+															</a>
+															<a href="#under-sec04" class="pagelinkitem">
+																<p class="pagelinkitem__text">配送・お届け<br>について</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt="">
+															</a>
+															<a href="#under-sec05" class="pagelinkitem">
+																<p class="pagelinkitem__text">商品について</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+															<a href="#under-sec06" class="pagelinkitem">
+																<p class="pagelinkitem__text">ご注文について</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+															<a href="#under-sec08" class="pagelinkitem">
+																<p class="pagelinkitem__text">お支払いについて</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+
+															<a class="pagelinkitem pagelinkitem-kara"></a>
+															<a class="pagelinkitem pagelinkitem-kara"></a>
+															{# <a class="pagelinkitem pagelinkitem-kara"></a> #}
+															{# <a class="pagelinkitem pagelinkitem-kara"></a> #}
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div id="under-sec02" class="under-sec under-sec03">
+												<div class="wrap">
+
+
+													<p class="under-sec-ttl">よくあるご質問
+
+													</p>
+
+
+													{# <div class="under-sec-wrap">
+																																																					<p class="under-sec-subttl">店舗と同じ商品をオンラインショップで購入できますか。</p>
+																																																					<p class="under-sec-txt">
+																																																						店舗で販売している商品で、オンラインショップで取り扱いのない商品に関しても電話・メールでご注文は可能な場合がございます。<br>
+																																																						その際、通常の購入方法と手順が異なるため、お問い合わせフォームよりお問い合わせください。<br><a href="../contact">お問い合わせフォームはこちら ></a>
+																																																					</p>
+																																																				</div> #}
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">お見積りに対応していますか？</p>
+														<p class="under-sec-txt">
+															対応可能です。<br>
+															【一軒分のお見積り】<br>
+															お電話にてご相談ください。<br>
+															お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+															受付時間：09:30～18:00（12:00～13:00を除く）祝日休業<br><br>
+
+															【上記以外のお見積り】<br>
+															お問い合わせフォームよりお問い合わせください。<br><a href="../contact">お問い合わせフォームはこちら ></a>
+														</p>
+													</div>
+													<div class="under-sec-wrap" id="qa_rc">
+														<p class="under-sec-subttl">注文のキャンセル・変更はできますか？</p>
+														<p class="under-sec-txt">
+															オーダー商品につきましては、お客様のご注文により縫製する完全受注生産のため、キャンセル・変更はお受けできません。<br>
+															注文後のお問い合わせは下記からお願いします。<br><a href="../contact">お問い合わせフォームはこちら ></a>
+														</p>
+													</div>
+													<div class="under-sec-wrap" id="qa_receipt">
+														<p class="under-sec-subttl">領収書は発行できますか？</p>
+														<p class="under-sec-txt">
+															■クレジットカード決済の場合<br>
+															■PayPay決済の場合<br>
+															マイページより【ご注文履歴＞領収書発行】から必要に応じてダウンロードしてください。<br>
+															領収書の発行は、商品発送後3か月以内となります。<br>
+															マイページ：<a href="https://www.justcurtain.com/mypage">https://www.justcurtain.com/mypage</a><br><br>
+															■銀行振込の場合<br>
+															ご入金確認後、当方より発行いたします。ご注文の際に、お問い合わせ欄に『領収書希望』とご明記ください。<br>
+															下記内容を記した領収書を商品に同梱してお届けいたします。<br><br><b>
+																・決済金額全額<br>
+																・宛名（ご注文者様名）<br>
+																・但書（例．オーダーカーテン代として）<br></b><br>
+															■代金引換の場合<br>
+															配送業者が代金引換料金の受領時にお渡ししている送り状（伝票）の控えを領収書としてご利用ください。<br>
+															（税務署で認められている会計法規上正式な領収書となります。）<br>
+															お届け先のお名前が宛名となります。<br>
+															＜ご注意＞マイページより【ご注文履歴＞ご注文明細書発行】ができます。<br>
+															弊社では領収書の発行は承っておりません。<br><br>
+															■後払い決済の場合<br>
+															指定の請求書にてお支払いいただいた際の「払込受領証（半券）」を領収証としてご利用ください。<br>
+															（税務署で認められている会計法規上正式な領収書となります。）<br>
+															ご注文者様のお名前が宛名となります。<br>
+															＜ご注意＞マイページより【ご注文履歴＞ご注文明細書発行】ができます。<br>
+															弊社では領収書の発行は承っておりません。<br><br>
+															＜非会員のお客様へ＞<br>
+															ご注文の際に、お問い合わせ欄に『領収書希望』とご明記ください。<br>
+															下記内容を記した領収書を商品に同梱してお届けいたします。<br><br><b>
+																・決済金額全額<br>
+																・宛名（ご注文者様名）<br>
+																・但書（例．オーダーカーテン代として）<br></b>
+														</p>
+													</div>
+												</div>
+											</div>
+
+											<div id="under-sec03" class="under-sec under-sec03">
+												<div class="wrap">
+													<p class="under-sec-ttl">返品・交換について</p>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">商品の返品・交換は可能ですか？</p>
+														<p class="under-sec-txt">
+															オーダー品、その他の商品すべてにおいて、サイズが合わない、イメージ違い、入力間違い等、お客様のご都合による返品、交換はお受けする事が出来ません。<br>
+
+															不良品や、ご注文と異なる商品が届いた場合は、迅速に新しい商品とご交換いたしますので当店までご連絡ください。<br>
+															お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+															受付時間：09:30～18:00（12:00～13:00を除く）祝日休業
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">届いた商品に不備がありました。（破損・汚れ・不良品 等）</p>
+														<p class="under-sec-txt">
+															誠に申し訳ございません。<br>
+															お手数をおかけしますが、内容を確認させていただくため、まずは当店までご連絡ください。<br><br>
+
+															【お電話の場合】<br>
+															お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+															受付時間：09:30～18:00（12:00～13:00を除く）祝日休業<br><br>
+
+															【メールでのお問い合わせ】<br>
+															お問い合わせフォームよりお問い合わせください。<br><a href="../contact">お問い合わせフォームはこちら ></a><br>
+															受注番号・お客様名・不良商品名・状態などをお伝えいただけますと幸いです。<br><br>
+
+															※詳しい状況を確認する為、不良箇所のお写真をお願いすることがございますがご了承ください。<br>
+															※当店では返品や返金はいたしておりません。良品交換にてご対応させていただきます。<br>
+															※返却方法につきましては、当店より詳しくご説明いたします。<br>
+															ご連絡がなく直接、縫製工場や会社住所に返却された場合、お受け取りができない場合がございますので、<br>
+															必ず先にご連絡をしていただけますようお願いいたします。
+														</p>
+													</div>
+												</div>
+											</div>
+											<div id="under-sec04" class="under-sec under-sec04">
+												<div class="wrap">
+													<p class="under-sec-ttl">配送・お届けについて</p>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">指定した日時に商品が届かないのですが。</p>
+														<p class="under-sec-txt">
+															■発送完了メールが届いている場合<br>
+															配送業者の都合で遅れている可能性があります。<br>
+															お手数をおかけいたしますが、当店よりお送りしている「ご注文の商品を発送いたしました」のメール内に記載されております【お荷物お問い合わせ番号】にて、各配送業者ホームページよりご確認をお願いいたします。<br><br>
+
+															■発送完了メールが届いていない場合<br>
+															誠に申し訳ございません。欠品や注文内容不備などの理由で発送できていない場合がございます。<br>
+															一度当店よりメールにて連絡が届いていないか確認いただき、届いていない場合は、お手数をおかけいたしますが当店までお問い合わせください。<br>
+															お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+															受付時間：09:30～18:00（12:00～13:00を除く）祝日休業
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">商品を受け取れなかった場合は？</p>
+														<p class="under-sec-txt">
+															お届け時にご不在の場合は、配送業者より「不在票」がポストにご投函されているかと思いますので、不在票をご確認の上、配送業者へ再配達のお手続きをお願いいたします。<br><br>
+
+															また、当店からお送りしている「ご注文の商品を発送いたしました」のメール内に配送情報を記載しておりますので、インターネット、またはお電話から再配達のお手続きも可能です。<br><br>
+
+															※保管期間は定められています。<br>
+															保管期限を過ぎますと、商品は工場へ返送となり再配達には返送・再配達・手数料をご負担いただく必要があるためご注意ください。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">配送日時の指定は可能ですか？</p>
+														<p class="under-sec-txt">
+															可能です。<br>
+															ご注文日から起算して、商品によって指定が可能なお日にちが変わります。<br>
+															最短をご希望の方は、指定なしをご選択ください。<br><br>
+
+															※一部商品・お住いの地域によっては、お時間の指定をお受けできない場合がございます。予めご了承ください。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">すぐに商品が欲しいのですが、最短でいつ届きますか？</p>
+														<p class="under-sec-txt">
+															当日正午までのご注文で、最短中2営業日出荷（カーテン・プリーツなしの場合）が可能です。<br>
+															※繁忙期やご注文の量などにより、翌日に出荷できないこともございますので予めご了承ください。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">送料はいくらですか？</p>
+														<p class="under-sec-txt">
+															送料は一律825円（税込）となっております。<br>
+															※北海道・沖縄・離島のみ1,650円（税込）となりますのでご注意ください。<br><br>
+
+															1配送につき20,000円（税抜）以上のご購入で送料無料です。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">引っ越し先に届けてもらえますか？</p>
+														<p class="under-sec-txt">
+															可能です。<br>
+															ご注文時にお引越し先の住所をご指定ください。<br>
+															※お受け取りできる日時にてご指定をお願いいたします。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">取り付け工事はお願いできますか？</p>
+														<p class="under-sec-txt">
+															申し訳ございません。取り付け工事はお受けしておりません。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">海外への発送は可能ですか。</p>
+														<p class="under-sec-txt">
+															申し訳ございません。海外への発送はお受けしておりません。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">配送業者は指定できますか？</p>
+														<p class="under-sec-txt">
+															申し訳ございません。ご指定はお受けできません。
+														</p>
+													</div>
+												</div>
+											</div>
+											<div id="under-sec05" class="under-sec under-sec05">
+												<div class="wrap">
+													<p class="under-sec-ttl">商品について</p>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">レールに吊るすフックは付属していますか？</p>
+														<p class="under-sec-txt">
+															1つの商品に対して、必要な個数のフックが付属しております。
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">サイトにある商品の写真の色は実物と同じですか？/生地の確認をしたいのですが・・・</p>
+														<p class="under-sec-txt">
+															商品の色味などに関してはできる限り実物に近くなるよう努めておりますが、<br>
+															ご利用端末によるディスプレイや画面の設定による見え方の違いなどにより、実物と画像に違いが発生する場合もございます。<br><br>
+
+															色味のご確認に関しては、サンプル生地を無料でお送りしておりますのでぜひご利用ください。<br><a href="../sample_require">無料サンプル請求についてのご説明はこちら ></a>
+														</p>
+													</div>
+													<div class="under-sec-wrap">
+														<p class="under-sec-subttl">洗濯機で洗えますか？</p>
+														<p class="under-sec-txt">
+															機能に「洗濯可能」と記載がある場合はお洗濯可能です。<br><br>
+
+															１．お洗濯方法は、カーテンに付属のフックを全て外していただき、ひだに沿って畳んでください。<br>
+															２．その後、洗濯ネットへお入れいただき、弱水流でお洗濯ください。<br>
+															３．乾燥機には回さず、濡れた状態のままカーテンレールへ吊るし、自然乾燥させていただければ、綺麗なプリーツでお使いいただけます。<br>※脱水はシワの原因になりますので、軽めにしていただくのがお勧めです。
+														</p>
+													</a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">商品を実際に見たいのですが、店舗はありますか？</p>
+												<p class="under-sec-txt">
+													ジャストカーテンは全国に22店舗（パートナーショップ含め）ございますのでお近くの店舗までご来店ください。<br><a href="../shoplist">店舗一覧はこちら ></a><br>
+													また、サンプル生地を無料でお送りしておりますので、店舗へお越しいただくのが難しい方はぜひご利用ください。<br><a href="../sample_require">無料サンプル請求についてのご説明はこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">スーパーやホームセンターで販売しているカーテンとはどう違うのですか？</p>
+												<p class="under-sec-txt">
+													ジャストカーテンでは、商品企画から販売・縫製・施工までを一貫して自社で行っております。<br>
+													ホームセンターなどで販売しているカーテンと大きく異なる点は3つ<br><br>
+
+													①商社やブランドメーカーを通さないことで流通コストやブランドロイヤリティをカットし、その分高品質な商品を低価格でご提供しております。<br>
+													②生産元から生地を直接仕入れ、国内最大の縫製工場で高級縫製仕様にて縫製しているため、高いクオリティを実現しています。<br>
+													③フルオーダーによる完全受注生産のため、1つ1つのカーテンがお客様の希望するサイズに合うように縫製しております。<br><br>
+
+													さらに詳しく知りたい方は
+													<a href="../about">ジャストカーテンについて</a>
+													のページをご覧ください。
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">カーテンに巾継ぎ（つなぎ目）はありますか？</p>
+												<p class="under-sec-txt">
+													カーテンやシェードには、製作するサイズやお選びいただく生地によって、巾継ぎ（つなぎ目）が入る場合があります。<br>
+													原反の生地で縫製可能な横幅を超える仕上がり幅のカーテンを製作する場合は、生地を横につなぎ合わせて1枚のカーテンに仕立てます。あくまで目安ですが、多くの厚地カーテンやレースカーテンは原反の生地が150cm前後の幅ですので、シンプル縫製（1.5倍ヒダ）の場合、1枚のカーテンの仕上がり幅が約90cm程度まで、巾継ナシで製作することが可能となります。（左記数値は、あくまで目安となりますので、詳しくはお問い合わせください。）
+																																																																																																																					                一方で、一部の生地は、生地を横方向に使用することで、仕上がり幅が大きなカーテンでも、巾継なし（シームレス）で製作することが可能となります。<br>
+													商品ページの商品情報の欄に「巾継ぎ」の有無を掲載していますのでご確認ください。
+												</p>
+											</div>
+											<div id="tunagime" style="margin-top: -20px;margin-bottom: 40px;"></div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">シェードの取り扱い方法を教えてほしい</p>
+												<p class="under-sec-txt">
+
+													ジャストカーテンでご購入いただいたシェードの商品には、種類に応じて取り扱い説明書を同送いたします。ご購入後の取付けや操作方法、生地（幕体）の取り外し・取り付け方法等は、そちらをご確認ください。<br>
+													取り扱い説明書は以下のリンクからもご確認いただけます。商品名をクリックしてください。<br>
+													▼
+													<a href="https://www.justcurtain.com/faq-ec_wp/wp-content/uploads/2020/08/シングルシェード.pdf">シングルシェード（コード式/ドラム式）</a><br>
+													▼
+													<a href="https://www.justcurtain.com/faq-ec_wp/wp-content/uploads/2020/08/ダブルシェード_コード式.pdf">ダブルシェード（コード式）</a><br>
+													▼
+													<a href="https://www.justcurtain.com/faq-ec_wp/wp-content/uploads/2020/08/ダブルシェード_ドラム式（1チェーン）.pdf">ダブルシェード（ドラム式：1チェーン）</a><br>
+													▼
+													<a href="https://www.justcurtain.com/faq-ec_wp/wp-content/uploads/2020/08/ダブルシェード_ドラム式（2チェーン）.pdf">ダブルシェード（ドラム式：2チェーン</a>）※オンラインショップ非売<br>
+													※ご購入から年数が経っており上記の説明書の仕様に当てはまらない場合やご購入いただいたシェードの種類が分からない場合は、お手数ですが各店舗もしくはオンラインショップ窓口までお問い合わせください。
+
+												</p>
+											</div>
+										</div>
+									</div>
+									<div id="under-sec06" class="under-sec under-sec06">
+										<div class="wrap">
+											<p class="under-sec-ttl">ご注文について</p>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">カーテンの注文方法が分かりません</p>
+												<p class="under-sec-txt">
+													商品をお選びいただき、ご注文いただく際にステップに沿ってサイズの入力やオプションなどが入力できるようになっております。<br>
+													説明も掲載しておりますので、オーダーカーテンをご購入されたことのない方でも安心してご購入いただけます。<br><a href="../howto">How to order はこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">サイズの測り方を教えていただけますか？</p>
+												<p class="under-sec-txt">
+													商品の種類やレールの取り付け方法によって採寸方法が異なります。<br>
+													ご希望の商品やレール形状をご確認の上、下記ページより採寸方法をご確認ください。<br><a href="../measure">カーテンサイズの測り方はこちら ></a><br><br>
+
+													お電話でも測り方についてのご相談を承っておりますのでお気軽にお問合せください。<br>
+													お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+													受付時間：09:30～18:00（12:00～13:00を除く）祝日休業
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">注文したのに確認のメールが届きません。</p>
+												<p class="under-sec-txt">
+													ご注文後、「注文内容ご確認メール」が自動配信されます。<br><br>
+
+													メールが届いていない場合は、エラーもしくは迷惑メール等の設定にて当店のメールがお届けできていない可能性がございます。<br>
+													また、迷惑メールフォルダにメールがない場合には、メールアドレスの入力が誤っていたか、当店からのメールが受信拒否されている場合がございます。<br>
+													その場合は、メールの受信設定のご変更をお願いいたします。
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">電話やFAXでも注文はできますか？</p>
+												<p class="under-sec-txt">
+													申し訳ございません、お電話・FAXでのご注文は受け付けておりません。<br>
+													ただし、下記のご依頼はお電話でもお受けしております。<br><br>
+
+													・他店にて見積りを取られた、当サイト上で掲載の無い商品のご相談<br>
+													・特殊縫製のご相談<br><br>
+
+													お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+													受付時間：09:30～18:00（12:00～13:00を除く）祝日休業
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">お見積りに対応していますか？</p>
+												<p class="under-sec-txt">
+													対応可能です。<br>
+													【一軒分のお見積り】<br>
+													お電話にてご相談ください。<br>
+													お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+													受付時間：09:30～18:00（12:00～13:00を除く）祝日休業<br><br>
+
+													【上記以外のお見積り】<br>
+													お問い合わせフォームよりお問い合わせください。<br><a href="../contact">お問い合わせフォームはこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">注文のキャンセル・変更はできますか？</p>
+												<p class="under-sec-txt">
+													オーダー商品につきましては、お客様のご注文により縫製する完全受注生産のため、キャンセル・変更はお受けできません。<br>
+													注文後のお問い合わせは下記からお願いします。<br><a href="../contact">お問い合わせフォームはこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">掲載していないサイズも買えますか？</p>
+												<p class="under-sec-txt">
+													商品により対応可能なサイズがございます。<br>
+													【カーテン】<br>
+													W：300～3900（三つヒダの場合は3250）<br>
+													H：300～3700（プリーツ加工アリの場合は3100）<br>
+													※上記以外のサイズをご希望の場合はお問い合わせください。<br><a href="../contact">お問い合わせフォームはこちら ></a><br><br>
+
+													【シェード】<br>
+													種類により製作可能なサイズが異なります。<br>
+													詳しくはお問い合わせください。<br><a href="../contact">お問い合わせフォームはこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">欠品中の商品の予約はできますか？</p>
+												<p class="under-sec-txt">
+													申し訳ございません、ご予約は承っておりません。
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">たくさん買うので値引きしてもらえませんか？</p>
+												<p class="under-sec-txt">
+													ジャストカーテンでは、商品企画・販売・縫製・施工までを一貫して自社で行っており、商社やブランドメーカーを通さずに流通コスト・ブランドロイヤリティを徹底的にカットすることで、高品質な商品を低価格でご提供しております。<br><br>
+
+													そのため、個別でのお値引きは承っておりません。<br>
+													サイト上でキャンペーンなどの際にさらにお求めやすい価格でご紹介することもございますので、ぜひチェックしてみてください。
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">カタログやパンフレットはありますか？</p>
+												<p class="under-sec-txt">
+													申し訳ございません。カタログ・パンフレットは取り扱いがございません。<br><br>
+
+													生地を実際にご確認いただきたい方は、お近くの店舗にご来店ください。<br><a href="../shoplist">店舗一覧はこちら ></a><br>
+													もしくは、無料生地サンプルをご活用ください。<br><a href="../sample_require">無料サンプル請求についてのご説明はこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">採寸していただくことはできますか？</p>
+												<p class="under-sec-txt">
+													申し訳ございません。採寸代行は承っておりません。<br>
+													商品をご購入の際に、お客様にてご採寸をお願いいたします。<br><a href="../measure">カーテンサイズの測り方はこちら ></a><br><br>
+
+													実店舗では採寸施工サービスを承っております。ご希望の方はお近くの店舗にご相談ください。<br><a href="../shoplist">店舗一覧はこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">ラッピング・のし等のギフト対応はできますか？</p>
+												<p class="under-sec-txt">
+													申し訳ございません。ギフト対応はお受けしておりません。
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">商品が届きましたが、サイズを間違えてしまったのでお直しは可能ですか？</p>
+												<p class="under-sec-txt">
+													オーダー商品につきましては、ご客様のご注文により縫製する完全受注生産のため、お客様都合による返品、交換はお受けできません。<br>
+													その他の商品につきましても、ご客様都合による返品、交換はお受けできません。<br><br>
+
+													届いた商品が不良品だった場合や、ご注文と異なる商品が届いた場合は、迅速に新しい商品と交換いたしますので、ご連絡ください。
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">新築で使用するカーテンを他店で見積りをしてもらったのですが、 予算オーバーしてしまい困っています・・・</p>
+												<p class="under-sec-txt">
+													お近くの店舗まで一度お越しください。<br>
+													ご新居の図面をお持ちいただければ、専門のスタッフが無料でお見積りをさせていただきます。<br><a href="../shoplist">店舗一覧はこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">店舗と同じ商品をオンラインショップで購入できますか。</p>
+												<p class="under-sec-txt">
+													店舗で販売している商品で、オンラインショップで取り扱いのない商品に関しても電話・メールでご注文は可能な場合がございます。<br>
+													その際、通常の購入方法と手順が異なるため、お問い合わせフォームよりお問い合わせください。<br><a href="../contact">お問い合わせフォームはこちら ></a>
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">カーテンにタッセルは付きますか？</p>
+												<p class="under-sec-txt">
+													当店では厚地カテーン、レースカーテン共にタッセルは付属致しません。共生地の船形タッセルを１本500円（オプション）でご購入いただいております。<br>
+													また、装飾タッセルも多数ご用意しておりまして、カーテンの印象を各段に上げる素敵なアイテムとして人気商品となっております。<br><a href="http://www.justcurtain.com/products/list?category_id=7">タッセル一覧はこちら ></a>
+												</p>
+											</div>
+										</div>
+									</div>
+									<div id="under-sec08" class="under-sec under-sec08">
+										<div class="wrap">
+											<p class="under-sec-ttl">お支払いについて</p>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">支払方法は何が選べますか？</p>
+												<p class="under-sec-txt">
+													クレジットカード決済、銀行振込、代金引換、後払いからお選びいただけます。<br>
+													銀行振込、代金引換、後払いの場合、手数料はお客様ご負担にてお願いしておりますので、ご了承ください。
+												</p>
+											</div>
+											<div class="under-sec-wrap">
+												<p class="under-sec-subttl">領収書は発行できますか？</p>
+												<p class="under-sec-txt">
+													■クレジットカード決済の場合<br>
+													■PayPay決済の場合<br>
+													マイページより【ご注文履歴＞領収書発行】から必要に応じてダウンロードしてください。<br>
+													領収書の発行は、商品発送後3か月以内となります。<br><a href="https://www.justcurtain.com/mypage" class="blue_link">マイページ：https://www.justcurtain.com/mypage</a><br><br>
+													■銀行振込の場合<br>
+													ご入金確認後、当方より発行いたします。ご注文の際に、お問い合わせ欄に『領収書希望』とご明記ください。<br>
+													下記内容を記した領収書を商品に同梱してお届けいたします。<br><br><b>
+														・決済金額全額<br>
+														・宛名（ご注文者様名）<br>
+														・但書（例．オーダーカーテン代として）<br></b><br>
+													■代引引換の場合<br>
+													配送業者が代金引換料金の受領時にお渡ししている送り状（伝票）の控えを領収書としてご利用ください。（税務署で認められている会計法規上正式な領収書となります。）<br>
+													お届け先のお名前が宛名となります。<br>
+													＜ご注意＞マイページより【ご注文履歴＞ご注文明細書発行】ができます。<br>
+													弊社では領収書の発行は承っておりません。<br><br>
+													■後払い決済の場合<br>
+													指定の請求書にてお支払いいただいた際の「払込受領証（半券）」を領収証としてご利用ください。（税務署で認められている会計法規上正式な領収書となります。）<br>
+													ご注文者様のお名前が宛名となります。<br>
+													＜ご注意＞マイページより【ご注文履歴＞ご注文明細書発行】ができます。<br>
+													弊社では領収書の発行は承っておりません。<br><br>
+													＜非会員のお客様へ＞<br>
+													ご注文の際に、お問い合わせ欄に『領収書希望』とご明記ください。<br>
+													下記内容を記した領収書を商品に同梱してお届けいたします。<br><br><b>
+														・決済金額全額<br>
+														・宛名（ご注文者様名）<br>
+														・但書（例．オーダーカーテン代として）<br></b>
+												</p>
+											</div>
+										</div>
+									</div>
+
+
+								</div>
+								{# <div class="tabcontent_list">
+																		<div class="under-sec under-sec01">
+																			<div class="wrap">
+																				<p class="under-sec-ttl">よくあるご質問</p>
+																				<div class="under-sec-wrap">
+																					<p class="under-sec-subttl">商品の取り扱い店舗や商品について教えてほしい</p>
+																					<p class="under-sec-txt">
+																						お近くのお店に問い合わせください。<br><a href="../shoplist">店舗一覧はこちら ></a>
+																					</p>
+																				</div>
+																				<div class="under-sec-wrap">
+																					<p class="under-sec-subttl">店舗の住所、営業時間、定休日が知りたいです。</p>
+																					<p class="under-sec-txt">
+																						店舗の営業時間、定休日は各店舗により異なりますので、店舗一覧よりご確認ください。<br><a href="../shoplist">店舗一覧はこちら ></a><br><br>
+								
+																						※年末年始、お盆期間中などは営業時間・定休日が変更になる場合がございます。<br>
+																						詳しくは、店舗まで直接お問い合わせください。
+																					</p>
+																				</div>
+																				<div class="under-sec-wrap">
+																					<p class="under-sec-subttl">店舗にカーテンを持ち込んで修繕してもらうことは可能ですか？</p>
+																					<p class="under-sec-txt">
+																						ご購入いただいた店舗にお問合せください。<br><a href="../shoplist">店舗一覧はこちら ></a>
+																					</p>
+																				</div>
+																				<div class="under-sec-wrap">
+																					<p class="under-sec-subttl">オンラインショップで購入したものを実店舗で受け取ることはできますか？</p>
+																					<p class="under-sec-txt">
+																						申し訳ございません。実店舗でのお受渡しは行っておりません。
+																					</p>
+																				</div>
+																			</div>
+																		</div>
+								
+																	</div> #}
+							</div>
+						</div>
+					</div><!-- コンテンツページ --></div>
+			</body>
+		</div>
+	</body>
+</div></body></div></div><script type="text/javascript">$(function () { // #にダブルクォーテーションが必要
+var headerHight = 80; // ヘッダの高さ
+$('a[href^="#"]').click(function () {
+var speed = 400;
+var href = $(this).attr("href");
+var target = $(href == "#" || href == "" ? 'html' : href);
+var position = target.offset().top - headerHight;
+$('body,html').animate({
+scrollTop: position
+}, speed, 'swing');
+return false;
+});
+
+
+$(function () {
+$('.tabnav li').click(function () { // 押されたのがリストの何番目か調べる
+var index = $('.tabnav li').index(this);
+// 表示領域を全部非表示にする
+$('.tabcontent .tabcontent_list').hide();
+// 押されたのと同じ番目のを表示する
+$('.tabcontent .tabcontent_list').eq(index).fadeIn();
+// .activeがついてるのを外す
+$('.tabnav li').removeClass('active');
+// 押したやつにactiveを付与してる
+$(this).addClass('active');
+});
+});
+
+
+$(function () {
+$(".under-sec-subttl ").click(function () {
+$(this).siblings(".under-sec-txt").slideToggle();
+if ($(this).hasClass("clicked")) {
+$(this).removeClass("clicked");
+} else {
+$(this).addClass("clicked");
+}
+});
+});
+});</script></body>{% endblock %}

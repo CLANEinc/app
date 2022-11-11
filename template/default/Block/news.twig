@@ -1,0 +1,197 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% set NewsList = repository('Eccube\\Entity\\News').getList() %}
+{% set cnt = BaseInfo.option_newslist %}
+{% set NewsOpen = BaseInfo.option_newsopen %}
+
+{% if cnt == 0 or cnt == "" %}
+
+{% block javascript %}
+    <script>
+        $(function() {
+            $('.ec-newsRole__news_area').each(function() {
+                var listLength = $(this).find('.ec-newsRole__newsItem').length;
+                if (listLength > 5) {
+                    $(this).find('.ec-newsRole__newsItem:gt(4)').each(function() {
+                        $(this).hide();
+                    });
+                    $(this).append('<a id="news_readmore" class="ec-inlineBtn--top">{{ 'more'|trans }}</a>');
+                    var dispNum = 5;
+                    $(this).find('#news_readmore').click(function() {
+                        dispNum += 5;
+                        $(this).parent().find('.ec-newsRole__newsItem:lt(' + dispNum + ')').show();
+                        if (dispNum >= listLength) {
+                            $(this).hide();
+                        }
+                    })
+                }
+            });
+
+        {% if NewsOpen == 1 %}
+			$('.ec-newsRole__newsHeading').on('click', function() {
+                $newsItem = $(this).parent('.ec-newsRole__newsItem');
+                $newsDescription = $newsItem.children('.ec-newsRole__newsDescription');
+                if ($newsDescription.css('display') == 'none') {
+                    $newsItem.addClass('is_active');
+                    $newsDescription.slideDown(300);
+                } else {
+                    $newsItem.removeClass('is_active');
+                    $newsDescription.slideUp(300);
+                }
+                return false;
+            });
+		{% else %}
+			$(function() {
+				$('.ec-newsRole__newsDescription').css('display','block');
+				$('.ec-newsRole__newsClose').css('display','none');
+				$('.ec-newsRole .ec-newsRole__newsHeading').css('cursor','text');
+			});
+		{% endif %}
+        });
+    </script>
+{% endblock %}
+<div class="ec-role">
+    <div class="ec-newsRole">
+        <div class="common_block_title">
+            {{ '新着情報'|trans }}
+        </div>
+        <div class="ec-newsRole__news_area">
+            {% for News in NewsList %}
+                <div class="ec-newsRole__newsItem">
+                    <div class="ec-newsRole__newsHeading">
+                        <div class="ec-newsRole__newsDate">
+                            {{ News.publish_date|date_day }}
+                        </div>
+                        <div class="ec-newsRole__newsColumn">
+                            <div class="ec-newsRole__newsTitle">
+                                {{ News.title }} 
+                            </div>
+                            {% if News.description or News.url %}
+                                <div class="ec-newsRole__newsClose">
+                                    <a class="ec-newsRole__newsCloseBtn">
+                                        <i class="fas fa-angle-down"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="ec-newsRole__newsDescription">
+						{% if BaseInfo.option_tinymcenews %}
+							{{ News.description|raw }}
+						{% else %}
+							{{ News.description|raw|nl2br }}
+						{% endif %}
+                        {% if News.url %}
+                            <br>
+                            <a href="{{ News.url }}" {% if News.link_method == '1' %}target="_blank"{% endif %}>{{ '詳しくはこちら'|trans }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<script src="{{ asset('assets/js/jquery.simplePagination/jquery.simplePagination.js') }}"></script>
+<script>
+{% if NewsOpen == 1 %}
+	$(function() {
+		$('.ec-newsRole__newsHeading').on('click', function() {
+			$newsItem = $(this).parent('.ec-newsRole__newsItem');
+			$newsDescription = $newsItem.children('.ec-newsRole__newsDescription');
+			if ($newsDescription.css('display') == 'none') {
+				$newsItem.addClass('is_active');
+				$newsDescription.slideDown(300);
+			} else {
+				$newsItem.removeClass('is_active');
+				$newsDescription.slideUp(300);
+			}
+			return false;
+		});
+	});
+{% else %}
+	$(function() {
+		$('.ec-newsRole__newsDescription').css('display','block');
+		$('.ec-newsRole__newsClose').css('display','none');
+		$('.ec-newsRole .ec-newsRole__newsHeading').css('cursor','text');
+	});
+{% endif %}
+
+	$(function(){
+		$("#paging").pagination({
+			items: {% if NewsList|length % cnt == 0 %}{{ NewsList|length / cnt }}{% else %}{{ NewsList|length // cnt + 1 }}{% endif %},
+			displayedPages: 1,
+			cssStyle: 'light-theme',
+			prevText: '前',
+			nextText: '次',
+			onPageClick: function(pageNumber){show(pageNumber)}
+		})
+	});
+	function show(pageNumber){
+		var page=".page-"+pageNumber;
+		$('.selection').hide()
+		$(page).show()
+	}
+</script>
+
+<div class="ec-role">
+    <div class="ec-newsRole">
+        <div class="common_block_title">
+            {{ '新着情報'|trans }}
+        </div>
+		{% if NewsList|length > cnt %}<div id="paging"></div>{% endif %}
+        <div class="ec-newsRole__news_area">
+            {% for News in NewsList %}
+				{% if cnt == 1 %}
+					<div class="selection page-{{ loop.index }}">
+				{% elseif loop.index % cnt == 1 %}
+					<div class="selection page-{{ (loop.index - 1) / cnt + 1 }}">
+				{% endif %}
+                <div class="ec-newsRole__newsItem">
+                    <div class="ec-newsRole__newsHeading">
+                        <div class="ec-newsRole__newsDate">
+                            {{ News.publish_date|date_day }}
+                        </div>
+                        <div class="ec-newsRole__newsColumn">
+                            <div class="ec-newsRole__newsTitle">
+                                {{ News.title }} newsニュースNEWS
+                            </div>
+                            {% if News.description or News.url %}
+                                <div class="ec-newsRole__newsClose">
+                                    <a class="ec-newsRole__newsCloseBtn">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="ec-newsRole__newsDescription">
+						{% if BaseInfo.option_tinymce %}
+							{{ News.description|raw }}
+						{% else %}
+							{{ News.description|raw|nl2br }}
+						{% endif %}
+                        {% if News.url %}
+                            <br>
+                            <a href="{{ News.url }}" {% if News.link_method == '1' %}target="_blank"{% endif %}>{{ '詳しくはこちら'|trans }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+				{% if cnt == 1 or loop.index % cnt == 0 %}</div>{% endif %}
+            {% endfor %}
+			{% if NewsList|length % cnt != 0 %}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+{% endif %}

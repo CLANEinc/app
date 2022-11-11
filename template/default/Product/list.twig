@@ -1,0 +1,449 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'product_page' %}
+
+{% block javascript %}
+	<script>
+		eccube.productsClassCategories = {
+{% for Product in pagination %}
+"{{ Product.id|escape('js') }}" : {{ class_categories_as_json(Product)|raw }}
+{% if loop.last == false %},{% endif %}{% endfor %}
+};
+
+$(function () { // 表示件数を変更
+$('.disp-number').change(function () {
+var dispNumber = $(this).val();
+$('#disp_number').val(dispNumber);
+$('#pageno').val(1);
+$("#form1").submit();
+});
+
+// 並び順を変更
+$('.order-by').change(function () {
+var orderBy = $(this).val();
+$('#orderby').val(orderBy);
+$('#pageno').val(1);
+$("#form1").submit();
+});
+
+$('.add-cart').on('click', function (e) {
+var $form = $(this).parents('li').find('form');
+
+// 個数フォームのチェック
+var $quantity = $form.parent().find('.quantity');
+if ($quantity.val() < 1) {
+$quantity[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+setTimeout(function () {
+loadingOverlay('hide');
+}, 100);
+return true;
+} else {
+$quantity[0].setCustomValidity('');
+} e.preventDefault();
+$.ajax({
+url: $form.attr('action'),
+type: $form.attr('method'),
+data: $form.serialize(),
+dataType: 'json',
+beforeSend: function (xhr, settings) { // Buttonを無効にする
+$('.add-cart').prop('disabled', true);
+}
+}).done(function (data) { // レスポンス内のメッセージをalertで表示
+$.each(data.messages, function () {
+$('#ec-modal-header').html(this);
+});
+
+$('.ec-modal').show()
+
+// カートブロックを更新する
+$.ajax({url: '{{ url('block_cart') }}', type: 'GET', dataType: 'html'}).done(function (html) {
+$('.ec-headerRole__cart').html(html);
+});
+}).fail(function (data) {
+alert('{{ 'カートへの追加に失敗しました。'|trans }}');
+}).always(function (data) { // Buttonを有効にする
+$('.add-cart').prop('disabled', false);
+});
+});
+});
+
+$('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel').on('click', function () {
+$('.ec-modal').hide()
+});
+	</script>
+{% endblock %}
+
+{% block main %}
+{% if search_form.category_id.vars.errors|length > 0 %}
+	<div class="ec-searchnavRole">
+		<p class="errormsg text-danger">{{ 'ご指定のカテゴリは存在しません'|trans }}</p>
+	</div>
+{% else %}
+	<div class="ec-searchnavRole">
+		<form name="form1" id="form1" method="get" action="?">
+			{% for item in search_form %}
+				<input type="hidden" id="{{ item.vars.id }}" name="{{ item.vars.full_name }}" {% if item.vars.value is not empty %} value="{{ item.vars.value }}" {% endif %}/>
+			{% endfor %}
+		</form>
+		{#<div class="ec-searchnavRole__topicpath">#}
+		{#	<ol class="ec-topicpath">#}
+		{#		<li class="ec-topicpath__item">#}
+		{#			<a class="list__all" href="{{ url('product_list') }}">{{ '全て'|trans }}</a>#}
+		{#		</li>#}
+		{#		<li class="ec-topicpath__item">#}
+		{#			<a class="list__drapeCurtain" href="">ドレープカーテン</a>#}
+		{#		</li>#}
+		{#		{% if Category is not null %}#}
+		{#			{% for Path in Category.path %}#}
+		{#				<li class="ec-topicpath__divider">#}
+		{#					<i class="ec-headerNav__itemIcon fas fa-angle-right fa-fw"></i>#}
+		{#				</li>#}
+		{#				<li class="ec-topicpath__item{% if loop.last %}--active{% endif %}">#}
+		{#					<a href="{{ url('product_list') }}?category_id={{ Path.id }}">{{ Path.name }}</a>#}
+		{#				</li>#}
+		{#			{% endfor %}#}
+		{#		{% endif %}#}
+
+		{#		{% if Tag is not null %}#}
+		{#			{% set Tags = repository('Eccube\\Entity\\Tag').getList() %}#}
+		{#			{% for TagList in Tags %}#}
+		{#				<li class="ec-topicpath__item{% if app.request.query.get('product_tag_id') == TagList.id %}--active{% endif %}">#}
+		{#					<a href="{{ url('product_list') }}?product_tag_id={{ TagList.id }}">{{ TagList.name }}</a>#}
+		{#				</li>#}
+		{#			{% endfor %}#}
+		{#		{% endif %}#}
+
+		{#		{% if search_form.vars.value and search_form.vars.value.name %}#}
+		{#			<li class="ec-topicpath__divider">|</li>#}
+		{#			<li class="ec-topicpath__item">{{ '「%name%」の検索結果'|trans({ '%name%': search_form.vars.value.name }) }}</li>#}
+		{#		{% endif %}#}
+		{#	</ol>#}
+		{#</div>#}
+
+		<div class="listpage_category_name_area">
+			{% if Category is not null %}
+				<div class="name">{{ Category.name }}</div>
+			{% elseif Tag is not null %}
+				<div class="name">{{ Tag.name }}</div>
+				{% else %}
+				{# <div class="name">全て</div> #}
+			{% endif %}
+			{% if search_form.vars.value and search_form.vars.value.name %}
+				<div class="comment">{{ '「%name%」の検索結果'|trans({ '%name%': search_form.vars.value.name }) }}</div>
+			{% endif %}
+			
+				<div class="cat_item_list_sort_list_items -right">
+						<div
+							class="cat_item_list_sort_list_item -second">
+							{# <dt>並べ替え</dt> #}
+							<dd class="cat_item_list_sort_list_dd -second">
+								{{ form_widget(disp_number_form, {'id': '', 'attr': {'class': 'disp-number'}}) }}</dd>
+						</div>
+						<div class="cat_item_list_sort_list_item -third">
+							{# <dt>表示件数</dt> #}
+							{# <dd class="cat_item_list_sort_list_dd -third"></dd> #}
+							{{ form_widget(order_by_form, {'id': '', 'attr': {'class': 'order-by'}}
+						) }}
+					</div>
+				</div>
+				
+		</div>
+		
+		
+		<style>
+		    .name{
+		        font-size: 2.8rem;
+		    }
+		    
+		    .listpage_category_name_area{
+		        display: flex;
+		        align-items: center;
+		        margin-bottom: 1.6rem;
+		    }
+		    
+		    @media(max-width: 768px) {
+		        .listpage_category_name_area{
+		            flex-wrap: wrap;
+		        }
+		        
+		        .cat_item_list_sort_list_items.-right{
+		            width: 100%;
+		            margin-right: auto;
+		            margin-left: 0;
+		            margin-top: 1.6rem;
+		        }
+		    }
+		    
+		</style>
+
+		{% if Category is not null %}
+			{% if Category.page_text is not empty %}
+				<div class="category_text_area" style="margin-bottom: 20px;">
+					{{ Category.page_text|raw }}
+				</div>
+			{% endif %}
+		{% endif %}
+
+
+		{# 表示切り替えプラグイン #}
+		<div class="ec-searchnavRole__infos">
+			{% if pagination.totalItemCount > 0 %}
+				<dl class="cat_item_list_sort_list">
+					<div
+						class="cat_item_list_sort_list_item -first">
+						{# <dt>並べ替え</dt> #}
+						{#<dd class="cat_item_list_sort_list_dd -first">00件の商品が見つかりました</dd>#}
+
+					</div>
+					<div
+						class="cat_item_list_sort_list_item">
+						{# <dt>イメージ切替</dt> #}
+						<dd>
+							<ul class="listImgChange">{# <li class="comp_button active" onclick="javascript:void(0)">完成例</li> #}
+								{# <li class="kiji_button" onclick="javascript:void(0)">生地</li> #}
+							</ul>
+						</dd>
+					</div>
+
+			</div>
+
+		</dl>
+	{% endif %}
+
+
+</div>
+</div>
+	{% if pagination.totalItemCount > 0 %}
+		<div class="ec-shelfRole"> <ul class="ec-shelfGrid">
+			{% for Product in pagination %}
+				<li class="ec-shelfGrid__item">
+					<a href="{{ url('product_detail', {'id': Product.id}) }}">
+						<p class="ec-shelfGrid__item-image">
+							<img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}">
+						</p>
+						{{ include('@DesignTag4/tag_list.twig', ignore_missing = true) }}
+						<p class="list__productName">{{ Product.name }}</p>
+						{% if Product.description_list %}
+							{% if BaseInfo.option_tinymce %}
+								<p>{{ Product.description_list|raw }}</p>
+							{% else %}
+								<p>{{ Product.description_list|raw|nl2br }}</p>
+							{% endif %}
+						{% endif %}
+						<p class="price02-default">
+							{% if Product.hasProductClass %}
+								{% if Product.getPrice02Min == Product.getPrice02Max %}
+									{{ Product.getPrice02IncTaxMin|price }}
+								{% else %}
+									{{ Product.getPrice02IncTaxMin|price }}
+									～
+									{{ Product.getPrice02IncTaxMax|price }}
+								{% endif %}
+							{% else %}
+								{{ Product.getPrice02IncTaxMin|price }}
+							{% endif %}
+						</p>
+						<div class="list__tags">
+							<p class="list__tag">遮光2級</p>
+							<p class="list__tag">洗濯可</p>
+						</div>
+					</a>
+
+					{# ↓■期間限定①/③ #}
+					{% if Product.arrival_date is not empty or Product.endsell_date is not empty %}
+						<div style="margin-bottom:10px;">
+							{% if Product.arrival_date is not empty %}
+								<div class="limited_time">
+									<small>販売開始：{{ Product.arrival_date|date("Y/m/d G時i分") }}</small>
+								</div>
+							{% endif %}
+							{% if Product.endsell_date is not empty %}
+								<div class="limited_time">
+									<small>販売終了：{{ Product.endsell_date|date("Y/m/d G時i分") }}</small>
+								</div>
+							{% endif %}
+						</div>
+					{% endif %}
+					{# ↑■期間限定 #}
+
+					{# ↓■期間限定②/③ #}
+					{% if (Product.arrival_date is not empty and Product.arrival_date >= date()) or (Product.endsell_date is not empty and Product.endsell_date < date()) %}
+						<div class="text-danger">
+							期間限定商品：現在ご購入いただけません。
+						</div>
+					{% else %}
+						{# ↑■期間限定 #}
+
+						{% if BaseInfo.option_listcart == 0 %}
+							{% if Product.stock_find %}
+								{% set form = forms[Product.id] %}
+								{# <form name="form{{ Product.id }}" id="productForm{{ Product.id }}" action="{{ url('product_add_cart', {id:Product.id}) }}" method="post">
+																																																																																																																																													<div class="ec-productRole__actions">
+																																																																																																																																														{% if form.classcategory_id1 is defined %}
+																																																																																																																																															<div class="ec-select">
+																																																																																																																																																{{ form_widget(form.classcategory_id1) }}
+																																																																																																																																																{{ form_errors(form.classcategory_id1) }}
+																																																																																																																																															</div>
+																																																																																																																																															{% if form.classcategory_id2 is defined %}
+																																																																																																																																																<div class="ec-select">
+																																																																																																																																																	{{ form_widget(form.classcategory_id2) }}
+																																																																																																																																																	{{ form_errors(form.classcategory_id2) }}
+																																																																																																																																																</div>
+																																																																																																																																															{% endif %}
+																																																																																																																																														{% endif %}
+																																																																																																																																														<div class="ec-numberInput"><span>{{ '数量'|trans }}</span>
+																																																																																																																																															{{ form_widget(form.quantity, {'attr': {'class': 'quantity'}}) }}
+																																																																																																																																															{{ form_errors(form.quantity) }}
+																																																																																																																																														</div>
+																																																																																																																																													</div>
+																																																																																																																																													{{ form_rest(form) }}
+																																																																																																																																												</form> #}
+								{# <div class="ec-productRole__btn">
+																																																																																																																																													<button type="submit" class="ec-blockBtn--action add-cart" data-cartid="{{ Product.id }}" form="productForm{{ Product.id }}">
+																																																																																																																																														{{ 'カートに入れる'|trans }}
+																																																																																																																																													</button>
+																																																																																																																																												</div> #}
+								{% else %}
+								{# <div class="ec-productRole__btn">
+																																																																																																																																													<button type="button" class="ec-blockBtn--action" disabled="disabled">
+																																																																																																																																														{{ 'ただいま品切れ中です。'|trans }}
+																																																																																																																																													</button>
+																																																																																																																																												</div> #}
+							{% endif %}
+						{% endif %}
+
+					{% endif %}
+					{# ←■期間限定③/③ #}
+
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="ec-modal">
+		<div class="ec-modal-overlay">
+			<div class="ec-modal-wrap">
+				<span class="ec-modal-close">
+					<span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span>
+				</span>
+				<div id="ec-modal-header" class="text-center">{{ 'カートに追加しました。'|trans }}</div>
+				<div class="ec-modal-box">
+					<div class="ec-role">
+						<span class="ec-inlineBtn--cancel">{{ 'お買い物を続ける'|trans }}</span>
+						<a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'カートへ進む'|trans }}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	{# {% for Product in Products %}
+																						  <div>
+																						    <a href="{{ url('product_detail', {'id': Product.id}) }}">
+																						      <img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') }}">
+																						      <!--  ここで表示 -->
+																						      {% if Product.ProductCategories is not empty %}
+																						        <div class="category-list">
+																						          {% for ProductCategory in Product.ProductCategories %}
+																						            <p class="category-name">{{ ProductCategory.Category.name }}</p>
+																						          {% endfor %}
+																						        </div>
+																						      {% endif %}
+																						      <!-- / ここで表示 -->
+																						      <p class="ec-newItemRole__listItemTitle">{{ Product.name }}</p>
+																						    </a>
+																								ああああ
+																						  </div>
+																						{% endfor %} #}
+
+	<div class="ec-pagerRole">
+		{% include "pager.twig" with {'pages': pagination.paginationData} %}
+	</div>
+	<style>
+		.ec-layoutRole .ec-layoutRole__contents {
+			display: block;
+
+		}
+		.ec-shelfRole {
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+		.ec-searchnavRole__infos {
+			margin-bottom: 3.1rem !important;
+
+
+		}
+		{# .ec-layoutRole__contents { #}
+			{# margin-right: 0 !important; #}
+			{# margin-left: 0 !important; #}
+			{# max-width: none !important; #}
+			{# padding: 17.6rem 10.486111111% 13.4rem; #}
+
+		{# } #}
+
+
+		.disp-number.form-control {
+			box-shadow: none;
+			height: 34px !important;
+			font-size: 1.4rem;
+			font-weight: 500;
+			letter-spacing: 0;
+			line-height: 1.42857142857;
+			color: #555555 !important;
+		}
+		.order-by.form-control {
+			height: 34px !important;
+			font-size: 1.4rem;
+			font-weight: 500;
+			letter-spacing: 0;
+			line-height: 1.42857142857;
+			color: #555555 !important;
+		}
+		@media(max-width: 768px) {
+			.ec-topicpath {
+			 padding:0 ;
+			 border-bottom:0;
+			}
+
+			.ec-layoutRole__contents {
+				padding: 8.9rem 2rem 4.02rem !important;
+			}
+			.ec-shelfGrid .ec-shelfGrid__item-image {
+				text-align: left;
+			}
+			.ec-searchnavRole__infos{
+				padding-right:0 !important;
+				padding-left:0 !important;
+				margin-bottom:3.21rem !important;
+			}
+			.cat_item_list_sort_list {
+				display:flex;
+				flex-direction:column;
+			}
+			.cat_item_list_sort_list::before{
+				content:"";
+				display:block;
+				width:100vw;
+				margin: 0 calc(50% - 50vw);
+				border-bottom:1px dashed #cccccc;
+			}
+			.cat_item_list_sort_list_item.-first{
+				margin-bottom:1.1rem;
+			}
+
+			
+
+
+		}
+	</style>
+{% endif %}{% endif %}{% endblock %}

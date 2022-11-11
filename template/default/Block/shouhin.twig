@@ -1,0 +1,63 @@
+
+
+
+
+<br>
+<p>ブロック商品一覧テスト</p>
+{% if Products is defined and Products %}
+
+<div class="ec-shelfRole">
+     <ul class="ec-shelfGrid">
+          {% for Product in Products %}
+           <li class="ec-shelfGrid__item">
+                   <img src="{{asset(Product.getMainListImage()|no_image_product,'save_image')}}">
+                    <p>{{Product.getName()}}</p>
+          </li>
+
+{# 配列の出力 #}
+ {# <p>{{
+    dump(Product)
+     }}</p> #}
+
+{# ディスクリプション出力 #}
+     {# {{ include(template_from_string(Product.description_detail|raw)) }} #}
+      {% endfor %}
+     </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+{# 特定のカテゴリー以外を表示しないカテゴリー一覧」 #}
+{% set Categories = repository('Eccube\\Entity\\Category').getList() %}
+
+<div class="categories__flex">
+{% for Category in Categories %}
+{# 例：「カテゴリID:2」新入荷のみと「カテゴリID:8」生和を出力しないようにしたい場合のif文 #}
+
+{% if Category.id is not same as(2) and Category.id is not same as(8)   %}
+  <div class="categories__linkWrap">
+    <a class="categories__link -category__id{{ Category.id }}" href="{{ url('product_list') }}?category_id={{ Category.id }}">
+
+    {# twigでの文字連結をするがtwigでは「~」を使う。 #}
+      <img class="-category__id{{ Category.id }}" src="{{ asset('assets/img/top/category_img_'~ Category.id ~'.jpg') }}">
+                </a>
+    {# {{ tree(Category) }} #}
+	  <p>{{ Category.name }}</p>
+  </div>
+{% endif %}
+
+<style>
+</style>
+
+{% endfor %}
+  </div>
+{% endif %}
+
+

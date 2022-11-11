@@ -1,0 +1,1882 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+
+{% set Categories = repository('Eccube\\Entity\\Category').getList() %}
+
+{# {% macro tree(Category) %}
+	{% if BaseInfo.option_categoryopen == 1 %}
+		{% from _self import tree %}
+		<a {% if Category.id == app.request.query.get('category_id') %} class="active_open" {% endif %} href="{{ url('product_list') }}?category_id={{ Category.id }}">{{ Category.name }}</a>
+		{% if Category.children|length > 0 %}
+			<ul>
+				{% for ChildCategory in Category.children %}
+					<li {% if ChildCategory.id == app.request.query.get('category_id') %} class="active_open" {% endif %}>
+						<em>┗</em>
+						{{ tree(ChildCategory) }}
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	{% else %}
+		{% from _self import tree %}
+		{% if Category.hierarchy == 1 and Category.children|length > 0 %}
+			<a class="page_link" href="{{ url('product_list') }}?category_id={{ Category.id }}">
+				<i class="ec-headerNav__itemIcon fas fa-external-link-square-alt fa-fw"></i>
+			</a>
+			<a class="accordion-trigger{% if Category.id == app.request.query.get('category_id') %} active_open{% endif %}">{{ Category.name }}<span class="accordion-plus"></span>
+			</a>
+		{% else %}
+			<a {% if Category.id == app.request.query.get('category_id') %} class="active_open" {% endif %} href="{{ url('product_list') }}?category_id={{ Category.id }}">{{ Category.name }}</a>
+		{% endif %}
+		{% if Category.children|length > 0 %}
+			<ul {% if Category.hierarchy == 1 %} class="accordion" {% endif %}>
+				{% for ChildCategory in Category.children %}
+					<li {% if ChildCategory.id == app.request.query.get('category_id') %} class="active_open" {% endif %}>
+						<em>┗</em>
+						{{ tree(ChildCategory) }}
+					</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	{% endif %}
+{% endmacro %}
+
+{# @see https://github.com/bolt/bolt/pull/2388 #}
+{# {% from _self import tree %} #}
+
+{# <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+	$(function () { // クッキーの値を設定
+var cookie = '';
+
+// クッキーが存在する場合、変数に値を設定
+if ($.cookie('accordion_cookie') && $.cookie('accordion_cookie') != null) {
+var cookie = $.cookie('accordion_cookie');
+}
+
+// Font Awesome CSS設定
+var plus_icon = 'accordion-plus';
+var minus_icon = 'accordion-minus';
+
+// アコーディオントリガー数だけ実行
+$('.accordion-trigger').each(function (index) { // クッキーからアコーディオン開閉設定
+if ($.cookie('accordion_cookie') == null || cookie.indexOf('[' + index + ']') == -1) {
+$(this).children('span').removeClass().addClass(plus_icon);
+$(this).next('.accordion').hide();
+// クッキーにアコーディオンナンバーがある場合、開ける
+} else {
+$(this).children('span').removeClass().addClass(minus_icon);
+$(this).next('.accordion').show();
+}
+
+// アコーディオントリガークリックされたら
+$(this).on('click', function () {
+$trigger_icon = $(this).children('span');
+// アコーディオンを開閉する
+$(this).next('.accordion').slideToggle();
+
+// プラスアイコンならマイナスにして開く
+if ($trigger_icon.hasClass('accordion-plus')) {
+$trigger_icon.removeClass();
+$trigger_icon.addClass(minus_icon);
+cookie += '[' + index + ']';
+$.cookie('accordion_cookie', cookie);
+// プラスアイコンでないでないならプラスにして閉じる
+} else {
+$trigger_icon.removeClass().addClass(plus_icon);
+cookie = cookie.replace('[' + index + ']', '');
+// クッキーに何も保存されていなければクッキーを削除
+if (cookie.length == 0) {
+$.cookie('accordion_cookie', '', {expires: -1});
+} else {
+$.cookie('accordion_cookie', cookie);
+}
+}
+});
+});
+});
+</script> #}
+
+{# <div class="ec-role">
+	<div class="category_side_area">
+		<div class="category_side_title">
+			カテゴリー
+		</div>
+		<ul>
+			{% for Category in Categories %}
+				<li class="category_block">
+					{{ tree(Category) }}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div> #}
+
+
+	<style>
+
+
+#side_left {
+	display: block;
+}
+
+/* カテゴリー内 共通 */
+#contents ul {
+	list-style: none;
+}
+/*.theme_side_left #main {
+  max-width: 830px;
+  width: 100%;
+}*/
+#contents .colorTip {
+	display: table-cell;
+	vertical-align: middle;
+}
+#contents .colorTip > i {
+	display: block;
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+#contents .selectList {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border-radius: 0;
+	border: 1px solid #c1c1c1;
+	background: #fff url('../images/btn_select_arrow.png') no-repeat 100% 0;
+	height: 25px;
+	padding-left: 10px;
+	padding-right: 35px;
+	cursor: pointer;
+}
+#contents .selectList::-ms-expand {
+	display: none;
+}
+#contents .icnDescFixView {
+	position: fixed;
+	right: -58px;
+	top: 230px;
+	z-index: 100;
+	display: table;
+	background: #fff;
+	padding: 8px;
+	border: 1px solid #333;
+	border-right: 0;
+	border-radius: 5px 0 0 5px;
+	-webkit-box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.35);
+	box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.35);
+	cursor: pointer;
+	-webkit-transition: all 0.3s;
+	transition: all 0.3s;
+}
+#contents .icnDescFixView.open {
+	right: 0;
+}
+#contents .icnDescFixView .icnDescFixViewLeft {
+	display: table-cell;
+	padding-right: 8px;
+}
+#contents .icnDescFixView ul.icnDescList {
+	display: table-cell;
+	vertical-align: top;
+}
+#contents .icnDescFixView ul.icnDescList li {
+	font-size: 15px;
+	color: #333;
+}
+#contents .icnDescFixView ul.icnDescList li:not(:last-child) {
+	margin-bottom: 5px;
+}
+#contents .icnDescFixView ul.icnDescList li > img {
+	margin-right: 3px;
+	width: 28px;
+	height: auto;
+}
+#contents {
+	display: block;
+	/* padding-top: 132px; */
+	background-color: #fff;
+	/*border-bottom: 1px solid #333;*/
+	/*min-width: 1280px;*/
+}
+#contents.theme_main_only {
+	padding-top: 66px;
+}
+#contents #contentsMainWrap {
+	width: 1080px;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: hidden;
+}
+
+/* 検索絞り込みメニュー（メガメニュー部分） */
+#contents #megaRefineSearchMenu {
+	position: relative;
+	margin-bottom: 100px;
+	z-index: 2;
+	width: 100%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background: #fafafa;
+	-webkit-box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.15);
+	-webkit-transition: all 0.3s;
+	transition: all 0.3s;
+}
+#contents #megaRefineSearchMenu.open {
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchTit {
+	font-size: 26px;
+	text-align: center;
+}
+#contents #megaRefineSearchMenu.open .megaRefineSearchTit {
+	margin-bottom: 20px;
+}
+#contents #megaRefineSearchMenu ul.megaSearchTagList li {
+	display: inline-block;
+	border-radius: 4px;
+	background: #e2e2e2;
+	padding-left: 5px;
+	font-size: 12px;
+	line-height: 20px;
+	height: 20px;
+	margin-right: 8px;
+	margin-bottom: 5px;
+}
+#contents #megaRefineSearchMenu ul.megaSearchTagList li .megaSearchTagout {
+	font-size: 10px;
+	display: inline-block;
+	vertical-align: top;
+	padding-right: 4px;
+	padding-left: 4px;
+	cursor: pointer;
+}
+#contents #megaRefineSearchMenu .searchToggleBtn {
+	position: absolute;
+	z-index: 1;
+	bottom: -38px;
+	left: 50%;
+	margin-left: -85px;
+	width: 170px;
+	height: 38px;
+	font-size: 18px;
+	background: #fafafa url('../images/icn_search_open.png') no-repeat 145px 15px;
+	-webkit-box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.15);
+	border-radius: 0 0 3px 3px;
+	text-align: center;
+	cursor: pointer;
+	padding-top: 5px;
+}
+#contents #megaRefineSearchMenu.open .searchToggleBtn {
+	background: #fafafa url('../images/icn_search_close.png') no-repeat 145px 12px;
+}
+#contents #megaRefineSearchMenu .searchToggleBtn::before {
+	width: 170px;
+	content: '';
+	display: block;
+	height: 7px;
+	position: absolute;
+	z-index: 10;
+	top: -7px;
+	background: #fafafa;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap {
+	width: 100%;
+	max-width: 1080px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .megaSearchForm {
+	padding-top: 20px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .megaSearchTable {
+	width: 100%;
+	margin-bottom: 10px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .megaSearchTable td {
+	width: 250px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .megaSearchTable td:not(:last-child) {
+	padding-right: 35px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .megaSearchTable td {
+	padding-bottom: 30px;
+	vertical-align: top;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .megaSearchTableTit {
+	border-bottom: 1px solid #000;
+	text-align: left;
+	margin-bottom: 15px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	font-size: 16px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .megaSearchTable td > label {
+	float: left;
+	width: calc(50% - 20px);
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap {
+	overflow: hidden;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap {
+	float: left;
+	display: table;
+	font-size: 18px;
+	padding-top: 15px;
+	line-height: 1;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap > div {
+	display: table-cell;
+	vertical-align: bottom;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap>div:first-of-type {
+	padding-right: 30px;
+	padding-bottom: 1px;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap .itemResultNum {
+	font-size: 25px;
+	color: #b21d33;
+	margin-right: 3px;
+	float: left;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap .itemResultNum::after {
+	content: '/';
+	display: inline-block;
+	color: #333;
+	font-size: 18px;
+	padding-left: 3px;
+	padding-bottom: 1px;
+	vertical-align: bottom;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap .itemTotalNum {
+	padding-bottom: 1px;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .resultBtnWrap {
+	float: right;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .resultBtnWrap .btnReset {
+	display: inline-block;
+	color: #333333;
+	background-color: #cbcbcb;
+	width: 170px;
+	height: 42px;
+	font-size: 14px;
+	line-height: 24px;
+	border-radius: 4px;
+	position: relative;
+	cursor: pointer;
+	border: 0;
+	margin-right: 15px;
+	outline: 0;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .resultBtnWrap .btnReset::after {
+	content: url('../images/icn_reset.png');
+	width: 11px;
+	vertical-align: middle;
+	position: absolute;
+	right: 11px;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .resultBtnWrap .btnSubmit {
+	display: inline-block;
+	color: #fff;
+	background-color: #b21d33;
+	width: 170px;
+	height: 42px;
+	font-size: 14px;
+	line-height: 24px;
+	border-radius: 4px;
+	position: relative;
+	cursor: pointer;
+	border: 0;
+	outline: 0;
+}
+#contents #megaRefineSearchMenu .megaSearchBottomWrap .resultBtnWrap .btnSubmit::after {
+	content: url('../images/icn_arrow_right.png');
+	width: 4px;
+	vertical-align: middle;
+	position: absolute;
+	right: 14px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck {
+	display: block;
+	position: relative;
+	padding-left: 20px;
+	cursor: pointer;
+	font-size: 14px;
+	text-align: left;
+	margin-left: 15px;
+	margin-bottom: 8px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck .megaSearchNumView {
+	font-size: 12px;
+	color: #a5a5a5;
+	margin-left: 5px;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck .indicator {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	height: 15px;
+	width: 15px;
+	background: #fff;
+	border: 1px solid #999;
+	background-size: cover;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input:checked~.indicator {
+	background: #bbb;
+	border: 1px solid #828282;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input:checked~.indicator::after {
+	display: block;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck .indicator::after {
+	left: 4px;
+	top: 0;
+	width: 6px;
+	height: 10px;
+	border: solid #333;
+	border-width: 0 2px 2px 0;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+	content: '';
+	position: absolute;
+	display: none;
+}
+#contents #megaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input[data-label="ブラック"]~.indicator::after {
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+}
+
+/*------------------------------------------------
+
+		202101 変更 サイドバー絞り込み
+
+------------------------------------------------*/
+#contents #side_left {
+	float: left;
+	font-size: 1.4rem;
+	width: 100%;
+	padding-right: 0 !important;
+}
+#contents #side_left .md_side_bnr {
+	margin: 20px auto;
+}
+#contents #side_left .md_side_bnr:first-child {
+	margin-top: 0;
+}
+#contents #side_left .md_side_bnr .btn_nouki {
+	background: #eee;
+	margin: 0 auto;
+	padding-bottom: 20px;
+	text-align: center;
+}
+#contents #side_left .md_side_bnr .btn_nouki a {
+	background: #b21c33;
+	box-shadow: 0 1.5px 0 0 rgba(119, 25, 39, 1);
+	border-radius: 8px;
+	color: #fff;
+	display: inline-block;
+	font-size: 12px;
+	padding: 10px 30px 12px 20px;
+	transition: 0.3s all;
+	position: relative;
+}
+#contents #side_left .md_side_bnr .btn_nouki a::after {
+	border-color: transparent transparent transparent #d3b644;
+	border-style: solid;
+	border-width: 4px 0 4px 6px;
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	margin-top: -4px;
+	position: absolute;
+	top: 50%;
+	right: 10px;
+}
+#contents #side_left .md_side_bnr .btn_nouki a:hover {
+	opacity: 0.6;
+}
+#contents #side_left .md_side_search_form {
+	margin: 30px auto 20px;
+}
+#contents #side_left .md_side_search_form dl dt {
+	font-size: 1.2rem;
+}
+#contents #side_left .md_side_search_form dl dd {
+	margin-top: 5px;
+	position: relative;
+}
+#contents #side_left .md_side_search_form dl dd input {
+	background: #f3f3f3;
+	border-radius: 10px;
+	width: 100%;
+	padding: 8px 5%;
+}
+#contents #side_left .md_side_search_form dl dd button {
+	background: transparent;
+	width: 20px;
+	margin-top: -10px;
+	position: absolute;
+	top: 50%;
+	right: 8px;
+}
+#contents #side_left .md_side_ttl {
+	font-weight: 500;
+	margin-bottom: 10px;
+	padding-left: 18px;
+	position: relative;
+	text-align: left;
+}
+#contents #side_left .md_side_search_form .md_side_ttl {
+	font-size: 1.6rem;
+}
+#contents #side_left .md_side_search_list .md_side_ttl {
+	display: block;
+	font-size: 1.6rem;
+	margin-top: -10px;
+	margin-bottom: 23px;
+}
+#contents #side_left .md_side_ttl::before {
+	border-style: solid;
+	/* border-width: 11px 5px 0 5px; */
+	border-width: 8px 8px 0 8px;
+	content: '';
+	display: block;
+	width: 0;
+	height: 0;
+	margin-top: -5px;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: rotate(270deg);
+}
+#contents #side_left .md_side_ttl.is_red::before {
+	border-color: #a91a2d transparent transparent transparent;
+}
+#contents #side_left .md_side_ttl.is_gray::before {
+	border-color: #838181 transparent transparent transparent;
+}
+#contents #side_left .md_side_search_list {
+	border-top: 1px solid #cbc8c8;
+	margin-top: 25px;
+	padding-top: 35px;
+}
+
+.md_side_search_list:last-child {
+	border-bottom: 1px solid #cbc8c8;
+}
+
+
+#contents #side_left .md_side_search_list .md_link_btn a {
+	background: #f3f3f3;
+	border: 1px solid #dcdada;
+	border-radius: 10px;
+	display: block;
+	margin-bottom: 10px;
+	padding: 6px 5%;
+	position: relative;
+}
+#contents #side_left .md_side_search_list .md_link_btn.is_red a {
+	background: #b21c33;
+	border: 1px solid #b21c33;
+	color: #fff;
+}
+#contents #side_left .md_side_search_list .md_side_ttl + .md_link_btn a {
+	margin-bottom: 16px;
+}
+#contents #side_left .md_side_search_list .md_link_btn a:hover {
+	border: 1px solid #b21c33;
+	color: #b21c33;
+}
+#contents #side_left .md_side_search_list .md_link_btn.is_red a:hover {
+	background: #fff;
+	color: #b21c33;
+}
+#contents #side_left .md_side_search_list .md_link_btn a::after {
+	border-style: solid;
+	border-width: 5px 0 5px 6px;
+	border-color: transparent transparent transparent #838181;
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	margin-top: -5px;
+	transition: all 0.5s cubic-bezier(0, 0, 0.25, 1) 0s;
+	position: absolute;
+	top: 50%;
+	right: 8px;
+}
+#contents #side_left .md_side_search_list .md_link_btn.is_red a::after {
+	border-color: transparent transparent transparent #fff;
+}
+#contents #side_left .md_side_search_list .md_link_btn a:hover::after {
+	border-color: transparent transparent transparent #b21c33;
+}
+#contents #side_left .md_side_search_list .md_link_btn.is_red a:hover::after {
+	border-color: transparent transparent transparent #b21c33;
+}
+#contents #side_left .md_hamburger_accordion.is_red {
+	margin-bottom: 10px;
+}
+#contents #side_left .md_hamburger_accordion dt {
+	background: #fff;
+	border: 1px solid #eae9e9;
+	cursor: pointer;
+	display: block;
+	padding: 6px 30px 6px 8px;
+	transition: all 0.5s cubic-bezier(0, 0, 0.25, 1) 0s;
+	position: relative;
+
+
+}
+#contents #side_left .md_hamburger_accordion dd + dt {
+	margin-top: 10px;
+}
+#contents #side_left .md_hamburger_accordion dt i {
+	/* background: #838181; */
+	display: block;
+	width: 24px;
+	height: 100%;
+	transition: all 0.5s cubic-bezier(0, 0, 0.25, 1) 0s;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
+}
+#contents #side_left .md_hamburger_accordion.is_red dt i {
+	background: #b21c33;
+}
+#contents #side_left .md_hamburger_accordion dt i::before {
+
+	border-color: #004F99 transparent transparent transparent;
+	border-style: solid;
+	/* border-width: 11px 5px 0 5px; */
+	border-width: 8px 8px 0 8px;
+	content: '';
+	display: block;
+	width: 0;
+	height: 0;
+	margin-top: -5px;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: rotate(0deg);
+}
+
+#contents #side_left .md_hamburger_accordion dt.is_open i::before {
+	transform: rotate(180deg);
+}
+
+/* 
+#contents #side_left .md_hamburger_accordion dt i::before,
+#contents #side_left .md_hamburger_accordion dt i::after {
+	background: #fff;
+	border-radius: 2px;
+	content: "";
+	display: block;
+	margin: 0 auto;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+}
+#contents #side_left .md_hamburger_accordion dt i::before {
+	width: 2px;
+	height: 12px;
+	margin-top: -6px;
+}
+#contents #side_left .md_hamburger_accordion dt i::after {
+	width: 12px;
+	height: 2px;
+	margin-top: -1px;
+} */
+/* #contents #side_left .md_hamburger_accordion dt.is_open i::before {
+	opacity: 0;
+} */
+#contents #side_left .md_hamburger_accordion dt:hover {
+	border: 1px solid #838181;
+}
+#contents #side_left .md_hamburger_accordion.is_red dt:hover {
+	border: 1px solid #b21c33;
+}
+#contents #side_left .md_hamburger_accordion dt + dd {
+	background: #fff;
+	border: 1px solid #eae9e9;
+	border-top: none;
+	display: none;
+	font-weight: 200;
+	padding: 12px 12px 4px;
+}
+#contents #side_left .md_hamburger_accordion dt + dd li {
+	margin-bottom: 8px;
+}
+#contents #side_left .md_hamburger_accordion dt + dd li a:hover {
+	color: #b21c33;
+}
+
+
+/* サイドバー（絞り込み部分） */
+#contents #side_left ul.searchSidePickup li {
+	margin-bottom: 22px;
+	-webkit-transition: all 0.3s;
+	transition: all 0.3s;
+	border: 1px solid #ccc;
+	background: #fff;
+}
+
+#contents #side_left ul.searchSidePickup li .isearchSidePickupImg {
+	display: block;
+	width: 200px;
+	height: 210px;
+	border-bottom: 5px;
+	text-decoration: none;
+}
+
+#contents #side_left ul.searchSidePickup li .isearchSidePickupImg img {
+	width: 100%;
+	height: auto;
+}
+
+#contents #side_left ul.searchSidePickup li .searchSidePickupTitE {
+	display: block;
+	color: #000;
+	text-align: center;
+	padding: 10px 0 0;
+	/* border-bottom: 1px solid #ccc; */
+	text-decoration: none;
+	font-size: 20px;
+	letter-spacing: -1px;
+}
+
+#contents #side_left ul.searchSidePickup li .searchSidePickupTitJ {
+	display: block;
+	color: #555;
+	text-align: center;
+	padding: 0 0 15px;
+	text-decoration: none;
+	font-size: 13px;
+}
+
+#contents #side_left ul.searchSidePickup li:hover {
+	opacity: .5;
+	zoom: 1;
+}
+#contents #side_left .searchSidTit {
+	width: 200px;
+	height: 46px;
+	font-size: 20px;
+	line-height: 46px;
+	text-align: center;
+	color: #fff;
+	background-color: #333;
+	margin-bottom: 17px;
+}
+#contents #side_left .searchSideMenu {
+	width: 200px;
+	font-size: 14px;
+	line-height: 24px;
+	color: #333;
+	position: relative;
+	margin-bottom: 30px;
+}
+#contents #side_left .searchSideMenuTit {
+	width: 100%;
+	height: 52px;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 20px;
+	border-bottom: 1px solid #666;
+	padding: 14px 2px;
+	cursor: pointer;
+}
+#contents #side_left .searchSideMenuTit::after {
+	content: "+";
+	position: absolute;
+	right: 2px;
+}
+#contents #side_left .open::after {
+	content: "−";
+	position: absolute;
+	right: 2px;
+}
+#contents #side_left ul.searchSideMenuList {
+	width: 100%;
+}
+#contents #side_left ul.searchSideMenuList li {
+	width: 100%;
+	padding: 10px 2px;
+	border-bottom: 1px solid #f0f0f0;
+}
+#contents #side_left ul.searchSideMenuList li:last-child {
+	margin-bottom: 18px;
+}
+#contents #side_left ul.searchSideMenuList li > label {
+	display: table;
+	cursor: pointer;
+}
+#contents #side_left ul.searchSideMenuList li > label input {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+#contents #side_left ul.searchSideMenuList li > label .indicator {
+	display: inline-block;
+	vertical-align: middle;
+	height: 16px;
+	width: 16px;
+	background: #fff;
+	border: 1px solid #828282;
+}
+#contents #side_left ul.searchSideMenuList li>label input:checked~.indicator {
+	background: #bbb;
+	border: 1px solid #828282;
+	position: relative;
+}
+#contents #side_left ul.searchSideMenuList li>label input:checked~.indicator::before {
+	content: '';
+	position: absolute;
+	left: 4px;
+	top: 1px;
+	width: 6px;
+	height: 10px;
+	border: solid #333;
+	border-width: 0 2px 2px 0;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+#contents #side_left ul.searchSideMenuList li>label input:checked~.indicator::after {
+	display: block;
+}
+#contents #side_left .sideMenuListTit {
+	width: 162px;
+	letter-spacing: -0.12em;
+	display: table-cell;
+}
+#contents #side_left .sideMenuListNum {
+	font-size: 12px;
+	color: #a5a5a5;
+	display: table-cell;
+	padding-right: 5px;
+	white-space: nowrap;
+}
+#contents #side_left .sideMenuListCheck {
+	display: table-cell;
+	vertical-align: middle;
+}
+#contents #side_left .searchResultWrap {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: end;
+	-ms-flex-align: end;
+	align-items: flex-end;
+	font-size: 14px;
+	line-height: 1;
+	margin-bottom: 10px;
+	width: 100%;
+}
+#contents #side_left .searchResultWrap>div:first-of-type {
+	padding-bottom: 2px;
+	margin-right: auto;
+}
+#contents #side_left .searchResultWrap .itemResultNum {
+	font-size: 25px;
+	color: #b21d33;
+	margin-right: 3px;
+	float: right;
+	text-align: right;
+}
+#contents #side_left .searchResultWrap .itemResultNum::after {
+	content: '/';
+	display: inline-block;
+	color: #333;
+	font-size: 18px;
+	padding-left: 3px;
+	padding-bottom: 3px;
+	vertical-align: bottom;
+}
+#contents #side_left .searchResultWrap .itemTotalNum {
+	padding-bottom: 2px;
+}
+#contents #side_left .searchBtn {
+	width: 200px;
+}
+#contents #side_left .searchBtn button:not(:last-child) {
+	margin-bottom: 15px;
+}
+#contents #side_left .btnReset {
+	color: #333333;
+	background-color: #cbcbcb;
+	width: 100%;
+	height: 42px;
+	font-size: 14px;
+	line-height: 24px;
+	border-radius: 4px;
+	position: relative;
+	cursor: pointer;
+	border: 0;
+	outline: 0;
+}
+#contents #side_left .btnReset::after {
+	content: url('../images/icn_reset.png');
+	width: 11px;
+	vertical-align: middle;
+	position: absolute;
+	right: 11px;
+}
+#contents #side_left .btnSubmit {
+	color: #fff;
+	background-color: #b21d33;
+	width: 100%;
+	height: 42px;
+	font-size: 14px;
+	line-height: 24px;
+	border-radius: 4px;
+	position: relative;
+	cursor: pointer;
+	border: 0;
+	outline: 0;
+}
+#contents #side_left .btnSubmit::after {
+	content: url('../images/icn_arrow_right.png');
+	width: 4px;
+	vertical-align: middle;
+	position: absolute;
+	right: 14px;
+}
+
+/* 商品一覧部分 */
+#contents #categoryItemList {
+	float: left;
+	width: calc(100% - 235px);
+	margin-left: 35px;
+}
+#contents #categoryItemList .suppItemDesc {
+	font-size: 14px;
+	line-height: 1.78;
+	margin-bottom: 40px;
+}
+#contents #categoryItemList .suppSiteDesc {
+	font-size: 14px;
+	line-height: 1.78;
+	margin-top: 40px;
+}
+#contents #categoryItemList .catItemListTitLabel {
+	position: relative;
+}
+#contents .spCatItemListLabel {
+	display: none;
+}
+#contents #categoryItemList .catItemListNum {
+	position: absolute;
+	display: table;
+	font-size: 30px;
+	font-weight: bold;
+	color: #b21d33;
+	line-height: 1;
+	bottom: 10px;
+}
+#contents #categoryItemList .catItemListNum > span {
+	display: table-cell;
+	vertical-align: bottom;
+	padding-left: 3px;
+	padding-bottom: 3px;
+	font-size: 16px;
+	font-weight: normal;
+	color: #797979;
+}
+#contents #categoryItemList .catItemListTit {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+	font-size: 26px;
+	text-align: center;
+	padding-left: 80px;
+	padding-right: 80px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #cccccc;
+	margin-bottom: 10px;
+}
+#contents #categoryItemList .catItemListViewOp {
+	overflow: hidden;
+	margin-bottom: 80px;
+}
+#contents #categoryItemList .catItemListViewOpLeft {
+	float: left;
+}
+#contents #categoryItemList .catItemListViewOpLeft th {
+	color: #333;
+	font-size: 13px;
+	font-weight: normal;
+	padding-right: 10px;
+	vertical-align: middle;
+}
+#contents #categoryItemList .catItemListViewOpLeft .listImgChange {
+	overflow: hidden;
+}
+#contents #categoryItemList .catItemListViewOpLeft .listImgChange > div {
+	float: left;
+	width: 64px;
+	font-size: 14px;
+	color: #333;
+	text-align: center;
+	background: #fff;
+	border: 1px solid #c1c1c1;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	cursor: pointer;
+}
+#contents #categoryItemList .catItemListViewOpLeft .listImgChange > div.active {
+	color: #fff;
+	background: #b91131;
+	border: 1px solid #b91131;
+}
+#contents #categoryItemList .catItemListViewOpRight {
+	float: right;
+}
+#contents #categoryItemList .catItemListSort {
+	float: left;
+	margin-right: 20px;
+}
+#contents #categoryItemList .catItemListSort > div,
+#contents #categoryItemList .catItemListNumChange > div {
+	float: left;
+	height: 25px;
+	line-height: 25px;
+	font-size: 14px;
+}
+#contents #categoryItemList .catItemListNumChange {
+	float: left;
+}
+#contents #categoryItemList .catItemListSort>div:first-of-type,
+#contents #categoryItemList .catItemListNumChange>div:first-of-type {
+	float: left;
+	padding-right: 10px;
+}
+#contents #categoryItemList .listPagenation.topPagenation {
+	margin-bottom: 30px;
+}
+
+
+#contents #categoryItemList .listPagenation.bottomPagenation {
+	margin-top: 30px;
+}
+#contents #categoryItemList .listPagenation {
+	text-align: center;
+}
+#contents #categoryItemList .listPagenation span {
+	display: inline-block;
+	color: #aaa;
+	padding: 5px;
+	position: relative;
+}
+#contents #categoryItemList .listPagenation span:not(:last-of-type) {
+	margin-right: 5px;
+}
+#contents #categoryItemList .listPagenation span.active {
+	color: #000;
+}
+#contents #categoryItemList .listPagenation span.active::after {
+	content: '';
+	display: inline-block;
+	position: absolute;
+	bottom: 3px;
+	left: 50%;
+	margin-left: -5px;
+	border-bottom: 1px solid #b21d33;
+	width: 10px;
+	height: 1px;
+}
+#contents #categoryItemList .listPagenation span.prev {
+	font-size: 13px;
+}
+#contents #categoryItemList .listPagenation span.next {
+	font-size: 13px;
+}
+#contents #categoryItemList .listPagenation span > a {
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+	color: inherit;
+}
+
+/* TODO: 共通点テンプレート適用時に修正ください。 */
+#contents #categoryItemList ul.itemList {
+	overflow: hidden;
+}
+#contents #categoryItemList ul.itemList li {
+	float: left;
+	width: 253px;
+	height: 365px;
+	margin-bottom: 10px;
+}
+#contents #categoryItemList ul.itemList li:not(:nth-child(4n)) {
+	margin-right: 10px;
+}
+/* /TODO */
+
+#contents ul.spFixBtn {
+	display: none;
+}
+#contents #categoryItemList .spCatItemListTitLabel {
+	display: none;
+}
+
+@media screen and(max-width: 960px) {
+	#contents #side_left {
+		display: none;
+	}
+}
+@media screen and(max-width: 768px) {
+	#contents {
+		min-width: 100%;
+		width: 100%;
+		border-bottom: 0;
+		/*padding-top: 55px;*/
+		padding-top: 0;
+	}
+
+	#contents #megaRefineSearchMenu {
+		display: none;
+	}
+
+	#contents #categoryItemList .catItemListTitLabel {
+		display: none;
+	}
+
+	#contents #categoryItemList .catItemListViewOp {
+		display: none;
+	}
+
+	#contents #categoryItemList .listPagenation.topPagenation {
+		margin-bottom: 20px;
+	}
+
+	#contents #categoryItemList .listPagenation.bottomPagenation {
+		margin-top: 20px;
+	}
+
+	#contents .icnDescFixView {
+		display: none;
+	}
+
+	#contents #contentsMainWrap {
+		width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		overflow: hidden;
+	}
+
+	#contents #categoryItemList .suppItemDesc {
+		display: none;
+	}
+
+	#contents #categoryItemList .suppSiteDesc {
+		padding-left: 20px;
+		padding-right: 20px;
+		margin-top: 20px;
+	}
+
+	#contents #categoryItemList .spCatItemListTitLabel {
+		display: block;
+		text-align: center;
+		padding-top: 25px;
+		padding-bottom: 25px;
+	}
+
+	#contents #categoryItemList .spCatItemListTitLabel .enTit {
+		font-size: 20px;
+		margin-bottom: 5px;
+	}
+
+	#contents #categoryItemList .spCatItemListTitLabel .jpTit {
+		font-size: 12px;
+	}
+
+	#contents #categoryItemList ul.itemList {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	#contents #categoryItemList ul.itemList li:not(:nth-child(4n)) {
+		margin-right: 0;
+	}
+
+	#contents #categoryItemList ul.itemList li:not(:nth-child(2n)) {
+		margin-right: 14px;
+	}
+
+	#contents .spCatItemListLabelWrap {
+		margin-bottom: 20px;
+	}
+
+	#contents .spCatItemListLabel {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		width: 100%;
+		background: #eee;
+		padding: 10px 20px;
+	}
+
+	#contents .spCatItemListNum {
+		margin-right: auto;
+		font-size: 28px;
+		font-weight: bold;
+		font-weight: 600;
+		color: #b21d33;
+		line-height: 1;
+	}
+
+	#contents .spCatItemListNum>span:nth-of-type(1) {
+		display: inline-block;
+		margin-right: 3px;
+	}
+
+	#contents .spCatItemListNum>span:nth-of-type(2) {
+		display: inline-block;
+		font-size: 16px;
+		color: #797979;
+	}
+
+	#contents .spListImgChange {
+		background: url('../images/icn_imgchange.png') no-repeat right 10px top 50%;
+		background-size: 20px auto;
+		padding-right: 40px;
+		font-size: 12px;
+		min-height: 25px;
+		padding-top: 3px;
+		margin-right: 15px;
+		border-right: 1px solid #ccc;
+		cursor: pointer;
+	}
+
+	#contents .spListImgChange.on {
+		background: url('../images/icn_imgchange_on.png') no-repeat right 10px top 50%;
+		background-size: 20px auto;
+		color: #b21d33;
+	}
+
+	#contents .spCatItemListSort {
+		background: url('../images/icn_sort.png') no-repeat right 0 top 50%;
+		background-size: 22px auto;
+		padding-right: 32px;
+		font-size: 12px;
+		min-height: 25px;
+		padding-top: 3px;
+		cursor: pointer;
+	}
+
+	#contents .spCatItemListSort.on {
+		background: url('../images/icn_sort_on.png') no-repeat right 0 top 50%;
+		background-size: 22px auto;
+		color: #b21d33;
+	}
+
+	#contents ul.spSortSelecter li {
+		padding: 15px 20px;
+		background-color: #fff;
+		border-bottom: 1px solid #ddd;
+		font-size: 13px;
+		cursor: pointer;
+	}
+
+	#contents ul.spSortSelecter li.on {
+		background: #fff url('../images/icn_check.png') no-repeat right 20px top 50%;
+		background-size: 15px auto;
+	}
+
+	#contents ul.spSortSelecter li a {
+		color: inherit;
+	}
+
+	/* TODO: 共通点テンプレート適用時に修正ください。 */
+	#contents #categoryItemList ul.itemList li {
+		float: left;
+		width: calc(50% - 7px);
+		height: 300px;
+		margin-bottom: 10px;
+	}
+
+	#contents #categoryItemList {
+		float: none;
+		width: 100%;
+		margin-left: 0;
+	}
+	/* /TODO */
+
+	#contents ul.spFixBtn {
+		display: block;
+		position: fixed;
+		bottom: 80px;
+		right: 10px;
+	}
+
+	#contents ul.spFixBtn .spFixBtnImg {
+		width: 53px;
+		height: auto;
+	}
+
+	#contents ul.spFixBtn li {
+		cursor: pointer;
+	}
+
+	#contents ul.spFixBtn li:not(:last-child) {
+		margin-bottom: 5px;
+	}
+	#contents.theme_main_only {
+		padding-top: 0;
+	}
+	/* モーダル 絞り込み検索 */
+	#spMegaRefineSearchMenu .megaRefineSearchTit {
+		position: fixed;
+		z-index: 1;
+		left: auto;
+		width: calc(100% - 40px);
+		height: 50px;
+		background: #eee;
+		padding-left: 20px;
+		padding-right: 40px;
+		font-size: 15px;
+		font-weight: bold;
+		font-weight: 600;
+		line-height: 50px;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchTit > span {
+		display: block;
+		width: 20px;
+		height: 20px;
+		content: '';
+		position: absolute;
+		right: 10px;
+		top: calc(50% - 10px);
+		background: url('../images/icn_modal_close.png') no-repeat right 0;
+		background-size: 20px auto;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap {
+		padding: 70px 20px 150px;
+	}
+
+	#spMegaRefineSearchMenu .megaSearchTableTit {
+		border-bottom: 1px solid #ccc;
+		font-size: 15px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		margin-bottom: 20px;
+	}
+
+	#spMegaRefineSearchMenu ul.megaRefineSearchMenuList li {
+		margin-bottom: 20px;
+		overflow: hidden;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck {
+		display: block;
+		position: relative;
+		padding-top: 2px;
+		padding-left: 20px;
+		cursor: pointer;
+		font-size: 13px;
+		text-align: left;
+		margin-bottom: 20px;
+		width: 50%;
+		float: left;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input {
+		position: absolute;
+		z-index: -1;
+		opacity: 0;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck .megaSearchNumView {
+		font-size: 12px;
+		color: #a5a5a5;
+		margin-left: 5px;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck .indicator {
+		position: absolute;
+		top: 2px;
+		left: 0;
+		height: 15px;
+		width: 15px;
+		background: #fff;
+		border: 1px solid #999;
+		background-size: cover;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input:checked~.indicator {
+		background: #fff;
+		border: 1px solid #828282;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input:checked~.indicator::after {
+		display: block;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck .indicator::after {
+		left: 4px;
+		top: 0;
+		width: 6px;
+		height: 10px;
+		border: solid #333;
+		border-width: 0 2px 2px 0;
+		-webkit-transform: rotate(45deg);
+		transform: rotate(45deg);
+		content: '';
+		position: absolute;
+		display: none;
+	}
+
+	#spMegaRefineSearchMenu .megaRefineSearchMenuWrap .cmnCheck input[data-label="ブラック"]~.indicator::after {
+		border: solid #fff;
+		border-width: 0 2px 2px 0;
+	}
+
+	#spMegaRefineSearchMenu .megaSearchBottomWrap {
+		position: fixed;
+		z-index: 1;
+		bottom: 20px;
+		left: auto;
+		width: calc(100% - 40px);
+		background: #fff;
+		border-top: 1px solid #ccc;
+		padding: 15px;
+	}
+
+	#spMegaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: end;
+		-ms-flex-align: end;
+		align-items: flex-end;
+		-webkit-box-pack: end;
+		-ms-flex-pack: end;
+		justify-content: flex-end;
+		font-size: 14px;
+		line-height: 1;
+		margin-bottom: 10px;
+		width: 100%;
+	}
+
+	#spMegaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap div:first-of-type {
+		padding-bottom: 2px;
+		font-size: 16px;
+		color: #797979;
+		padding-right: 10px;
+	}
+
+	#spMegaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap .itemResultNum {
+		font-size: 30px;
+		color: #b21d33;
+		margin-right: 3px;
+		float: right;
+		text-align: right;
+		font-weight: bold;
+		font-weight: 600;
+	}
+
+	#spMegaRefineSearchMenu .megaSearchBottomWrap .searchResultWrap .itemTotalNum {
+		padding-bottom: 2px;
+		font-size: 16px;
+		color: #797979;
+	}
+
+	#spMegaRefineSearchMenu .resultBtnWrap {
+		margin-top: 15px;
+		overflow: hidden;
+	}
+
+	#spMegaRefineSearchMenu .resultBtnWrap .btnReset {
+		float: left;
+		color: #fff;
+		background-color: #999;
+		width: 48%;
+		width: calc(50% - 5px);
+		height: 42px;
+		font-size: 14px;
+		line-height: 24px;
+		border-radius: 4px;
+		position: relative;
+		cursor: pointer;
+		border: 0;
+		outline: 0;
+		background: #999 url('../images/icn_reset_white.png') no-repeat right 10px top 50%;
+		background-size: 10px auto;
+	}
+
+	#spMegaRefineSearchMenu .resultBtnWrap .btnSubmit {
+		float: right;
+		color: #fff;
+		width: 48%;
+		width: calc(50% - 5px);
+		height: 42px;
+		font-size: 14px;
+		line-height: 24px;
+		border-radius: 4px;
+		position: relative;
+		cursor: pointer;
+		border: 0;
+		outline: 0;
+		background: #b21d33 url('../images/icn_arrow_right_2.png') no-repeat right 10px top 50%;
+		background-size: 5px auto;
+	}
+
+	#spMegaRefineSearchMenu .modalWrap .modalInner {
+		position: relative;
+		background: #fff;
+		overflow: scroll;
+		cursor: auto;
+		height: calc(100% - 40px);
+		height: calc(100vh - 40px);
+	}
+
+	/* モーダル アイコン説明 */
+
+	#spIcnDescFixView .icnDescTit {
+		position: fixed;
+		z-index: 1;
+		left: auto;
+		width: calc(100% - 40px);
+		height: 50px;
+		background: #eee;
+		padding-left: 20px;
+		padding-right: 40px;
+		font-size: 15px;
+		font-weight: bold;
+		font-weight: 600;
+		line-height: 50px;
+	}
+
+	#spIcnDescFixView .icnDescTit > span {
+		display: block;
+		width: 20px;
+		height: 20px;
+		content: '';
+		position: absolute;
+		right: 10px;
+		top: calc(50% - 10px);
+		background: url('../images/icn_modal_close.png') no-repeat right 0;
+		background-size: 20px auto;
+	}
+
+	#spIcnDescFixView .icnDescTitWrap {
+		padding: 80px 30px 30px;
+	}
+
+	#spIcnDescFixView ul.icnDescList {
+		overflow: hidden;
+	}
+
+	#spIcnDescFixView ul.icnDescList li {
+		width: 42px;
+		font-size: 13px;
+		text-align: center;
+		float: left;
+		margin-bottom: 25px;
+	}
+
+	#spIcnDescFixView ul.icnDescList li:not(:nth-child(4n)) {
+		margin-right: calc((100% -(42px * 4)) / 3);
+	}
+
+	#spIcnDescFixView ul.icnDescList li:nth-last-child(1),
+	#spIcnDescFixView ul.icnDescList li:nth-last-child(2),
+	#spIcnDescFixView ul.icnDescList li:nth-last-child(3),
+	#spIcnDescFixView ul.icnDescList li:nth-last-child(4) {
+		margin-bottom: 0;
+
+	}
+
+	#spIcnDescFixView ul.icnDescList li > img {
+		margin-bottom: 5px;
+		width: 42px;
+		height: auto;
+	}
+}
+
+
+/* SPモーダル */
+[data-lmodal-contents] {
+	display: none;
+}
+
+@media screen and(max-width: 768px) {
+	[data-lmodal-contents].lmodal-open {
+		position: relative;
+		z-index: 10000;
+		top: 0;
+		left: 0;
+		width: 100%;
+	}
+
+	.lmodal-overlay {
+		background: rgba(0, 0, 0, 0.5);
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		position: fixed;
+		overflow: auto;
+		z-index: 10000;
+		-webkit-overflow-scrolling: touch;
+		cursor: pointer;
+	}
+
+	.lmodal-overlay > * {
+		z-index: 10001;
+	}
+
+	.lmodal-enabled {
+		position: fixed;
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+		height: 100vh;
+	}
+
+	.lmodal-close {
+		cursor: pointer;
+	}
+
+	.modalWrap {
+		width: calc(100% - 40px);
+		max-height: calc(100% - 40px);
+		overflow: hidden;
+	}
+
+	.modalWrap .modalInner {
+		position: relative;
+		background: #fff;
+		overflow: scroll;
+		cursor: auto;
+	}
+
+	.modalWrap .modalClose {
+		position: absolute;
+	}
+
+	.modalWrap .modalWrapCnt {
+		overflow: auto;
+		height: 100%;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.modalWrap .modalCmnCnt {
+		color: #505050;
+	}
+
+	.modalBottomMargin {
+		height: 50px;
+	}
+
+}
+</style>
+
+	<div id="contents"> <div
+		id="side_left" class="side">
+
+
+		{# <div class="md_side_search_list">
+													<a href="__TBD__" class="md_side_ttl is_gray">ドレープカーテン</a>
+										
+													<dl class="md_hamburger_accordion">
+										
+														<dt class="md_hamburger_accordion_title">機能で探す<i></i>
+														</dt>
+														<dd class="md_hamburger_accordion_content">
+															<ul>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_shading_grade1">遮光</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_fire_proof">防炎</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_washable">洗濯可</a></li>
+															</ul>
+														</dd>
+														<dt class="md_hamburger_accordion_title">カラーで探す<i></i>
+														</dt>
+														<dd class="md_hamburger_accordion_content">
+															<ul>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_red_orange">レッド・オレンジ</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_yellow_gold">イエロー・ゴールド</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_green_olive">グリーン・オリーブ</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_blue_nevy">ブルー・ネイビー</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_purple_mauve">パープル・モーブ</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_pink">ピンク</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_ivory_beige">アイボリー・ベージュ</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_brown">ブラウン</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_multi">マルチ</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_silver_gray">シルバー・グレー</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_white">ホワイト</a></li>
+																<li><a href="https://www.justcurtain.com/category/drape/drape_black">ブラック</a></li>
+															</ul>
+														</dd>
+										
+										
+													</dl>
+												</div>
+												<div class="md_side_search_list">
+													<a href="__TBD__" class="md_side_ttl is_gray">レースカーテン</a>
+										
+													<dl class="md_hamburger_accordion">
+															<dt class="md_hamburger_accordion_title"> 機能で探す<i></i>
+														</dt>
+														<dd>
+															<ul>
+																<li><a href="https://www.justcurtain.com/category/lacecurtain/lace_privacy">プライバシー</a></li>
+																<li><a href="https://www.justcurtain.com/category/lacecurtain/lace_hot_cool">暑さ・寒さ対策</a></li>
+																<li><a href="https://www.justcurtain.com/category/lacecurtain/lace_pollen_mosquito">花粉・蚊対策</a></li>
+																<li><a href="https://www.justcurtain.com/category/lacecurtain/lace_clean">クリーン</a></li>
+															</ul>
+														</dd>
+													</dl>
+												</div>
+												<div class="md_side_search_list">
+										
+													<a href="__TBD__" class="md_side_ttl is_gray">シェード</a>
+										
+												</div> #}
+
+
+		<div class="md_side_search_list">
+			<a href="{{ url('product_list') }}?category_id=1" class="md_side_ttl is_gray">ドレープカーテン</a>
+
+			<dl class="md_hamburger_accordion">
+				<dt class="md_hamburger_accordion_title">
+					機能で探す<i></i>
+				</dt>
+				<dd>
+
+
+					{# dtb_category parent_category_id 親カテゴリのIDを .find(32)の中に指定 #}
+					{%  set Category = repository('Eccube\\Entity\\Category').find(32) %}
+
+					{# 子カテゴリの情報を取得 #}
+					{% set cate_childs = Category.getDescendants %}
+
+
+					{% if cate_childs %}
+						<ul class="category__list">
+							{% for cate in cate_childs %}
+								<li>
+									<a href="/products/list?category_id={{ cate.id }}">{{ cate.name }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+
+
+				</dd>
+
+				<dt class="md_hamburger_accordion_title">
+					カラーで探す<i></i>
+				</dt>
+				<dd>
+
+
+					{# dtb_category parent_category_id 親カテゴリのIDを .find(19)の中に指定#}
+					{%  set Category = repository('Eccube\\Entity\\Category').find(19) %}
+
+					{# 子カテゴリの情報を取得 #}
+					{% set cate_childs = Category.getDescendants %}
+
+
+					{% if cate_childs %}
+						<ul class="category__list">
+							{% for cate in cate_childs %}
+								<li>
+									<a href="/products/list?category_id={{ cate.id }}">{{ cate.name }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+
+
+				</dd>
+			</dl>
+		</div>
+
+
+		<div class="md_side_search_list">
+			<a href="{{ url('product_list') }}?category_id=5" class="md_side_ttl is_gray">レースカーテン</a>
+
+			<dl class="md_hamburger_accordion">
+				<dt class="md_hamburger_accordion_title">
+					機能で探す<i></i>
+				</dt>
+				<dd>
+					{# dtb_category parent_category_id 親カテゴリのIDを .find(36)の中に指定#}
+					{%  set Category = repository('Eccube\\Entity\\Category').find(36) %}
+
+					{# 子カテゴリの情報を取得 #}
+					{% set cate_childs = Category.getDescendants %}
+
+
+					{% if cate_childs %}
+						<ul class="category__list">
+							{% for cate in cate_childs %}
+								<li>
+									<a href="/products/list?category_id={{ cate.id }}">{{ cate.name }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+
+				</dd>
+			</dl>
+		</div>
+
+
+		<div class="md_side_search_list">
+
+			<a href="{{ url('product_list') }}?category_id=7" class="md_side_ttl is_gray">シェード</a>
+
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$(function () {
+
+$('.md_hamburger_accordion_content').css("display", "none");
+$(".md_hamburger_accordion_title").click(function () {
+
+
+$(this).toggleClass("is_open");
+
+$(this).next().slideToggle();
+});
+});
+</script>

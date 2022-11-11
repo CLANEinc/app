@@ -1,0 +1,8 @@
+{% extends 'default_frame.twig' %}
+
+{% block main %}
+{% for Product in Products %}
+<p>{{Product.getName()}}</p>
+{% endfor %}
+<p>新規のページを再び作成します。qux</p>
+{% endblock %}

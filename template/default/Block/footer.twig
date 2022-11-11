@@ -1,0 +1,114 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+<footer id="footer" class="footer">
+	<div class="sos_footer">
+		<div class="foot_btn_area">
+			<div class="inner">
+				<div class="box">
+					<div class="foot_btn">
+						<a href="/guide">ご利用ガイド</a>
+					</div>
+				</div>
+				<div class="box">
+					<div class="foot_btn">
+						<a href="/sos_qa">Q＆A</a>
+					</div>
+				</div>
+				<div class="box">
+					<div class="foot_btn">
+						<a href="https://www.justcurtain.com/contact">お問い合わせ</a>
+					</div>
+				</div>
+			</div><!--.inner--></div><!--.foot_btn_area--><div class="under_area">
+			<dl>
+				<dt>出荷日</dt>
+				<dd>
+					<p>カーテンは最短ご注文の<em>3日後</em>に出荷</p>
+					<p class="small">※正午までの注文、プリーツなしの場合</p>
+				</dd>
+			</dl>
+			<dl>
+				<dt>送料</dt>
+				<dd>
+					<p>送料一律<em>825円</em>
+						<span>(税込)</span>
+					</p>
+					<p class="small">※北海道・沖縄・離島は1,650円(税込)</p>
+					<p>1配送につき<em>22,000円(税込)以上で送料無料</em>
+					</p>
+				</dd>
+			</dl>
+			<dl>
+				<dt>お支払方法</dt>
+				<dd>
+					<p>現金(代金引換)（銀行振込)</p>
+					<p>クレジットカード</p>
+					<p>後払い</p>
+				</dd>
+			</dl>
+			<p class="under_copy">ヤマダ電機店舗でご購入の場合は異なります。
+				<br>ご利用店舗までお問い合わせください。</p>
+		</div><!--.under_area--><div class="under_area2">
+			<small>cJUST CURTAIN SMART ORDER</small>
+			<a href="/yamada_sp_contact" class="md_online_advice" target="_blank">
+				<div class="md_online_advice_inner">
+					<p>
+						<strong>スマホで気軽にオンライン相談</strong>ビデオ通話でカーテンアドバイザーに相談が出来ます</p>
+					<p class="is_images"><img src="/user_data/sos_templates/img/img_online_advice.png" alt=""></p>
+				</div>
+			</a>
+		</div><!--.under_area2--></div>
+
+
+	<div class="ec-footerRole">
+
+		<div class="ec-footerRole__inner">
+			<ul class="ec-footerNavi">
+				<li class="ec-footerNavi__link">
+					<a href="{{ url('help_about') }}">{{ '当サイトについて'|trans }}</a>
+				</li>
+				<li class="ec-footerNavi__link">
+					<a href="/help/privacy">{{ 'プライバシーポリシー'|trans }}</a>
+				</li>
+				<li class="ec-footerNavi__link">
+					<a href="/help/tradelaw">{{ '特定商取引法に基づく表記'|trans }}</a>
+				</li>
+				<li class="ec-footerNavi__link">
+					<a href="{{ url('contact') }}">{{ 'お問い合わせ'|trans }}</a>
+				</li>
+			</ul>
+			<div class="ec-footerTitle">
+				<div class="ec-footerTitle__logo">
+					<a href="{{ url('homepage') }}">{{ BaseInfo.shop_name }}</a>
+				</div>
+				<div class="ec-footerTitle__copyright">copyright (c)
+					{{ BaseInfo.shop_name }}
+					all rights reserved.</div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script>
+	const ham = document.querySelector('.js__Header__hamburger');
+const hamLine = document.querySelector('.Header__hamburgerLine');
+const gNav = document.getElementById('g-nav');
+const hamWrapper = document.querySelector(".header__hamburgerWrapper");
+
+ham.addEventListener("click", () => {
+hamLine.classList.toggle("active");
+gNav.classList.toggle('panelactive');
+hamWrapper.classList.toggle("active");
+
+
+});
+</script>

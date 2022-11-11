@@ -1,0 +1,1560 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'product_page' %}
+
+{% block stylesheet %}
+	{% if BaseInfo.option_colorbox == 1 %}
+		<link rel="stylesheet" href="{{ asset('assets/js/jquery.colorbox/1/colorbox.css') }}">
+	{% elseif BaseInfo.option_colorbox == 2 %}
+		<link rel="stylesheet" href="{{ asset('assets/js/jquery.colorbox/2/colorbox.css') }}">
+	{% elseif BaseInfo.option_colorbox == 3 %}
+		<link rel="stylesheet" href="{{ asset('assets/js/jquery.colorbox/3/colorbox.css') }}">
+	{% elseif BaseInfo.option_colorbox == 4 %}
+		<link rel="stylesheet" href="{{ asset('assets/js/jquery.colorbox/4/colorbox.css') }}">
+	{% elseif BaseInfo.option_colorbox == 5 %}
+		<link rel="stylesheet" href="{{ asset('assets/js/jquery.colorbox/5/colorbox.css') }}">
+		{% else %}
+	{% endif %}
+	<style>
+
+		.md_tab_area_inner {
+			display: none;
+		}
+
+
+		.slick-slider {
+			margin-bottom: 30px;
+		}
+
+		.slick-dots {
+			position: absolute;
+			bottom: -45px;
+			display: block;
+			width: 100%;
+			padding: 0;
+			list-style: none;
+			text-align: center;
+			margin-top: 0.4rem;
+		}
+
+
+		.slick-dots li {
+			position: relative;
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			margin: 0 5px;
+			padding: 0;
+
+			cursor: pointer;
+		}
+
+		.slick-dots li button {
+			font-size: 0;
+			line-height: 0;
+			display: block;
+			width: 20px;
+			height: 20px;
+			padding: 5px;
+			cursor: pointer;
+			color: transparent;
+			border: 0;
+			outline: none;
+			background: transparent;
+		}
+
+		.slick-dots li button:hover,
+		.slick-dots li button:focus {
+			outline: none;
+		}
+
+		.slick-dots li button:hover:before,
+		.slick-dots li button:focus:before {
+			opacity: 1;
+		}
+
+		.slick-dots li button:before {
+			content: " ";
+			line-height: 20px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 12px;
+			height: 12px;
+			text-align: center;
+			background-color: #e4edf5;
+			border: 1px solid #004f99;
+			border-radius: 50%;
+
+		}
+
+		.slick-dots li.slick-active button:before {
+			background-color: #004f99;
+		}
+
+		.slick-dots li button.thumbnail img {
+			width: 0;
+			height: 0;
+		}
+		.ec-layoutRole__contents {
+			max-width: none !important;
+			padding-top: 2.4rem;
+		}
+		.ec-productRole {
+			max-width: 1080px !important;
+			margin: 0 auto !important;
+		}
+
+
+		.ec-sliderItemRole {
+			padding-right: 0;
+			padding-left: 0;
+			margin-bottom: 0 !important;
+		}
+		.ec-productRole__profile {
+			margin-left: 0 !important;
+		}
+		.main_visual.slick-initialized.slick-slider {
+			margin-bottom: 1.2rem !important;
+		}
+
+
+		.slick-track {
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			margin-bottom: 0;
+		}
+
+		.ec-sliderItemRole .slideThumb {
+			width: 20.701754386% !important;
+			margin-bottom: 1.5rem !important;
+
+		}
+
+		.item_nav {
+			justify-content: space-between !important;
+		}
+		.ec-grid2__cell:first-child {
+			margin-right: 3.055555555%;
+
+		}
+
+		.ec-headingTitle {
+			margin-bottom: 1.4rem;
+			font-size: 3.2rem;
+			letter-spacing: 0;
+			font-weight: 700;
+			line-height: 1.4375;
+			padding-bottom: 3.1rem;
+			border-bottom: 1px dotted #c9c9c9;
+		}
+		.ec-price {
+			display: flex;
+		}
+
+		.ec-price__price {
+			font-size: 2.9rem;
+			font-weight: 700;
+			letter-spacing: 0;
+			line-height: 1.44827586207;
+			color: #d83e3e;
+			padding-right: 0 !important;
+			padding-left: 0 !important;
+			margin-right: 2.2rem;
+		}
+		.ec-price__tax {
+			font-size: 1.6rem;
+			letter-spacing: 0;
+			line-height: 1.5;
+			color: #d83e3e;
+			align-self: flex-end;
+		}
+		.detailDescription__content {
+			display: none;
+		}
+		.order-ui {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+			background: white !important;
+		}
+
+		.option-form-title {
+			line-height: 4.5rem;
+		}
+
+		.option-form-title::before {
+			padding: 0 1rem;
+			display: inline-block;
+			margin-right: 1.2rem;
+		}
+
+		.ec-radio > div {
+			width: 31.9% !important;
+		}
+
+		.option-form:nth-of-type(2) > .option-form-body > .ec-grid2 > .ec-grid2__cell:first-of-type {
+			width: 60%;
+		}
+
+		.option-form:nth-of-type(2) > .option-form-body > .ec-grid2 > .ec-grid2__cell:last-of-type {
+			width: 35%;
+		}
+
+		.option-form:nth-of-type(2) > .option-form-body > .ec-grid2 > .ec-grid2__cell:last-of-type > div > div:first-of-type {
+			font-size: 110% !important;
+		}
+
+		.option-form:nth-of-type(4) > .option-form-body > .ec-radio > div {
+			width: 48.5% !important;
+		}
+
+
+		.ec-radio > div > label {
+			display: flex;
+			align-items: center;
+			padding: 8px;
+			border: 2px solid #c7d4e4;
+			border-radius: 10px;
+		}
+
+		.ec-radio > div > label > img {
+			width: 70px;
+			margin-right: 20px;
+		}
+
+		input:checked + label {
+			border: 2px solid #004f99;
+		}
+
+		input[type = 'radio'] {
+			display: none;
+		}
+
+		.show-description > div {
+			margin-left: auto;
+			margin-right: 2rem;
+		}
+
+		.ec-icon {
+			position: relative;
+		}
+
+		.ec-icon > img {
+			position: relative;
+			z-index: 1;
+		}
+
+		.ec-icon::before {
+			position: absolute;
+			content: "";
+			top: 63%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			margin: auto;
+			width: 22px;
+			height: 22px;
+			background: #004f99;
+			border-radius: 100px;
+		}
+
+		.ec-numberInput > div > label {
+			padding-right: 12px;
+			width: 50px;
+		}
+
+		.ec-numberInput:first-of-type {
+			margin-top: 2.4rem;
+		}
+
+		.ec-numberInput:last-of-type {
+			margin-top: 2.4rem;
+		}
+
+		.ec-numberInput input {
+			padding: 1.3rem 0 1.3rem 1.3rem !important;
+			width: 100px !important;
+			text-align: left !important;
+			background: #e2e9f1 !important;
+			border: none !important;
+		}
+
+		.ec-grid2__cell:last-of-type > div {
+			padding: 2rem;
+		}
+
+
+		label[for = "order-ui-tassel-0"] {
+			position: relative;
+			border: none !important;
+			width: 400px;
+			font-size: 18px;
+			margin-right: 12px;
+			padding-left: 32px;
+		}
+
+		label[for = "order-ui-tassel-0"]::before {
+			background: #e3e9f0;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		input:checked + label[for = "order-ui-tassel-0"]::after {
+			background: #004f99 !important;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 14px;
+			height: 14px;
+			transition: 0.3s all;
+			position: absolute;
+			top: 6px;
+			left: 6px;
+		}
+
+
+		label[for = "order-ui-tassel-1"] {
+			position: relative;
+			border: none !important;
+			width: 400px;
+			font-size: 18px;
+			margin-right: 12px;
+			padding-left: 32px;
+		}
+
+		label[for = "order-ui-tassel-1"]::before {
+			background: #e3e9f0;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		input:checked + label[for = "order-ui-tassel-1"]::after {
+			background: #004f99 !important;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 14px;
+			height: 14px;
+			transition: 0.3s all;
+			position: absolute;
+			top: 6px;
+			left: 6px;
+		}
+
+		label[for = "order-ui-pleat-0"] {
+			position: relative;
+			border: none !important;
+			width: 400px;
+			font-size: 18px;
+			margin-right: 12px;
+			padding-left: 32px;
+		}
+
+		label[for = "order-ui-pleat-0"]::before {
+			background: #e3e9f0;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		input:checked + label[for = "order-ui-pleat-0"]::after {
+			background: #004f99 !important;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 14px;
+			height: 14px;
+			transition: 0.3s all;
+			position: absolute;
+			top: 6px;
+			left: 6px;
+		}
+
+
+		label[for = "order-ui-pleat-1"] {
+			position: relative;
+			border: none !important;
+			width: 400px;
+			font-size: 18px;
+			margin-right: 12px;
+			padding-left: 32px;
+		}
+
+		label[for = "order-ui-pleat-1"]::before {
+			background: #e3e9f0;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		input:checked + label[for = "order-ui-pleat-1"]::after {
+			background: #004f99 !important;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 14px;
+			height: 14px;
+			transition: 0.3s all;
+			position: absolute;
+			top: 6px;
+			left: 6px;
+		}
+
+
+		label[for = "order-ui-return-0"] {
+			position: relative;
+			border: none !important;
+			width: 400px;
+			font-size: 18px;
+			margin-right: 12px;
+			padding-left: 32px;
+		}
+
+		label[for = "order-ui-return-0"]::before {
+			background: #e3e9f0;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		input:checked + label[for = "order-ui-return-0"]::after {
+			background: #004f99 !important;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 14px;
+			height: 14px;
+			transition: 0.3s all;
+			position: absolute;
+			top: 6px;
+			left: 6px;
+		}
+
+		label[for = "order-ui-return-1"] {
+			position: relative;
+			border: none !important;
+			width: 400px;
+			font-size: 18px;
+			margin-right: 12px;
+			padding-left: 32px;
+		}
+
+		label[for = "order-ui-return-1"]::before {
+			background: #e3e9f0;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 26px;
+			height: 26px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		input:checked + label[for = "order-ui-return-1"]::after {
+			background: #004f99 !important;
+			border-radius: 50%;
+			content: '';
+			display: block;
+			width: 14px;
+			height: 14px;
+			transition: 0.3s all;
+			position: absolute;
+			top: 6px;
+			left: 6px;
+		}
+
+		.show-description {
+			margin-bottom: 1.2rem
+		}
+
+		.option-subform-title {
+			padding: 2rem !important;
+		}
+
+		.option-subform-title:first-of-type {
+			margin-top: 2rem;
+		}
+
+		#rendering-box .ec-grid2__cell:first-of-type {
+			width: 16vw !important;
+		}
+
+		#rendering-box .ec-grid2__cell:first-of-type > div {
+			border-bottom: 1px solid #ccc;
+			font-size: 1.1vw;
+			padding: 10px 0;
+		}
+
+		#rendering-box .ec-grid2__cell:first-of-type > div:last-of-type {
+			border: 1px solid #eee;
+			font-size: 1vw;
+			margin-top: 12px;
+			padding: 16px;
+		}
+
+
+		#rendering-box .ec-grid2__cell:last-of-type {
+			width: 70% !important;
+		}
+
+		#rendering-box .ec-grid2__cell:last-of-type > div {
+			padding-bottom: 0;
+			padding-top: 0;
+			font-size: 1.1vw;
+		}
+
+		#rendering-box .ec-grid2__cell:last-of-type > div:nth-of-type(4) {
+			width: 15vw;
+			float: left;
+		}
+
+		#rendering-box .ec-grid2__cell:last-of-type > div:nth-of-type(3) {
+			padding-bottom: 2rem;
+		}
+
+		#rendering-box .annotation {
+			display: inline-block;
+			padding-top: 2rem !important;
+		}
+
+
+		.order-ui + div > .ec-grid2 > .ec-grid2__cell:first-of-type {
+			width: 51vw;
+		}
+
+		.order-ui + div > .ec-grid2 > .ec-grid2__cell:last-of-type {
+			width: 20vw;
+		}
+
+		.ec-productRole__btn {
+			width: 100% !important;
+			min-width: auto !important;
+		}
+
+		@media(max-width: 768px) {
+			.ec-productRole {
+				width: 100% !important;
+				padding: 0 5% !important;
+			}
+
+			.ec-grid2 {
+				flex-wrap: wrap !important;
+			}
+
+			.ec-grid2__cell {
+				width: 100% !important;
+			}
+
+			.detailDescription__navOpen {
+				width: 100% !important;
+				margin: auto !important;
+			}
+
+			.ec-radio > div {
+				width: 100% !important;
+			}
+
+			.option-form:nth-of-type(2) > .option-form-body > .ec-grid2 > .ec-grid2__cell:last-of-type {
+				margin-top: 2.4rem
+			}
+
+			.option-form:nth-of-type(4) > .option-form-body > .ec-radio > div {
+				width: 100% !important;
+			}
+
+			.ec-grid2__cell:last-of-type > div {
+				padding: 1.4rem !important;
+			}
+
+			.ec-headingTitle {
+				margin-bottom: 0 !important;
+			}
+
+			.ec-productRole__category {
+				font-size: 2rem !important;
+			}
+
+			.ec-numberInput > div > label {
+				width: 100% !important;
+			}
+
+			.ec-numberInput:first-of-type {
+				margin-top: 2rem !important;
+			}
+
+			label[for = "order-ui-tassel-0"] {
+				width: 127px;
+			}
+
+			label[for = "order-ui-tassel-1"] {
+				width: 127px;
+			}
+
+			label[for = "order-ui-pleat-0"] {
+				width: 127px;
+			}
+
+			label[for = "order-ui-pleat-1"] {
+				width: 127px;
+			}
+
+			label[for = "order-ui-return-0"] {
+				width: 127px;
+			}
+
+			label[for = "order-ui-return-1"] {
+				width: 127px;
+			}
+
+			.option-form:nth-of-type(5) > .option-form-body > .option-subform > .ec-radio {
+				display: flex;
+			}
+
+			#rendering-box {
+				display: none;
+			}
+
+			.ec-price__price.price02-default.finish-price {
+				font-size: 2.8rem !important;
+			}
+
+			.ec-price__tax {
+				font-size: 1.6rem !important;
+			}
+
+			#order-ui-submit {
+				font-size: 1.6rem !important;
+			}
+
+
+			.slick-dots {
+				position: static !important;
+			}
+			.ec-headingTitle {
+				padding-bottom: 0 !important;
+				border-bottom: 0;
+			}
+			.ec-productRole__profile {
+				display: flex;
+				flex-direction: column;
+			}
+			.ec-productRole__title {
+				order: 1;
+				margin-bottom: 0;
+			}
+
+			.ec-productRole__price {
+				order: 3;
+				padding-top: 1.6rem !important;
+				padding-bottom: 2.1rem !important;
+				border-top: 1px dotted #c9c9c9;
+				border-bottom: 1px dotted #c9c9c9;
+			}
+			.ec-productRole__tags {
+				order: 2;
+				padding: 0 !important;
+				margin-bottom: 0 !important;
+			}
+			.detail__description {
+				order: 7;
+			}
+			[name="form1"] {
+				order: 4;
+			}
+			.ec-productRole__actions {
+				display: none;
+			}
+
+			.ec-modal {
+				order: 5;
+			}
+			.ec-modal+form {
+				order: 6;
+				margin-bottom: 5.6rem !important;
+			}
+			.ec-modal+form .ec-productRole__btn {
+				margin-bottom: 0 !important;
+
+			}
+
+
+		}
+	</style>
+
+	<style>
+		/* プルダウン時表示
+		-------------------------------- */
+		#option_detailclass0_area {
+			margin-top: 16px;
+		}
+		#option_detailclass0_item {
+			border-bottom: 1px dotted #ccc;
+			margin: 0 0 10px;
+			padding: 0 0 10px;
+			line-height: 1.2em;
+		}
+		#option_detailclass0_item .class_category_name {
+			font-weight: normal;
+		}
+		#option_detailclass0_item .item {
+			display: inline-block;
+			margin-right: 10px;
+		}
+		/* 規格ごとにカートボタン
+		-------------------------------- */
+		#option_detailclass1_item .row {
+			margin: 0;
+			padding: 0;
+		}
+		#option_detailclass1_item {
+			border-bottom: 1px dotted #ccc;
+			margin: 0 0 16px;
+			padding: 0 0 16px;
+			line-height: 1.2em;
+		}
+		#option_detailclass1_item .class_category_name {
+			font-weight: bold;
+		}
+
+		/* 縦1列の規格一覧
+		-------------------------------- */
+		#option_detailclass2_area {
+			margin-top: 16px;
+		}
+		#option_detailclass2_item {
+			border-bottom: 1px dotted #ccc;
+			margin: 0 0 16px;
+			padding: 0 0 16px;
+			line-height: 1.2em;
+		}
+		#option_detailclass2_item .class_category_name {
+			font-weight: bold;
+		}
+
+		.ec-productRole__category {
+			margin-bottom: 2.8rem;
+		}
+
+		.ec-productRole__description {
+			margin-top: 4rem;
+		}
+
+		.product_detail_text p {
+			text-align: left !important;
+		}
+
+		.ec-price__price.price02-default.finish-price {
+			font-size: 1.9vw
+		}
+
+		.ec-price__tax {
+			font-size: 1.1vw;
+		}
+
+		#order-ui-submit {
+			font-size: 1vw;
+		}
+	</style>
+
+{% endblock %}
+
+{% block javascript %}
+	<script>
+		eccube.classCategories = {{ class_categories_as_json(Product)|raw }};
+
+// 規格2に選択肢を割り当てる。
+function fnSetClassCategories(form, classcat_id2_selected) {
+var $form = $(form);
+var product_id = $form.find('input[name=product_id]').val();
+var $sele1 = $form.find('select[name=classcategory_id1]');
+var $sele2 = $form.find('select[name=classcategory_id2]');
+eccube.setClassCategories($form, product_id, $sele1, $sele2, classcat_id2_selected);
+}
+
+{% if form.classcategory_id2 is defined %}fnSetClassCategories($('#form1'), {{ form.classcategory_id2.vars.value|json_encode|raw }});
+{% elseif form.classcategory_id1 is defined %}
+eccube.checkStock($('#form1'), {{ Product.id }}, {{ form.classcategory_id1.vars.value|json_encode|raw }}, null);{% endif %}
+	</script>
+	<script>
+		$(function () { // bfcache無効化
+$(window).bind('pageshow', function (event) {
+if (event.originalEvent.persisted) {
+location.reload(true);
+}
+});
+
+$('.item_visual').slick({
+dots: false,
+arrows: false,
+responsive: [
+{
+breakpoint: 768,
+settings: {
+dots: true
+}
+}
+]
+});
+
+$('.slideThumb').on('click', function () {
+var index = $(this).attr('data-index');
+$('.item_visual').slick('slickGoTo', index, false);
+})
+});
+	</script>
+
+
+	{#
+								<script>
+									$(function () {
+							$('.add-cart').on('click', function (event){{% if form.classcategory_id1 is defined %}
+							// 規格1フォームの必須チェック
+							if ($('#classcategory_id1').val() == '__unselected' || $('#classcategory_id1').val() == '') {
+							$('#classcategory_id1')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+							return true;
+							} else {
+							$('#classcategory_id1')[0].setCustomValidity('');
+							}
+							{% endif %}
+							
+							{% if form.classcategory_id2 is defined %}
+							// 規格2フォームの必須チェック
+							if ($('#classcategory_id2').val() == '__unselected' || $('#classcategory_id2').val() == '') {
+							$('#classcategory_id2')[0].setCustomValidity('{{ '項目が選択されていません'|trans }}');
+							return true;
+							} else {
+							$('#classcategory_id2')[0].setCustomValidity('');
+							}
+							{% endif %}
+							
+							// 個数フォームのチェック
+							if ($('#quantity').val() < 1) {
+							$('#quantity')[0].setCustomValidity('{{ '1以上で入力してください。'|trans }}');
+							return true;
+							} else {
+							$('#quantity')[0].setCustomValidity('');
+							} event.preventDefault();
+							$form = $('#form1');
+							$.ajax({
+							url: $form.attr('action'),
+							type: $form.attr('method'),
+							data: $form.serialize(),
+							dataType: 'json',
+							beforeSend: function (xhr, settings) { // Buttonを無効にする
+							$('.add-cart').prop('disabled', true);
+							}
+							}).done(function (data) { // レスポンス内のメッセージをalertで表示
+							$.each(data.messages, function () {
+							$('#ec-modal-header').html(this);
+							});
+							
+							$('.ec-modal').show()
+							
+							// カートブロックを更新する
+							$.ajax({url: "{{ url('block_cart') }}", type: 'GET', dataType: 'html'}).done(function (html) {
+							$('.ec-headerRole__cart').html(html);
+							});
+							}).fail(function (data) {
+							alert('{{ 'カートへの追加に失敗しました。'|trans }}');
+							}).always(function (data) { // Buttonを有効にする
+							$('.add-cart').prop('disabled', false);
+							});
+							});
+							});
+							
+							$('.ec-modal-overlay, .ec-modal .ec-inlineBtn--cancel').on('click', function () {
+							$('.ec-modal').hide()
+							});
+							</script>
+							#}
+
+	<script>
+		$(function () { // クリックで動く
+$('.detailDescription__navOpen').click(function () {
+
+
+$(this).toggleClass('active');
+$(this).next('.detailDescription__content').slideToggle();
+
+
+});
+
+});
+	</script>
+
+
+	{% if BaseInfo.option_colorbox is not null %}
+		<script src="{{ asset('assets/js/jquery.colorbox/jquery.colorbox-min.js') }}"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+$(".cbox").colorbox({maxWidth: '100%', maxHeight: '100%', speed: '200'});
+});
+		</script>
+	{% endif %}
+
+	{% if BaseInfo.option_thumbnail == 1 %}
+		<!-- ▼【商品画像】カスタマイズ -->
+		<script>
+			$(function () {
+$('.main_visual').css('display', 'block');
+$('.main_visual').slick({
+dots: false,
+arrows: false,
+autoplay: false,
+autoplaySpeed: 5000,
+speed: 300,
+asNavFor: '.main_visual-thumbnails'
+})
+
+
+$('.main_visual-thumbnails').css('display', 'block');
+$('.main_visual-thumbnails').slick({slidesToShow: 4, arrows: false, asNavFor: '.main_visual', focusOnSelect: true})
+
+});
+		</script>
+	{% endif %}
+
+	{# ▼規格表示javascript #}
+	{% include 'Product/option_detailclass_script.twig' %}
+
+{% endblock %}
+
+{% block main %}
+	{% if (Product.arrival_date is not empty and Product.arrival_date > date() and Product.arrival_check != 1) or (Product.endsell_date is not empty and Product.endsell_date < date() and  Product.endsell_check != 1) %}
+		{% else %}
+			{# {{ dump(Product.ProductCategories[0]['Category']['name']) }} #}
+			{# ←■期間限定①/⑤ #}
+				<div class="ec-productRole">
+				<div class="ec-grid2">
+					<div class="ec-grid2__cell">
+						{# <div class="detail__topList">
+							<a class="detail__topListItem" href="/">TOP</a>
+							<a class="detail__topListItem" href="{{ url('product_list') }}?category_id={{ Product.ProductCategories[0]['Category']['id'] }}">{{ Product.ProductCategories[0]['Category']['name'] }}</a>
+							<a class="detail__topListItem" href="{{ url('product_detail', {'id': Product.id}) }}">{{ Product.name }}</a>
+						</div> #}
+						{# 関連カテゴリ #}
+						{% if Product.ProductCategories is not empty %}
+							<div class="ec-productRole__category">
+								{% for ProductCategory in Product.ProductCategories %}
+									{# <ul>
+																				<li>
+																					{% for Category in ProductCategory.Category.path %}
+																						<a class="my-categoryName" href="{{ url('product_list') }}?category_id={{ Category.id }}">{{ Category.name }}</a>
+																						{%- if loop.last == false %}
+																							<span>＞</span>
+																						{% endif -%}
+																					{% endfor %}
+																				</li>
+																			</ul> #}
+								{% endfor %}
+							</div>
+						{% endif %}
+						<div
+							class="ec-sliderItemRole">
+
+							{# {% if BaseInfo.option_thumbnail == 1 %}
+																																																																<ul class="main_visual" style="display:none;">
+																																																																	{% for ProductImage in Product.ProductImage %}
+																																																																		<li class="item">
+																																																																			{% if BaseInfo.option_colorbox is not null %}
+																																																																				<a href="{{ asset(ProductImage, 'save_image') }}" class="cbox"><img src="{{ asset(ProductImage, 'save_image') }}"></a>
+																																																																			{% else %}
+																																																																				<img src="{{ asset(ProductImage, 'save_image') }}">
+																																																																			{% endif %}
+																																																																		</li>
+																																																																	{% else %}
+																																																																		<li class="item"><img src="{{ asset(''|no_image_product, 'save_image') }}"/></li>
+																																																																	{% endfor %}
+																																																																</ul>
+																																																																{% if Product.ProductImage|length > 1 %}
+																																																																	<ul class="main_visual-thumbnails" style="display:none;">
+																																																																		{% for ProductImage in Product.ProductImage %}
+																																																																			<li class="item">
+																																																																				<img src="{{ asset(ProductImage, 'save_image') }}">
+																																																																			</li>
+																																																																		{% endfor %}
+																																																																	</ul>
+																																																																{% endif %}
+																																																															{% else %} #}
+							<div class="item_visual">
+								{% for ProductImage in Product.ProductImage %}
+									{% if BaseInfo.option_colorbox is not null %}
+										<a href="{{ asset(ProductImage, 'save_image') }}" class="cbox"><img src="{{ asset(ProductImage, 'save_image') }}"></a>
+									{% else %}
+										<img src="{{ asset(ProductImage, 'save_image') }}">
+									{% endif %}
+								{% else %}
+									<div class="slide-item"><img src="{{ asset(''|no_image_product, 'save_image') }}"/></div>
+								{% endfor %}
+							</div>
+
+							{# {% if Product.ProductImage|length > 1 %} #}
+							<div class="item_nav">
+								{% for ProductImage in Product.ProductImage %}
+									<div class="slideThumb" data-index="{{ loop.index0 }}"><img src="{{ asset(ProductImage, 'save_image') }}"></div>
+								{% endfor %}
+							</div>
+							{# {% endif %}
+																																																															{% endif %} #}
+
+						</div>
+
+
+					</div>
+					<div class="ec-grid2__cell">
+						<div
+							class="ec-productRole__profile">
+							{# 商品名 #}
+							<div class="ec-productRole__title">
+								<h2 class="ec-headingTitle">{{ Product.name }}</h2>
+							</div>
+
+							{# 通常価格 #}
+							{% if Product.hasProductClass -%}
+								<div class="ec-productRole__priceRegular">
+									{% if Product.getPrice01Min is not null and Product.getPrice01IncTaxMin == Product.getPrice01IncTaxMax %}
+										<div>
+											<span class="ec-productRole__priceRegularPrice">{{ '通常価格'|trans }}：<span class="price01-default">{{ Product.getPrice01IncTaxMin|price }}</span>
+											</span>
+											<span class="ec-productRole__priceRegularTax">{{ '税込'|trans }}</span>
+										</div>
+
+									{% elseif Product.getPrice01Min is not null and Product.getPrice01Max is not null %}
+										<div>
+											<span class="ec-productRole__priceRegularPrice">{{ '通常価格'|trans }}：<span class="price01-default">{{ Product.getPrice01IncTaxMin|price }}～
+													{{ Product.getPrice01IncTaxMax|price }}</span>
+											</span>
+											<span class="ec-productRole__priceRegularTax">{{ '税込'|trans }}</span>
+
+										</div>
+									{% endif %}
+								</div>
+							{% else %}
+								{% if Product.getPrice01Max is not null %}
+									<div>
+										<span class="ec-productRole__priceRegularPrice">{{ '通常価格'|trans }}：{{ Product.getPrice01IncTaxMin|price }}</span>
+										<span class="ec-productRole__priceRegularTax">{{ '税込'|trans }}</span>
+									</div>
+								{% endif %}
+							{% endif %}
+						</div>
+						{# 販売価格 #}
+						<div class="ec-productRole__price">
+							{% if Product.hasProductClass -%}
+								{% if Product.getPrice02IncTaxMin == Product.getPrice02IncTaxMax %}
+									<div class="ec-price">
+										<span class="ec-price__price price02-default">{{ Product.getPrice02IncTaxMin|price }}</span>
+										<span class="ec-price__tax">{{ '税込'|trans }}</span>
+									</div>
+								{% else %}
+									<div class="ec-price">
+										<span class="ec-price__price price02-default">{{ Product.getPrice02IncTaxMin|price }}
+											～
+											{{ Product.getPrice02IncTaxMax|price }}</span>
+										<span class="ec-price__tax">{{ '税込'|trans }}</span>
+									</div>
+								{% endif %}
+							{% else %}
+								<div class="ec-price">
+									<span class="ec-price__price">{{ Product.getPrice02IncTaxMin|price }}</span>
+									<span class="ec-price__tax">{{ '税込'|trans }}</span>
+								</div>
+							{% endif %}
+
+
+							{# 商品コード #}
+							{% if Product.code_min is not empty %}
+								<div class="ec-productRole__code">
+									{{ '商品コード'|trans }}：
+									<span class="product-code-default">{{ Product.code_min }}
+										{% if Product.code_min != Product.code_max %}
+											～
+											{{ Product.code_max }}
+										{% endif %}
+									</span>
+								</div>
+							{% endif %}
+							{# この商品へのお問い合わせ #}
+							{# <div class="ec-productRole__code">
+																																																																<a href="{{ url('contact') }}?product_id={{ Product.id }}" class="btn btn-success">この商品へのお問い合わせ</a>
+																																																															</div> #}
+							{# タグ #}
+								<ul class="ec-productRole__tags"> {% for Tag in Product.Tags %}
+									<li class="ec-productRole__tag tag_{{ Tag.id }}">{{ Tag }}</li>
+								{% endfor %}
+							</ul>
+
+							<div class="detail__description">商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。商品説明が入ります。</div>
+
+
+							{# ↓■期間限定②/⑤ #}
+							{% if Product.arrival_date is not empty or Product.endsell_date is not empty %}
+								<br/>
+								<div id="limited_time_box">
+									{% if Product.arrival_date is not empty %}
+										<dd class="limited_time">販売開始：{{ Product.arrival_date|date("Y/m/d G時i分") }}</dd>
+									{% endif %}
+									{% if Product.endsell_date is not empty %}
+										<dd class="limited_time">販売終了：{{ Product.endsell_date|date("Y/m/d G時i分") }}</dd>
+									{% endif %}
+								</div>
+							{% endif %}
+							{# ↑■期間限定 #}
+
+							{# 関連カテゴリ #}
+							{% if Product.ProductCategories is not empty %}
+								<div class="ec-productRole__category">
+									<div class="my-categoryTitle">{{ '関連カテゴリ'|trans }}</div>
+									{% for ProductCategory in Product.ProductCategories %}
+										<ul>
+											<li>
+												{% for Category in ProductCategory.Category.path %}
+													<a class="my-categoryName" href="{{ url('product_list') }}?category_id={{ Category.id }}">{{ Category.name }}</a>
+													{%- if loop.last == false %}
+														<span>＞</span>
+													{% endif -%}
+												{% endfor %}
+											</li>
+										</ul>
+									{% endfor %}
+								</div>
+							{% endif %}
+
+							{# ↓■期間限定③/⑤ #}
+							{% if (Product.arrival_date is not empty and Product.arrival_date >= date()) or (Product.endsell_date is not empty and Product.endsell_date < date()) %}
+								<div class="text-danger" style="margin:10px 0;">
+									期間限定商品：現在ご購入いただけません。
+								</div>
+							{% else %}
+								{# ↑■期間限定 #}
+
+								<form
+									action="{{ url('product_add_cart', {id:Product.id}) }}" method="post" id="form1" name="form1">
+
+									{# ▼商品設定[0] and 規格1が存在する場合 #}
+									{% if Product.option_class == "0" and form.classcategory_id1 is defined %}
+										{# ▼商品設定[1] and 規格1が存在する場合 #}
+									{% elseif Product.option_class == 1 and form.classcategory_id1 is defined %}
+										{% include 'Product/option_detailclass1.twig' %}
+										{# ▼商品設定[2] and 規格1が存在する場合 #}
+									{% elseif Product.option_class == 2 and form.classcategory_id1 is defined %}
+										{% include 'Product/option_detailclass2.twig' %}
+										{# ▼店舗設定[1] and 規格1が存在する場合 #}
+									{% elseif BaseInfo.option_detailclass == 1 and form.classcategory_id1 is defined %}
+										{% include 'Product/option_detailclass1.twig' %}
+										{# ▼店舗設定[2] and 規格1が存在する場合 #}
+									{% elseif BaseInfo.option_detailclass == 2 and form.classcategory_id1 is defined %}
+										{% include 'Product/option_detailclass2.twig' %}
+									{% endif %}
+
+									{# ▼規格1が存在する商品設定[1]（規格ごとカートボタン）では、通常のカートボタンを表示しない #}
+									{% if Product.option_class == 1 and form.classcategory_id1 is defined %}
+										{# ▼商品設定[1]以外 or 店舗設定[1]以外 or 規格1が存在しない場合、通常のカートボタンを表示する #}
+									{% elseif (Product.option_class == "0" and form.classcategory_id1 is defined) or (Product.option_class == 2 and form.classcategory_id1 is defined) or BaseInfo.option_detailclass != 1 or form.classcategory_id1 is not defined %}
+
+										{# ▼プルダウン時に表示 #}
+										{% if BaseInfo.option_detailclass == "0" or Product.option_class == "0" or form.classcategory_id1 is not defined %}
+											{% include 'Product/option_detailclass0.twig' %}
+										{% endif %}
+
+										{% if Product.stock_find %}
+											<div class="ec-productRole__actions">
+												{% if form.classcategory_id1 is defined %}
+													<div class="ec-select">
+														{{ form_widget(form.classcategory_id1) }}
+														{{ form_errors(form.classcategory_id1) }}
+													</div>
+													{% if form.classcategory_id2 is defined %}
+														<div class="ec-select">
+															{{ form_widget(form.classcategory_id2) }}
+															{{ form_errors(form.classcategory_id2) }}
+														</div>
+													{% endif %}
+												{% endif %}
+												<div class="ec-numberInput">
+													<span>{{ '数量'|trans }}</span>
+													{{ form_widget(form.quantity) }}
+													{{ form_errors(form.quantity) }}
+												</div>
+											</div>
+											<div class="ec-productRole__btn">
+												<button type="submit" class="ec-blockBtn--action add-cart">
+													{{ 'オーダー情報を入力する'|trans }}
+												</button>
+											</div>
+										{% else %}
+											<div class="ec-productRole__btn">
+												<button type="button" class="ec-blockBtn--action" disabled="disabled">
+													{{ 'お気に入りに追加'|trans }}
+												</button>
+											</div>
+										{% endif %}
+
+									{% endif %}
+
+									{# ▼設定[0]（通常プルダウン）以外は、CSSで非表示 #}
+									{% if (Product.option_class == 1 and form.classcategory_id1 is defined) or (Product.option_class == 2 and form.classcategory_id1 is defined) %}
+										<div style="display:none;">
+										{% elseif (Product.option_class == "0" and form.classcategory_id1 is defined) or BaseInfo.option_detailclass != 0 %}
+											<div style="display:none;">
+											{% endif %}
+
+											{{ form_rest(form) }}
+
+											{% if (Product.option_class == 1 and form.classcategory_id1 is defined) or (Product.option_class == 2 and form.classcategory_id1 is defined) %}
+											</div>
+									{% elseif (Product.option_class == "0" and form.classcategory_id1 is defined) or BaseInfo.option_detailclass != 0 %}
+										</div>
+									{% endif %}
+								</form>
+
+							{% endif %}
+							{# ←■期間限定④/⑤ #}
+
+							<div class="ec-modal">
+								<div class="ec-modal-overlay">
+									<div class="ec-modal-wrap">
+										<span class="ec-modal-close">
+											<span class="ec-icon"><img src="{{ asset('assets/icon/cross-dark.svg') }}" alt=""/></span>
+										</span>
+										<div id="ec-modal-header" class="text-center">{{ 'カートに追加しました。'|trans }}</div>
+										<div class="ec-modal-box">
+											<div class="ec-role">
+												<span class="ec-inlineBtn--cancel">{{ 'お買い物を続ける'|trans }}</span>
+												<a href="{{ url('cart') }}" class="ec-inlineBtn--action">{{ 'カートへ進む'|trans }}</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							{% if BaseInfo.option_favorite_product %}
+								<form action="{{ url('product_add_favorite', {id:Product.id}) }}" method="post">
+									<div class="ec-productRole__btn">
+										{% if is_favorite == false %}
+											<button type="submit" id="favorite" class="ec-blockBtn--cancel">
+												{{ 'お気に入りに追加'|trans }}
+											</button>
+										{% else %}
+											<button type="submit" id="favorite" class="ec-blockBtn--cancel" disabled="disabled">{{ 'お気に入りに追加済です。'|trans }}
+											</button>
+										{% endif %}
+									</div>
+								</form>
+							{% endif %}
+
+						</div>
+
+						{# YouTube #}
+						{% if Product.youtube is not empty %}
+							<div id="detail_youtube_area">
+								<div class="embed-container">
+									<iframe src="https://www.youtube.com/embed/{{ Product.youtube }}?wmode=transparent" frameborder="0" allowfullscreen></iframe>
+								</div>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+				{# <div class="detailDescription">
+					<div class="detailDescription__itemWrapper">
+						<p class="detailDescription__navOpen ">商品詳細</p>
+						<div class="detailDescription__content">
+							テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト
+						</div>
+					</div>
+					<div class="detailDescription__itemWrapper">
+						<p class="detailDescription__navOpen ">レビュー</p>
+						<div class="detailDescription__content">
+							テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト
+						</div>
+
+					</div>
+					<div class="detailDescription__itemWrapper">
+						<p class="detailDescription__navOpen ">オススメ商品</p>
+						<div class="detailDescription__content">
+							テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト
+						</div>
+					</div>
+
+
+				</div> #}
+
+
+				{% if Product.freearea %}
+					<div class="ec-productRole__description">
+
+
+						{% if BaseInfo.option_tinymce %}
+							{{ include(template_from_string(Product.freearea|raw)) }}
+						{% else %}
+							{{ include(template_from_string(Product.freearea)) }}
+						{% endif %}
+
+
+					</div>
+				{% endif %}
+
+				{% if BaseInfo.option_tinymce %}
+					<div class="ec-productRole__description">{{ Product.description_detail|raw }}
+
+
+					{% else %}
+						<div class="ec-productRole__description">{{ Product.description_detail|raw|nl2br }}
+						{% endif %}
+
+
+						<div class="md_tab_box">
+							{# <div class="md_btn_tab">
+								<p class="btn_tab is_active" id="detail_tab">商品詳細</p>
+								<p class="btn_tab" id="review_tab">レビュー</p>
+								<p class="btn_tab" id="anyitem_tab">この生地で<br>別商品</p>
+								<p class="btn_tab" id="related_tab">おススメ<br>商品</p>
+							</div>
+							<div class="md_tab_area">
+								<div class="md_tab_area_inner is_active">
+								
+								<!-- カーテンの機能・商品詳細文・商品情報 -->
+								<div class="product_detail_wrap">
+								<!-- 商品詳細文 -->
+								<div class="product_detail_text">
+									<p>優しい雰囲気が特徴のリネン100％の生地です。天然素材ならではの「シャリ感」とほどよい「透け感」があり、使い込むごとに柔らかく風合いが増すので、その変化も楽しんで頂きたいカーテンです。ナチュラル、モダン、カジュアル、ミニマルなどのテイストによく馴染むので、素材感を重視される方には特におすすめの商品です。カラー：ナチュラルなベージュ色</p>
+										</div><!-- カーテンの機能 --><!-- 商品情報 -->
+										<div class="product_detail_list"><input type="hidden" id="product_ex5" value="Z">
+										<ul class="item_code">
+												<!-- デメリット情報 -->
+												<!-- 生地タイプ -->
+													<li>
+														<span>
+													生地タイプ
+													</span>
+												レース
+												</li>
+												<!-- 素材 -->
+													<li>
+														<span>
+													素材
+													</span>
+												LI100
+												</li>
+												<!-- リピート -->
+													<li>
+														<span>
+													リピート/mm
+													</span>
+												(縦)0(横)0
+												</li>
+												<!-- 原産国 -->
+												<!-- 柄合わせ -->
+												<!-- 生地取り方 -->
+													<!-- 巾継 -->
+														<li>
+													<span>
+													巾継ぎ
+													</span>
+														巾継あり（ <a href="/faq#tunagime"class="blue_link"> 詳細はこちら</a>）
+												</li>
+											</ul>
+											※テンションポールは付属いたしません。<br>
+											</div>
+									</div>
+									<!-- / カーテンの機能・商品詳細文・商品情報 -->
+								</div> #}
+								<div class="md_tab_area_inner" id="review_tabarea"><!--#product-review-plugin-tag#-->
+								<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js" async="" defer=""></script>
+									<script async="" defer="">
+										window.addEventListener('load', function () {
+$('.md_btn_review object a').on('click', function (e) {
+e.preventDefault();
+url = $(this).attr('href');
+window.location = url;
+return false;
+});
+$('.md_btn_review').each(function () {
+$(this).magnificPopup({
+type: 'inline',
+preloader: false,
+modal: false,
+mainClass: 'mfp-fade',
+removalDelay: 500
+});
+});
+})
+									</script>
+									<script async="" defer="">
+										// news modal
+window.addEventListener('load', function () {
+$('.md_btn_modal').each(function () {
+$(this).magnificPopup({
+type: 'inline',
+preloader: false,
+modal: false,
+mainClass: 'mfp-fade',
+removalDelay: 500
+});
+});
+$('.md_review_list').show();
+
+// indexTextList accordion
+$('#indexTextList').find('dt').on('click', function () {
+$(this).toggleClass('is_open');
+$(this).next('dd').stop().slideToggle();
+});
+
+var moreNum = 5;
+$('.md_review_list li:nth-child(n + ' + (
+moreNum + 1
+) + ')').addClass('is-hidden');
+$('.more').on('click', function () {
+$('.md_review_list li.is-hidden').slice(0, moreNum).removeClass('is-hidden');
+if ($('.md_review_list li.is-hidden').length == 0) {
+$('.more').fadeOut();
+}
+});
+})
+									</script>
+									<style>
+										.md_review_list li {}
+										.md_review_list li.is-hidden {
+											opacity: 0;
+											height: 0;
+											margin: 0;
+											display: none;
+										}
+										.more {
+											text-align: center;
+											margin-top: 20px;
+											padding: 1%;
+											background: #d8eafb;
+											border-radius: 16px;
+										}
+									</style><!--  レビューの高い商品  --><style>
+										#review_tab,
+										#review_tabarea {
+											display: none !important;
+										}
+									</style>
+
+
+								</div>
+								<div class="md_tab_area_inner"><!-- この生地でオーダー可能な商品 --><div class="productOrderPossibleList"><!--<div class="productOrderPossibleListTit">この生地でオーダー可能な商品</div>--><ul>
+											<li>
+												<a href="https://www.justcurtain.com/products/detail/9193">オーダーカーテン</a>
+											</li>
+											<li>
+												<a href="https://www.justcurtain.com/products/detail/13963">シェード</a>
+											</li>
+											<li class="active">
+												<a href="https://www.justcurtain.com/products/detail/15922">カフェカーテン</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="md_tab_area_inner" id="related_tabarea">
+									<section class="sec01">
+										<div class="relation_item">
+											<h2 class="checked_title">
+												<span>この商品をチェックした人は<br>こんな商品も見てます<span></span>
+												</span>
+											</h2>
+											<ul class="itemList">
+												<li class="child">
+													<a href="https://www.justcurtain.com/products/detail/13963">
+														<div class="pic">
+															<figure><img src="/upload/save_image/Z-32008_nc4.jpg" class="main-img lazyload" loading="lazy"></figure>
+														</div>
+														<div class="new-item-title">
+															<h3>マリヤ シェード Z-32008 ベージュ</h3>
+														</div>
+														<p class="money-text">
+															11,000円<span class="fz10">（税込）〜</span><br class="spv"></p>
+													</a>
+													<ul class="item_attribute"></ul>
+												</li>
+												<li></li><!-- flex調整用 --><li></li><!-- flex調整用 --><li></li><!-- flex調整用 --></ul>
+										</div>
+									</section>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+				{% endif %}
+				{# ←■期間限定⑤/⑤ #}
+
+				{{ include('Product/option.twig') }}
+
+				{# カテゴリ一覧を表示する #}
+
+				<div class="ec-newItemRole__listItemHeading ec-secHeading--tandem">
+					<span class="ec-secHeading__en">NEW STOCK</span>
+					<span class="ec-secHeading__line"></span>
+					<span class="ec-secHeading__ja">新入荷商品</span>
+					<a class="ec-inlineBtn--top" href="{{ url('product_list') }}?category_id=2">{{ 'front.block.new_item.more'|trans }}</a>
+				</div>
+			</div>
+
+			{# ここから何故かPHPコードが書かれているのでコメントアウトします by joolen
+						<script>
+			
+							// 検索条件の新着順を定義
+			$searchData = array();
+			$qb = $this - > entityManager - > createQueryBuilder();
+			$query = $qb - > select("plob") -> from("Eccube\\Entity\\Master\\ProductListOrderBy", "plob") -> where('plob.id = :id') -> setParameter('id', $this - > eccubeConfig['eccube_product_order_newer']) -> getQuery();
+			$searchData['orderby'] = $query - > getOneOrNullResult();
+			
+			// 新入荷商品を表示
+			$new_stock_id = 2;
+			$qb = $this - > entityManager - > createQueryBuilder();
+			$query = $qb - > select("ctg") -> from("Eccube\\Entity\\Category", "ctg") -> where('ctg.id = :id') -> setParameter('id', $new_stock_id) -> getQuery();
+			$searchData['category_id'] = $query - > getOneOrNullResult();
+			
+			// 商品情報3件取得
+			$qb = $this - > productRepository - > getQueryBuilderBySearchData($searchData);
+			$query = $qb - > setMaxResults(3) -> getQuery();
+			$products = $query - > getResult();
+			return $products;
+						</script>
+			 #}
+		{% endblock %}

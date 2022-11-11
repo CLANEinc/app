@@ -1,0 +1,709 @@
+services:
+  Eccube\Service\Cart\CartItemComparator:
+    class: Customize\Service\Cart\ProductClassAndOptionComparator
+
+  eccube.purchase.flow.cart.item_validators:
+    class: Doctrine\Common\Collections\ArrayCollection
+    arguments:
+      - #
+        - '@Eccube\Service\PurchaseFlow\Processor\DeliverySettingValidator'
+        - '@Eccube\Service\PurchaseFlow\Processor\ProductStatusValidator'
+#        - '@Eccube\Service\PurchaseFlow\Processor\PriceChangeValidator' # 【商品価格の変更検知を削除】
+        - '@Eccube\Service\PurchaseFlow\Processor\StockValidator'
+        - '@Eccube\Service\PurchaseFlow\Processor\SaleLimitValidator'
+  eccube.purchase.flow.shopping.item_validators:
+    class: Doctrine\Common\Collections\ArrayCollection
+    arguments:
+      - #
+        - '@Eccube\Service\PurchaseFlow\Processor\DeliverySettingValidator'
+        - '@Eccube\Service\PurchaseFlow\Processor\ProductStatusValidator'
+#        - '@Eccube\Service\PurchaseFlow\Processor\PriceChangeValidator' # 【商品価格の変更検知を削除】
+
+parameters:
+  denpyo_no_start_value: 1000000
+  tax_rate: 10
+
+  option_list:
+    カーテン:
+      houseigrade:
+        label: '縫製グレード'
+        type: 'radio'
+        items:
+          deluxe:
+            label: 'デラックス'
+            default: true
+          simple:
+            label: 'シンプル'
+          flat:
+            label: 'フラット'
+      width:
+        label: '幅'
+        type: 'number'
+        min: 30
+        max: 680
+      height:
+        label: '高さ'
+        type: 'number'
+        min: 30
+        max: 310
+      handing:
+        label: '開き方'
+        type: 'radio'
+        items:
+          double:
+            label: '両開き'
+            default: true
+          left:
+            label: '左開き'
+          right:
+            label: '右開き'
+      hook:
+        label: 'フック'
+        type: 'radio'
+        items:
+          a:
+            label: 'Aフック'
+            default: true
+          b:
+            label: 'Bフック'
+      tassel:
+        label: '共生地タッセル'
+        type: 'radio'
+        items:
+          1:
+            label: 'あり'
+            price: 550
+          0:
+            label: 'なし'
+            price: 0
+            default: true
+      pleat :
+        label: 'プリーツ加工'
+        type: 'radio'
+        items:
+          1:
+            label: 'あり'
+            price: 4500
+          0:
+            label: 'なし'
+            price: 0
+            default: true
+      return :
+        label: 'リターン付き'
+        type: 'radio'
+        items:
+          1:
+            label: 'あり'
+            price: 3000
+          0:
+            label: 'なし'
+            price: 0
+            default: true
+    シェード:
+      shadetype:
+        label: 'シェードのタイプ'
+        type: 'radio'
+        items:
+          single:
+            label: 'シングルシェード'
+            default: true
+          double:
+            label: 'ダブルシェード'
+      houseistyle:
+        label: '縫製スタイル'
+        type: 'radio'
+        items:
+          plain:
+            label: 'プレーン'
+            default: true
+          sharp:
+            label: 'シャープ'
+      lining:
+        label: '裏生地'
+        type: 'radio'
+        items:
+          J-74004H:
+            label: '【ミラー・ＵＶカット・遮熱・花粉キャッチ】サラト J-74004H ホワイト'
+            group:
+              - 'grp1'
+              - 'grp2'
+          J-15224H:
+            label: '【ミラー・ＵＶカット】ダブルライン J-15224H オフホワイト'
+            group:
+              - 'grp1'
+              - 'grp2'
+          J-92506:
+            label: 'エターナルローズ J-92506 ホワイト'
+            group:
+              - 'grp5'
+      handletype:
+        label: 'メカ'
+        type: 'radio'
+        items:
+          code:
+            label: 'コード式'
+            default: true
+          drum:
+            label: 'ドラム式'
+          loopless:
+            label: 'ループレス式'
+      width:
+        label: '幅'
+        type: 'number'
+        min: 51
+        max: 290
+      height:
+        label: '高さ'
+        type: 'number'
+        min: 48
+        max: 300
+      mountingstyle:
+        label: '取り付け方'
+        type: 'radio'
+        items:
+          ceiling:
+            label: '天付け'
+            default: true
+          front:
+            label: '正面付け'
+      mountingheight:
+        label: '取付高'
+        type: 'number'
+        min: 48
+        max: 500
+      handing:
+        label: '操作'
+        type: 'radio'
+        items:
+          left:
+            label: '左操作'
+            default: true
+          right:
+            label: '右操作'
+      railattachment:
+        label: 'レール取り付け'
+        type: 'radio'
+        items:
+          1:
+            label: 'あり'
+          0:
+            label: 'なし'
+            default: true
+
+  lining_group:
+    grp1:
+      label: 'ミラーレース,遮像レース'
+    grp2:
+      label: '遮熱レース,保温レース'
+    grp3:
+      label: 'UVカットレース'
+    grp4:
+      label: '防炎レース'
+    grp5:
+      label: 'トルコレース'
+    grp6:
+      label: 'その他レース'
+
+  price_list:
+    ドレープカーテン:
+      デラックス:
+        - width_max: 100
+          height_max: 200
+          price: 5000
+        - width_max: 200
+          height_max: 200
+          price: 10000
+        - width_max: 300
+          height_max: 200
+          price: 15000
+        - width_max: 400
+          height_max: 200
+          price: 20000
+        - width_max: 100
+          height_max: 240
+          price: 5500
+        - width_max: 200
+          height_max: 240
+          price: 11000
+        - width_max: 300
+          height_max: 240
+          price: 16500
+        - width_max: 400
+          height_max: 240
+          price: 22000
+      シンプル:
+        - width_max: 100
+          height_max: 200
+          price: 3400
+        - width_max: 200
+          height_max: 200
+          price: 6800
+        - width_max: 300
+          height_max: 200
+          price: 10200
+        - width_max: 400
+          height_max: 200
+          price: 13600
+        - width_max: 100
+          height_max: 240
+          price: 3900
+        - width_max: 200
+          height_max: 240
+          price: 7800
+        - width_max: 300
+          height_max: 240
+          price: 11700
+        - width_max: 400
+          height_max: 240
+          price: 15600
+      フラット:
+        - width_max: 100
+          height_max: 200
+          price: 3400
+        - width_max: 200
+          height_max: 200
+          price: 6800
+        - width_max: 300
+          height_max: 200
+          price: 10200
+        - width_max: 400
+          height_max: 200
+          price: 13600
+        - width_max: 100
+          height_max: 240
+          price: 3900
+        - width_max: 200
+          height_max: 240
+          price: 7800
+        - width_max: 300
+          height_max: 240
+          price: 11700
+        - width_max: 400
+          height_max: 240
+          price: 15600
+    ドレープカーテンSE:
+      デラックス:
+        - width_max: 100
+          height_max: 200
+          price: 4500
+        - width_max: 200
+          height_max: 200
+          price: 8000
+        - width_max: 300
+          height_max: 200
+          price: 13500
+        - width_max: 400
+          height_max: 200
+          price: 18000
+        - width_max: 100
+          height_max: 240
+          price: 5000
+        - width_max: 200
+          height_max: 240
+          price: 10000
+        - width_max: 300
+          height_max: 240
+          price: 15000
+        - width_max: 400
+          height_max: 240
+          price: 20000
+      シンプル:
+        - width_max: 100
+          height_max: 200
+          price: 2900
+        - width_max: 200
+          height_max: 200
+          price: 5800
+        - width_max: 300
+          height_max: 200
+          price: 8700
+        - width_max: 400
+          height_max: 200
+          price: 11600
+        - width_max: 100
+          height_max: 240
+          price: 3400
+        - width_max: 200
+          height_max: 240
+          price: 6800
+        - width_max: 300
+          height_max: 240
+          price: 10200
+        - width_max: 400
+          height_max: 240
+          price: 13600
+      フラット:
+        - width_max: 100
+          height_max: 200
+          price: 2900
+        - width_max: 200
+          height_max: 200
+          price: 5800
+        - width_max: 300
+          height_max: 200
+          price: 8700
+        - width_max: 400
+          height_max: 200
+          price: 11600
+        - width_max: 100
+          height_max: 240
+          price: 3400
+        - width_max: 200
+          height_max: 240
+          price: 6800
+        - width_max: 300
+          height_max: 240
+          price: 10200
+        - width_max: 400
+          height_max: 240
+          price: 13600
+    レースカーテン:
+      デラックス:
+        - width_max: 100
+          height_max: 200
+          price: 3400
+        - width_max: 200
+          height_max: 200
+          price: 6800
+        - width_max: 300
+          height_max: 200
+          price: 10200
+        - width_max: 400
+          height_max: 200
+          price: 13600
+        - width_max: 100
+          height_max: 240
+          price: 3900
+        - width_max: 200
+          height_max: 240
+          price: 7800
+        - width_max: 300
+          height_max: 240
+          price: 11700
+        - width_max: 400
+          height_max: 240
+          price: 15000
+      シンプル:
+        - width_max: 100
+          height_max: 200
+          price: 2400
+        - width_max: 200
+          height_max: 200
+          price: 4800
+        - width_max: 300
+          height_max: 200
+          price: 7200
+        - width_max: 400
+          height_max: 200
+          price: 9600
+        - width_max: 100
+          height_max: 240
+          price: 2900
+        - width_max: 200
+          height_max: 240
+          price: 5800
+        - width_max: 300
+          height_max: 240
+          price: 8700
+        - width_max: 400
+          height_max: 240
+          price: 11600
+      フラット:
+        - width_max: 100
+          height_max: 200
+          price: 2400
+        - width_max: 200
+          height_max: 200
+          price: 4800
+        - width_max: 300
+          height_max: 200
+          price: 7200
+        - width_max: 400
+          height_max: 200
+          price: 9600
+        - width_max: 100
+          height_max: 240
+          price: 2900
+        - width_max: 200
+          height_max: 240
+          price: 5800
+        - width_max: 300
+          height_max: 240
+          price: 8700
+        - width_max: 400
+          height_max: 240
+          price: 11600
+    レースカーテンSE:
+      デラックス:
+        - width_max: 100
+          height_max: 200
+          price: 2900
+        - width_max: 200
+          height_max: 200
+          price: 5800
+        - width_max: 300
+          height_max: 200
+          price: 8700
+        - width_max: 400
+          height_max: 200
+          price: 11600
+        - width_max: 100
+          height_max: 240
+          price: 3400
+        - width_max: 200
+          height_max: 240
+          price: 6800
+        - width_max: 300
+          height_max: 240
+          price: 10200
+        - width_max: 400
+          height_max: 240
+          price: 13600
+      シンプル:
+        - width_max: 100
+          height_max: 200
+          price: 2050
+        - width_max: 200
+          height_max: 200
+          price: 4100
+        - width_max: 300
+          height_max: 200
+          price: 6150
+        - width_max: 400
+          height_max: 200
+          price: 8200
+        - width_max: 100
+          height_max: 240
+          price: 2550
+        - width_max: 200
+          height_max: 240
+          price: 5100
+        - width_max: 300
+          height_max: 240
+          price: 7650
+        - width_max: 400
+          height_max: 240
+          price: 10200
+      フラット:
+        - width_max: 100
+          height_max: 200
+          price: 2050
+        - width_max: 200
+          height_max: 200
+          price: 4100
+        - width_max: 300
+          height_max: 200
+          price: 6150
+        - width_max: 400
+          height_max: 200
+          price: 8200
+        - width_max: 100
+          height_max: 240
+          price: 2550
+        - width_max: 200
+          height_max: 240
+          price: 5100
+        - width_max: 300
+          height_max: 240
+          price: 7650
+        - width_max: 400
+          height_max: 240
+          price: 10200
+    シェード:
+      シングルシェード:
+        プレーン:
+          コード式:
+            - width_max: 90
+              price: 13200
+            - width_max: 140
+              price: 16500
+            - width_max: 190
+              price: 19800
+          ドラム式:
+            - width_max: 90
+              price: 16500
+            - width_max: 140
+              price: 19800
+            - width_max: 190
+              price: 23100
+          ループレス式:
+            - width_max: 90
+              price: 19250
+            - width_max: 140
+              price: 22550
+            - width_max: 190
+              price: 25850
+        シャープ:
+          コード式:
+            - width_max: 90
+              price: 15840
+            - width_max: 140
+              price: 19800
+            - width_max: 190
+              price: 23760
+          ドラム式:
+            - width_max: 90
+              price: 19800
+            - width_max: 140
+              price: 23760
+            - width_max: 190
+              price: 27720
+          ループレス式:
+            - width_max: 90
+              price: 22550
+            - width_max: 140
+              price: 26510
+            - width_max: 190
+              price: 30470
+      ダブルシェード:
+        プレーン:
+          コード式:
+            - width_max: 90
+              price: 22000
+            - width_max: 140
+              price: 27500
+            - width_max: 190
+              price: 33000
+          ドラム式:
+            - width_max: 90
+              price: 28600
+            - width_max: 140
+              price: 38500
+            - width_max: 190
+              price: 42900
+          ループレス式:
+            - width_max: 90
+              price: 31350
+            - width_max: 140
+              price: 41250
+            - width_max: 190
+              price: 45650
+          コード式JH:
+            - width_max: 90
+              price: 17600
+            - width_max: 140
+              price: 23100
+            - width_max: 190
+              price: 28600
+          ドラム式JH:
+            - width_max: 90
+              price: 27500
+            - width_max: 140
+              price: 36300
+            - width_max: 190
+              price: 40700
+          ループレス式JH:
+            - width_max: 90
+              price: 31350
+            - width_max: 140
+              price: 41250
+            - width_max: 190
+              price: 45650
+    シェードSE:
+      シングルシェード:
+        プレーン:
+          コード式:
+            - width_max: 90
+              price: 13200
+            - width_max: 140
+              price: 16500
+            - width_max: 190
+              price: 19800
+          ドラム式:
+            - width_max: 90
+              price: 16500
+            - width_max: 140
+              price: 19800
+            - width_max: 190
+              price: 23100
+          ループレス式:
+            - width_max: 90
+              price: 17650
+            - width_max: 140
+              price: 19250
+            - width_max: 190
+              price: 21450
+        シャープ:
+          コード式:
+            - width_max: 90
+              price: 15840
+            - width_max: 140
+              price: 19800
+            - width_max: 190
+              price: 23760
+          ドラム式:
+            - width_max: 90
+              price: 19800
+            - width_max: 140
+              price: 23760
+            - width_max: 190
+              price: 27720
+          ループレス式:
+            - width_max: 90
+              price: 19910
+            - width_max: 140
+              price: 22550
+            - width_max: 190
+              price: 25190
+      ダブルシェード:
+        プレーン:
+          コード式:
+            - width_max: 90
+              price: 17600
+            - width_max: 140
+              price: 23100
+            - width_max: 190
+              price: 28600
+          ドラム式:
+            - width_max: 90
+              price: 27500
+            - width_max: 140
+              price: 36300
+            - width_max: 190
+              price: 40700
+          ループレス式:
+            - width_max: 90
+              price: 31350
+            - width_max: 140
+              price: 41250
+            - width_max: 190
+              price: 45650
+    シェードSE001:
+      シングルシェード:
+        シャープ:
+          ドラム式:
+            - width_max: 90
+              price: 17160
+            - width_max: 140
+              price: 19800
+            - width_max: 190
+              price: 22480
+          ループレス式:
+            - width_max: 90
+              price: 19910
+            - width_max: 140
+              price: 22550
+            - width_max: 190
+              price: 25190
+        プレーン:
+          コード式:
+            - width_max: 90
+              price: 11000
+            - width_max: 140
+              price: 14300
+            - width_max: 190
+              price: 17600
+          ドラム式:
+            - width_max: 90
+              price: 14300
+            - width_max: 140
+              price: 16500
+            - width_max: 190
+              price: 18700
+          ループレス式:
+            - width_max: 90
+              price: 17050
+            - width_max: 140
+              price: 19250
+            - width_max: 190
+              price: 21450

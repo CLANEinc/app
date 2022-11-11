@@ -1,0 +1,45 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+<div class="ec-headerRole">
+    <div class="ec-headerRole__title">
+        <div class="ec-headerTitle">
+            <div class="ec-headerTitle__title">
+                <h1>
+                    <a href="{{ url('homepage') }}">
+						<img src="{{ asset('assets/img/common/logo.png') }}" alt="{{ BaseInfo.shop_name }}" />
+                    </a>
+                </h1>
+            </div>
+        </div>
+    </div>
+	<div class="header_right_area">
+    {# カート表示 #}
+        {# <div class="ec-headerRole__cart logo_cart">
+            {{ render(url('block_cart')) }}
+        </div> #}
+
+            {# 検索表示 #}
+        {# <div class="ec-headerNaviRole__search logo_search no2">
+            {{ render(path('block_search_product')) }}
+        </div> #}
+	</div>
+</div>
+
+
+      {# カテゴリー表示 #}
+{# {% if BaseInfo.option_globalmenu == 2 %}
+	{{ include('Block/globalmenuB.twig') }}
+{% elseif BaseInfo.option_globalmenu == 3 %}
+	{{ include('Block/globalmenuC.twig') }}
+{% else %}
+	{{ include('Block/globalmenuA.twig') }}
+{% endif %} #}

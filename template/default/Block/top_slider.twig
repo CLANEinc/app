@@ -1,0 +1,162 @@
+{% set TopimageList = repository('Eccube\\Entity\\Topimage').getList() %}
+{% block stylesheet %}
+<style>
+
+.ec-sliderRole_area {
+	background:#FFF;
+}
+.ec-sliderRole {
+	padding-left: 0px;
+	padding-right: 0px;
+	width: 100%;
+	max-width: initial !important
+}
+@media only screen and (min-width: 1090px){
+	.ec-sliderRole {
+		padding-left: 0;
+		padding-right: 0;
+		max-width: 1090px; /* ★PC：横幅いっぱいで表示するときは→max-width: 100%; */
+	}
+}
+
+.ec-sliderRole .slick-slider {
+	padding-top: 30px; /* ★PC：横幅いっぱいで表示するときは→padding-top: 0; 推奨*/
+	margin-bottom: -25px;
+}
+
+.ec-sliderRole .slick-dots {
+	position: absolute;
+	bottom: -45px;
+	display: block;
+	width: 100%;
+	padding: 0;
+	list-style: none;
+	text-align: center;
+}
+
+.ec-sliderRole .slick-dots li {
+	position: relative;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin: 0 5px;
+	padding: 0;
+	cursor: pointer;
+}
+
+.ec-sliderRole .slick-dots li button {
+	font-size: 0;
+	line-height: 0;
+	display: block;
+	width: 20px;
+	height: 20px;
+	padding: 5px;
+	cursor: pointer;
+	color: transparent;
+	border: 0;
+	outline: none;
+	background: transparent;
+}
+
+.ec-sliderRole .slick-dots li button:hover,
+.ec-sliderRole .slick-dots li button:focus {
+	outline: none;
+}
+.ec-sliderRole .slick-dots li button:hover:before,
+.ec-sliderRole .slick-dots li button:focus:before {
+	opacity: 1;
+}
+
+.ec-sliderRole .slick-dots li button:before {
+	content: " ";
+	line-height: 20px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 12px;
+	height: 12px;
+	text-align: center;
+	opacity: .25;
+	background-color: black;
+	border-radius: 50%;
+}
+
+.ec-sliderRole .slick-dots li.slick-active button:before {
+	opacity: .75;
+	background-color: black;
+}
+
+.ec-sliderRole .slick-dots li button.thumbnail img {
+	width: 0;
+	height: 0;
+}
+
+.-pc-only{
+    display: inline-block;
+}
+
+ @media only screen and (max-width: 768px){
+     .-pc-only{
+         display: none;
+     }
+ }  
+
+.-sp-only{
+    display: none !important;
+}
+
+@media only screen and (max-width: 768px){
+     .-sp-only{
+         display: inline-block !important;
+     }
+ }  
+ 
+ 
+ .main_visual{
+     padding-top: 8rem !important;
+ }
+ 
+ @media only screen and (max-width: 926px){
+     .main_visual{
+        padding-top: 6.7rem !important;
+    }
+ }
+{# 11/10 追加 #}
+.ec-layoutRole__contents{
+	display: none !important;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(function() {
+            $('.main_visual').slick({
+                dots: true,
+                arrows: false,
+                autoplay: true,
+                speed: 300
+            });
+        });
+    </script>
+{% endblock javascript %}
+
+
+
+<div class="ec-sliderRole_area">
+    <div class="ec-sliderRole">
+        <div class="main_visual">
+			{% for Item in TopimageList %}
+				<div class="item slick-slide">
+					{% if Item.url %}
+						<a href="{{ Item.url }}"{% if Item.link_method == 1 %} target="_blank"{% endif %}><img src="{{ asset(Item.topimage_image, 'save_image') }}"></a>
+					{% else %}
+						<img src="{{ asset(Item.topimage_image, 'save_image') }}" class="-pc-only" >
+						<img src="html/user_data/assets/option_image/mv_sp.jpg" class="-sp-only">
+					{% endif %}
+				</div>
+			{% endfor %}
+        </div>
+    </div>
+	<div style="height:1px;"></div>
+</div>

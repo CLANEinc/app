@@ -1,0 +1,29 @@
+plugin_rankingmanual.admin.navi: 手動ランキング管理
+plugin_rankingmanual.admin.not_found: 手動ランキング商品が存在しません。
+plugin_rankingmanual.admin.register.success: 手動ランキング商品を登録しました。
+plugin_rankingmanual.admin.update.success: 手動ランキング商品を修正しました。
+plugin_rankingmanual.admin.delete.success: 手動ランキング商品を削除しました。
+plugin_rankingmanual.admin.delete.confirm: 手動ランキング情報を削除してもよろしいですか？
+plugin_rankingmanual.admin.type.product.not_found: 商品を追加してください。
+plugin_rankingmanual.admin.type.comment.placeholder: 説明文、入力可 (HTMLタグ使用可)。
+
+plugin_rankingmanual.admin.index.title: 手動ランキング商品管理
+plugin_rankingmanual.admin.index.subtitle: 手動ランキング商品内容設定
+plugin_rankingmanual.admin.index.total_num: <strong>%number% 件</strong> が該当しました
+plugin_rankingmanual.admin.index.col2: 商品画像
+plugin_rankingmanual.admin.index.col3: 商品名
+plugin_rankingmanual.admin.index.col4: 説明文
+plugin_rankingmanual.admin.index.delete.confirm: この手動ランキング商品を削除しても宜しいですか？
+plugin_rankingmanual.admin.notice: 項目の順番はドラッグ＆ドロップでも変更可能です。
+plugin_rankingmanual.admin.new: 手動ランキング商品を新規登録
+
+plugin_rankingmanual.admin.edit.title: 手動ランキング商品管理
+plugin_rankingmanual.admin.edit.subtitle: 手動ランキング商品内容設定
+plugin_rankingmanual.admin.edit.header: 手動ランキング商品情報
+plugin_rankingmanual.admin.edit.product: 商品
+plugin_rankingmanual.admin.edit.comment: 説明文
+plugin_rankingmanual.admin.edit.comment.help: （最大%number%文字）
+plugin_rankingmanual.admin.edit.existed: この商品はすでに手動ランキング商品として登録されています。
+plugin_rankingmanual.admin.edit.search: 商品の追加
+plugin_rankingmanual.admin.edit.product_search.header: 商品検索
+plugin_rankingmanual.admin.edit.product_search.button: 検索

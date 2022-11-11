@@ -1,0 +1,218 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'index' %}
+
+{% set body_class = 'mypage' %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css', 'admin') }}">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/v4-shims.css">
+	<link rel="stylesheet" href="{{ asset('assets/css/app.css', 'admin') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/fileupload/jquery.fileupload.css', 'admin') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/fileupload/jquery.fileupload-ui.css', 'admin') }}">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+{% endblock stylesheet %}
+
+{% block javascript %}
+	<script src="{{ asset('assets/js/vendor/fileupload/vendor/jquery.ui.widget.js', 'admin') }}"></script>
+	<script src="{{ asset('assets/js/vendor/fileupload/jquery.iframe-transport.js', 'admin') }}"></script>
+	<script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload.js', 'admin') }}"></script>
+	<script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload-process.js', 'admin') }}"></script>
+	<script src="{{ asset('assets/js/vendor/fileupload/jquery.fileupload-validate.js', 'admin') }}"></script>
+	<script>
+		var bootstrapTooltip = $.fn.tooltip.noConflict();
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script>
+		$.fn.tooltip = bootstrapTooltip;
+$(document).on('drop dragover', function (e) {
+e.preventDefault();
+});
+
+$(function () {
+var hideThumbnail = function () {
+if ($('#thumb div').length > 0) {
+$('#icon_no_image').css('display', 'none');
+} else {
+$('#icon_no_image').css('display', '');
+}
+};
+
+var proto_img = '<div class="c-form__fileUploadThumbnail" style="background-image:url(\'__path__\');">' + '<a class="delete-image"><i class="fa fa-times" aria-hidden="true"></i></a>' + '</div>';
+var myimage_image = $('# {{ form.myimage_image.vars.id }}').val();
+if (myimage_image != '') {
+var filename = $('# {{ form.myimage_image.vars.id }}').val();
+if (myimage_image == '{{ oldMyimageImage }}') {
+var path = '{{ asset('', 'save_image') }}' + filename;
+} else {
+var path = '{{ asset('', 'temp_image') }}' + filename;
+}
+var $img = $(proto_img.replace(/__path__/g, path));
+$('# {{ form.myimage_image.vars.id }}').val(filename);
+
+$('#thumb').append($img);
+hideThumbnail();
+}
+hideThumbnail();
+
+$('# {{ form.myimage_image_file.vars.id }}').fileupload({
+url: "{{ url('mypage_myimage_image_add') }}",
+type: 'post',
+dataType: 'json',
+dropZone: $('#upload-zone'),
+done: function (e, data) {
+$('.progress').hide();
+var path = '{{ asset('', 'temp_image') }}/' + data.result.filename;
+var $img = $(proto_img.replace(/__path__/g, path));
+$('# {{ form.myimage_image.vars.id }}').val(data.result.filename);
+
+$('#thumb').append($img);
+hideThumbnail();
+},
+fail: function (e, data) {
+alert('{{ 'admin.common.upload_error'|trans }}');
+},
+always: function (e, data) {
+$('.progress').hide();
+$('.progress .progress-bar').width('0%');
+},
+start: function (e, data) {
+if ($('.c-form__fileUploadThumbnail').length >= 1) {
+$.each($('.delete-image'), function (index, delete_image) {
+delete_image.click();
+});
+}
+$('.progress').show();
+$('#thumb').find('div').remove();
+$('# {{ form.myimage_image.vars.id }}').val('');
+},
+acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+maxFileSize: 30000000,
+maxNumberOfFiles: 1,
+progressall: function (e, data) {
+var progress = parseInt(data.loaded / data.total * 100, 10);
+$('.progress .progress-bar').css('width', progress + '%');
+},
+processalways: function (e, data) {
+if (data.files.error) {
+alert("{{ 'admin.common.upload_error'|trans }}");
+}
+}
+});
+
+$('#thumb').on('click', '.delete-image', function () {
+$('# {{ form.myimage_image.vars.id }}').val('');
+var thumbnail = $(this).parents('div.c-form__fileUploadThumbnail');
+$(thumbnail).remove();
+hideThumbnail();
+});
+
+// 画像アップロード
+$('#file_upload').on('click', function () {
+$('# {{ form.myimage_image_file.vars.id }}').click();
+});
+});
+
+$('a.btn-ec-regular').on('click', 'button', function () {
+$('#mypage_myimage_myimage_image_file').click();
+return false;
+});
+	</script>
+{% endblock %}
+
+{% block main %}
+	<style>
+		.ec-layoutRole .ec-layoutRole__contents {
+			padding: 4.5rem 0;
+		}
+
+		@media only screen and(max-width: 768px) {
+			.ec-layoutRole .ec-layoutRole__contents {
+				padding: 6.5rem 0;
+			}
+		}
+	</style>
+	{% if BaseInfo.option_myimage == 1 %}
+
+		<div class="ec-layoutRole__main">
+			<div class="ec-mypageRole">
+				<div class="ec-pageHeader">
+					<p class="underpage-heading-title">MY PAGE</p>
+					<h1 class="underpage-heading">{{ 'マイページ'|trans }}/{{ 'ファイルアップロード'|trans }}</h1>
+				</div>
+				{% include 'Mypage/navi.twig' %}
+			</div>
+
+			<div>
+				<form role="form" class="form-horizontal" name="form1" id="form1" method="post" action="?" enctype="multipart/form-data">
+					{{ form_widget(form._token) }}
+					{{ form_widget(form.customer_id) }}
+					{{ form_widget(form.order_no) }}
+
+					<input type="hidden" id="mypage_myimage_fixed" name="mypage_myimage[fixed]" value="3"/>
+
+					<div class="row" style="margin-bottom:10px;">
+						<div class="col-xs-2">
+							{{ 'admin.common.file_select'|trans }}
+						</div>
+						<div class="col-xs-10">
+							<div class="progress" style="display: none;">
+								<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+							<div id="thumb" class="c-form__fileUploadThumbnails clearfix"></div>
+							{{ form_widget(form.myimage_image, { attr : { style : 'display:none;' } }) }}
+							{{ form_errors(form.myimage_image) }}
+							<div id="upload-zone" class="media py-5 border-ec-dashed mb-2 rounded">
+								<div class="media-body">
+									<i class="fa fa-cloud-upload fa-3x text-ec-lightGray mx-3 align-middle" aria-hidden="true"></i>
+									{{ 'admin.common.drag_and_drop_image_description'|trans }}
+									<label for="mypage_myimage_myimage_image_file">
+										<a class="btn btn-ec-regular mr-2">{{ 'admin.common.file_select'|trans }}</a>
+										{{ form_widget(form.myimage_image_file, { attr : { accept : 'image/*', style : 'display:none;' } }) }}
+									</label>
+									{{ form_errors(form.myimage_image) }}
+								</div>
+								<!-- /.media-body -->
+							</div>
+							<!-- /.media -->
+						</div>
+					</div>
+
+					<div class="row" style="margin-bottom:20px;">
+						<div class="col-xs-2">
+							{{ 'admin.order.delivery_note_message'|trans }}
+						</div>
+						<div class="col-xs-10">
+							{{ form_widget(form.comment) }}
+							{{ form_errors(form.comment) }}
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-6">
+							<a class="ec-inlineBtn" href="{{ url('mypage_history', {'order_no': Myimage.order_no}) }}">{{ 'common.back'|trans }}</a>
+						</div>
+						<div class="col-xs-6">
+							<button class="btn btn-ec-conversion px-5" type="submit">{{ 'common.registration'|trans }}</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+
+	{% endif %}
+{% endblock %}

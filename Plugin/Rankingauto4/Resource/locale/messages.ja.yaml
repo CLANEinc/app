@@ -1,0 +1,25 @@
+# 登録完了メッセージ
+rankingauto.admin.save.complete: 登録しました。
+
+
+# 設定画面
+rankingauto.admin.config.title: 自動売上ランキング設定
+rankingauto.admin.config.sub_title: プラグイン一覧
+rankingauto.admin.config.config_title: 設定
+rankingauto.admin.config.term: 集計期間（日）
+rankingauto.admin.config.display_num: 表示件数
+rankingauto.admin.config.display_name: 商品名
+rankingauto.admin.config.display_code: 商品コード
+rankingauto.admin.config.display_price: 価格
+rankingauto.admin.config.display_description_list: 商品説明
+rankingauto.admin.config.save: 登録
+rankingauto.admin.config.back: プラグイン一覧
+rankingauto.admin.config.in_display: 表示
+rankingauto.admin.config.out_of_display: 非表示
+rankingauto.admin.config.display_title: 表示名
+rankingauto.admin.config.display_layout: 表示レイアウト
+rankingauto.admin.config.slide: スライド
+rankingauto.admin.config.sidebyside: 横並び
+
+
+

@@ -1,0 +1,294 @@
+{% if ranking_products|length > 0 %}
+
+{% if display_layout_flg == 1 %}
+{# ▼表示レイアウト：スライド #}
+<style>
+.plugin_rankingauto {
+	margin-bottom:30px;
+}
+.plugin_rankingauto h3 {
+	margin-top:0;
+}
+.plugin_rankingauto .slick-slider {
+	margin-top:0;
+}
+.plugin_rankingauto .ec-shelfGrid.gallery_rankingauto {
+	margin:0 -10px;
+}
+.plugin_rankingauto .ec-shelfGrid .ec-shelfGrid__item{
+	padding: 0 10px;
+}
+.gallery_rankingauto .slick-dots {
+	position: absolute;
+	bottom: 0;
+	display: block;
+	width: 100%;
+	padding: 0;
+	list-style: none;
+	text-align: center;
+}
+.gallery_rankingauto .slick-dots li {
+	position: relative;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin: 0 5px;
+	padding: 0;
+	cursor: pointer;
+}
+.gallery_rankingauto .slick-dots li button {
+	font-size: 0;
+	line-height: 0;
+	display: block;
+	width: 20px;
+	height: 20px;
+	padding: 5px;
+	cursor: pointer;
+	color: transparent;
+	border: 0;
+	outline: none;
+	background: transparent;
+}
+.gallery_rankingauto .slick-dots li button:hover,
+.gallery_rankingauto .slick-dots li button:focus {
+	outline: none;
+}
+.gallery_rankingauto .slick-dots li button:hover:before,
+.gallery_rankingauto .slick-dots li button:focus:before {
+	opacity: 1;
+}
+.gallery_rankingauto .slick-dots li button:before {
+	content: " ";
+	line-height: 20px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 12px;
+	height: 12px;
+	text-align: center;
+	opacity: .25;
+	background-color: black;
+	border-radius: 50%;
+}
+.gallery_rankingauto .slick-dots li.slick-active button:before {
+	opacity: .75;
+	background-color: black;
+}
+.gallery_rankingauto .slick-dots li button.thumbnail img {
+	width: 0;
+	height: 0;
+}
+/* ランキング丸数字 */
+.gallery_rankingauto a {
+	position:relative;
+}
+.gallery_rankingauto .ranking_number {
+	position:absolute;
+	top:8px;
+	left:16px;
+    line-height: 30px;
+    width: 30px; height: 30px;
+    font-size: 16px;
+    font-size: 1.6rem;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+	font-weight:bold;
+	/*↓6位以下*/
+    background: #525263;
+    color: #fff;
+}
+.gallery_rankingauto .ranking_number1 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingauto .ranking_number2 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingauto .ranking_number3 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingauto .ranking_number4 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+.gallery_rankingauto .ranking_number5 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+</style>
+
+<div class="ec-shelfRole plugin_rankingauto">
+	{% if display_title != "" %}
+        <div class="ni-pageHeader">
+            <h3>{{ display_title }}</h3>
+        </div>
+    {% endif %}
+    <ul class="ec-shelfGrid gallery_rankingauto" style="display:none;">
+        {% for RankingProduct in ranking_products %}
+            <li class="ec-shelfGrid__item ranking_number{{loop.index}}">
+                <a href="{{ url('product_detail', {'id': RankingProduct.id}) }}">
+					<p>
+                    <img src="{{ asset(RankingProduct.mainFileName|no_image_product, "save_image") }}">
+					</p>
+                    <dl>
+                        {% if display_name_flg == 1 %}
+							<dt class="item_name">{{ RankingProduct.name }}</dt>
+						{% endif %}
+						{% if display_price_flg == 1 %}
+							<dd class="item_price">
+								{% if RankingProduct.hasProductClass %}
+									{% if RankingProduct.getPrice02Min == RankingProduct.getPrice02Max %}
+										{{ RankingProduct.getPrice02IncTaxMin|price }}
+									{% else %}
+										{{ RankingProduct.getPrice02IncTaxMin|price }} ～ {{ RankingProduct.getPrice02IncTaxMax|price }}
+									{% endif %}
+								{% else %}
+									{{ RankingProduct.getPrice02IncTaxMin|price }}
+								{% endif %}
+							</dd>
+						{% endif %}
+						{% if display_code_flg == 1 %}
+							<p>{{ RankingProduct.code_min }}{% if RankingProduct.code_min != RankingProduct.code_max %} ～ {{ RankingProduct.code_max }}{% endif %}</p>
+						{% endif %}
+						{% if display_description_list_flg == 1 %}
+							<p>{{ RankingProduct.description_detail|raw|nl2br }}</p>
+						{% endif %}
+                    </dl>
+					<span class="ranking_number">{{loop.index}}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+$(function() {
+	$('.gallery_rankingauto').css('display', 'block');
+    $('.gallery_rankingauto').slick({
+		infinite: true,
+		dots:true,
+		slidesToShow: 4,
+		slidesToScroll: 4,
+		arrows:false,
+		autoplay:true,
+		autoplaySpeed:5000,
+		responsive: [{
+			breakpoint: 768,
+				settings: {
+					arrows: false,
+					slidesToShow: 3,
+					slidesToScroll: 3,
+				}
+		},{
+			breakpoint: 480,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 2,
+				}
+		}]
+	});
+});
+</script>
+
+{% elseif display_layout_flg == 2 %}
+{# ▼表示レイアウト：横並び #}
+<style>
+.plugin_rankingauto h3 {
+	margin-top:0;
+}
+@media only screen and (min-width: 768px){
+	.plugin_rankingauto .ec-shelfGrid .ec-shelfGrid__item {
+		width: 25%; /* 列数指定：4列→25% 5列→20% */
+	}
+}
+/* ランキング丸数字 */
+.gallery_rankingauto a {
+	position:relative;
+}
+.gallery_rankingauto .ranking_number {
+	position:absolute;
+	top:8px;
+	left:16px;
+    line-height: 30px;
+    width: 30px; height: 30px;
+    font-size: 16px;
+    font-size: 1.6rem;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+	font-weight:bold;
+	/*↓6位以下*/
+    background: #525263;
+    color: #fff;
+}
+.gallery_rankingauto .ranking_number1 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingauto .ranking_number2 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingauto .ranking_number3 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingauto .ranking_number4 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+.gallery_rankingauto .ranking_number5 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+</style>
+<div class="ec-shelfRole plugin_rankingauto">
+	{% if display_title != "" %}
+        <div class="ni-pageHeader">
+            <h3>{{ display_title }}</h3>
+        </div>
+    {% endif %}
+    <ul class="ec-shelfGrid gallery_rankingauto">
+        {% for RankingProduct in ranking_products %}
+            <li class="ec-shelfGrid__item ranking_number{{loop.index}}">
+                <a href="{{ url('product_detail', {'id': RankingProduct.id}) }}">
+					<p>
+                    <img src="{{ asset(RankingProduct.mainFileName|no_image_product, "save_image") }}">
+					</p>
+                    <dl>
+                        {% if display_name_flg == 1 %}
+							<dt class="item_name">{{ RankingProduct.name }}</dt>
+						{% endif %}
+						{% if display_price_flg == 1 %}
+							<dd class="item_price">
+								{% if RankingProduct.hasProductClass %}
+									{% if RankingProduct.getPrice02Min == RankingProduct.getPrice02Max %}
+										{{ RankingProduct.getPrice02IncTaxMin|price }}
+									{% else %}
+										{{ RankingProduct.getPrice02IncTaxMin|price }} ～ {{ RankingProduct.getPrice02IncTaxMax|price }}
+									{% endif %}
+								{% else %}
+									{{ RankingProduct.getPrice02IncTaxMin|price }}
+								{% endif %}
+							</dd>
+						{% endif %}
+						{% if display_code_flg == 1 %}
+							<p>{{ RankingProduct.code_min }}{% if RankingProduct.code_min != RankingProduct.code_max %} ～ {{ RankingProduct.code_max }}{% endif %}</p>
+						{% endif %}
+						{% if display_description_list_flg == 1 %}
+							<p>{{ RankingProduct.Product.description_detail|raw|nl2br }}</p>
+						{% endif %}
+                    </dl>
+					<span class="ranking_number">{{loop.index}}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endif %}
+{% endif %}

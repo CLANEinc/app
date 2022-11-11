@@ -1,0 +1,587 @@
+{% set rankingmanual_products = repository('Plugin\\Rankingmanual4\\Entity\\RankingmanualProduct').getRankingmanualProduct %}
+{% set config = repository('Plugin\\Rankingmanual4\\Entity\\RankingmanualProductConfig').get %}
+
+{% if rankingmanual_products|length > 0 %}
+
+{% if config.rankingmanual_product_show_type == 1 %}
+{# ▼表示レイアウト：スライド #}
+
+<style>
+
+
+.plugin_rankingmanual {
+	margin-bottom:30px;
+}
+.plugin_rankingmanual h3 {
+	margin-top:0;
+}
+.plugin_rankingmanual .slick-slider {
+	margin-top:0;
+}
+.plugin_rankingmanual .ec-shelfGrid.gallery_rankingmanual {
+	margin:0 -10px;
+}
+.plugin_rankingmanual .ec-shelfGrid .ec-shelfGrid__item{
+	padding: 0 10px;
+}
+.gallery_rankingmanual .slick-dots {
+	position: absolute;
+	bottom: 0;
+	display: block;
+	width: 100%;
+	padding: 0;
+	list-style: none;
+	text-align: center;
+}
+.gallery_rankingmanual .slick-dots li {
+	position: relative;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin: 0 5px;
+	padding: 0;
+	cursor: pointer;
+}
+.gallery_rankingmanual .slick-dots li button {
+	font-size: 0;
+	line-height: 0;
+	display: block;
+	width: 20px;
+	height: 20px;
+	padding: 5px;
+	cursor: pointer;
+	color: transparent;
+	border: 0;
+	outline: none;
+	background: transparent;
+}
+.gallery_rankingmanual .slick-dots li button:hover,
+.gallery_rankingmanual .slick-dots li button:focus {
+	outline: none;
+}
+.gallery_rankingmanual .slick-dots li button:hover:before,
+.gallery_rankingmanual .slick-dots li button:focus:before {
+	opacity: 1;
+}
+.gallery_rankingmanual .slick-dots li button:before {
+	content: " ";
+	line-height: 20px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 12px;
+	height: 12px;
+	text-align: center;
+	opacity: .25;
+	background-color: black;
+	border-radius: 50%;
+}
+.gallery_rankingmanual .slick-dots li.slick-active button:before {
+	opacity: .75;
+	background-color: black;
+}
+.gallery_rankingmanual .slick-dots li button.thumbnail img {
+	width: 0;
+	height: 0;
+}
+.gallery_rankingmanual a {
+	position:relative;
+}
+/* ランキング丸数字 */
+.gallery_rankingmanual .ranking_number {
+	position:absolute;
+	top:8px;
+	left:16px;
+    line-height: 30px;
+    width: 30px; height: 30px;
+    font-size: 16px;
+    font-size: 1.6rem;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+	font-weight:bold;
+	/*↓6位以下*/
+    background: #525263;
+    color: #fff;
+}
+.gallery_rankingmanual .ranking_number1 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingmanual .ranking_number2 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingmanual .ranking_number3 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.gallery_rankingmanual .ranking_number4 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+.gallery_rankingmanual .ranking_number5 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+.ec-shelfRole{
+ padding-right:0 !important;
+ padding-left:0 !important;
+}
+.swiper-button-prev::after{
+	font-size:2.629rem !important;
+	color:#004f99 !important;
+	/* display:none !important; */
+}
+.swiper-button-next::after{
+	font-size:2.629rem !important;
+	color:#004f99 !important;
+	/* display:none !important; */
+}
+
+
+@media only screen and (max-width: 853px){
+	
+}
+
+</style>
+<!-- ▼item_list▼ -->
+<div class="ec-shelfRole plugin_rankingmanual">
+	{% if config.rankingmanual_product_title != "" %}
+        <div class="ni-pageHeader">
+            <h3 class="ranking__title">{{ config.rankingmanual_product_title }}</h3>
+			<h4 class="ranking__subtitle">人気カーテンランキング</h4>
+        </div>
+    {% endif %}
+
+	<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+  <style>
+      @charset "utf-8";
+
+/* ==========================
+  初期設定
+========================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  width: 100%;
+}
+
+/* ==========================
+  swiperslider
+========================== */
+.swiperCont {
+  width: 59.444444444%;
+  margin: 0 auto;
+  position: relative;
+}
+.swiper {
+  width: 100%;
+}
+.swiper-button-next,
+.swiper-rtl .swiper-button-prev,
+.swiper-button-prev,
+.swiper-rtl .swiper-button-next {
+  border-radius: 50%;
+  padding: 25px;
+}
+.swiper-button-next,
+.swiper-rtl .swiper-button-prev {
+  right: -160px;
+}
+.swiper-button-prev,
+.swiper-rtl .swiper-button-next {
+  left: -160px;
+}
+.swiper-button-next:focus,
+.swiper-rtl .swiper-button-prev:focus,
+.swiper-button-prev:focus,
+.swiper-rtl .swiper-button-next:focus {
+  outline: none;
+}
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after,
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+  color: #fff;
+  font-size: 18px;
+}
+.swiper-pagination-bullet-active {
+  opacity: var(--swiper-pagination-bullet-opacity, 1);
+  background: #444;
+}
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal,
+.swiper-pagination-custom,
+.swiper-pagination-fraction {
+  bottom: -30px;
+}
+.swiper-backface-hidden .swiper-slide {
+  transition: .3s;
+}
+
+
+/* .swiperCont a {
+	display:flex !important;
+	flex-direction:column !important;
+	justify-content:space-between !important;
+	background-color:red ;
+} */
+
+@media screen and (max-width: 768px) {
+  .swiperCont {
+    width: 70%;
+    /* padding: 0 70px; */
+  }
+  
+  .ranking__itemImageWrapper{
+      width: 100%;
+  }
+  
+  .swiper-button-next,
+  .swiper-rtl .swiper-button-prev {
+    right: -60px;
+  }
+  .swiper-button-prev,
+  .swiper-rtl .swiper-button-next {
+    left: -60px;
+  }
+  .swiper-button-next,
+  .swiper-rtl .swiper-button-prev,
+  .swiper-button-prev,
+  .swiper-rtl .swiper-button-next {
+    padding: 24px;
+  }
+  .swiper-button-prev:after,
+  .swiper-rtl .swiper-button-next:after,
+  .swiper-button-next:after,
+  .swiper-rtl .swiper-button-prev:after {
+    font-size: 16px;
+  }
+}
+
+.swiper-backface-hidden .swiper-slide {
+  transition: .3s;
+}
+/* .swiper-backface-hidden .swiper-slide.swiper-slide-prev,
+.swiper-backface-hidden .swiper-slide.swiper-slide-next {
+  opacity: .3;
+  transform: scale(.8);
+} */
+
+.ranking_number{
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    left: 0;
+    top: 0;
+    background: #004F99;
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.ranking__tags{
+    margin-top: 1rem;
+}
+
+.ec-shelfRole.plugin_rankingmanual{
+    background: #ffffff !important;
+}
+
+  </style>
+    <div class="swiperCont">
+      <div class="swiper mySwiper">
+		    <ul class="swiper-wrapper" >
+        {% for RankingmanualProduct in rankingmanual_products %}
+            <li class="swiper-slide ec-shelfGrid__item ranking_number{{loop.index}}">
+                <a href="{{ url('product_detail', {'id': RankingmanualProduct.Product.id}) }}">
+					<div class="ranking__itemImageWrapper">
+					    <figure class="ranking__itemImageWrapper__img">
+                    	    <img class="ranking__itemImageWrapper__img__picture" src="{{ asset(RankingmanualProduct.Product.mainFileName|no_image_product, "save_image") }}">
+					    </figure>
+                    		<span class="ranking_number">{{loop.index}}</span>
+                    		
+					</div>
+					<div class="ranking__descriptions">
+						<dl>
+							{% if config.rankingmanual_product_disp_title == 1 %}
+								<dt class="item_name">{{ RankingmanualProduct.Product.name }}</dt>
+							{% endif %}
+							{% if config.rankingmanual_product_disp_price == 1 %}
+								<dd class="item_price">
+									{% if RankingmanualProduct.Product.hasProductClass %}
+										{% if RankingmanualProduct.Product.getPrice02Min == RankingmanualProduct.Product.getPrice02Max %}
+											{{ RankingmanualProduct.Product.getPrice02IncTaxMin|price }}
+										{% else %}
+											{{ RankingmanualProduct.Product.getPrice02IncTaxMin|price }} ～ {{ RankingmanualProduct.Product.getPrice02IncTaxMax|price }}
+										{% endif %}
+									{% else %}
+										{{ RankingmanualProduct.Product.getPrice02IncTaxMin|price }}
+									{% endif %}
+								</dd>
+							{% endif %}
+							{% if config.rankingmanual_product_disp_code == 1 %}
+								<p>{{ RankingmanualProduct.Product.code_min }}{% if RankingmanualProduct.Product.code_min != RankingmanualProduct.Product.code_max %} ～ {{ RankingmanualProduct.Product.code_max }}{% endif %}</p>
+							{% endif %}
+							{% if config.rankingmanual_product_rankingmanual_comment == 1 %}
+								{% if RankingmanualProduct.comment %}
+									<p>{{ RankingmanualProduct.comment|raw|nl2br }}</p>
+								{% endif %}
+							{% endif %}
+							{% if config.rankingmanual_product_disp_description_detail == 1 %}
+								<p>{{ RankingmanualProduct.Product.description_detail|raw|nl2br }}</p>
+							{% endif %}
+						</dl>
+						<div class ="ranking__tags">
+							<p class="ranking__tag">遮光2級</p>
+							<p class="ranking__tag">洗濯可</p>
+						</div>
+					</div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+      </div>
+      <div class="swiper-button-prev dli-chevron-round-left"></div>
+      <div class="swiper-button-next dli-chevron-round-right"></div>
+    </div>
+  </main>
+  <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+
+</body>
+</html>
+<script>
+    'use strict';
+// swiperslider
+const swiperRanking = new Swiper('.mySwiper', {
+  spaceBetween: 20.6,
+  slidesPerView: 2,
+  slidesPerGroup:1,
+  //ブレイクポイントの書き方はモバイルファースト?
+  breakpoints: {
+    768: {
+      slidesPerView: 3,
+      slidesPerGroup:1,
+      spaceBetween: 48,
+    },
+  },
+//   centeredSlides: true,
+  loop: true,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+  },
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+});
+</script>
+
+</div>
+<!-- ▲item_list▲ -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script></body></html>
+
+
+
+{# <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> #}
+
+
+
+
+{% elseif config.rankingmanual_product_show_type == 0 %}
+{# ▼表示レイアウト：横並び #}
+
+
+
+
+<style>
+.plugin_rankingmanual h3 {
+	margin-top:0;
+}
+@media only screen and (min-width: 768px){
+	.plugin_rankingmanual .ec-shelfGrid .ec-shelfGrid__item {
+		width: 25%; /* 列数指定：4列→25% 5列→20% */
+	}
+}
+/* ランキング丸数字 */
+.plugin_rankingmanual a {
+	position:relative;
+}
+.plugin_rankingmanual .ranking_number {
+	position:absolute;
+	top:8px;
+	left:16px;
+    line-height: 30px;
+    width: 30px; height: 30px;
+    font-size: 16px;
+    font-size: 1.6rem;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+	font-weight:bold;
+	/*↓6位以下*/
+    background: #525263;
+    color: #fff;
+}
+.plugin_rankingmanual .ranking_number1 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.plugin_rankingmanual .ranking_number2 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.plugin_rankingmanual .ranking_number3 .ranking_number {
+    background: #f7f7f7;
+    color: #C00;
+}
+.plugin_rankingmanual .ranking_number4 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+.plugin_rankingmanual .ranking_number5 .ranking_number {
+    background: #f7f7f7;
+    color: #36C;
+}
+
+
+.dli-chevron-round-left {
+  display: inline-block;
+  vertical-align: middle;
+  color: #333;
+  line-height: 1;
+  position: relative;
+  width: 1em;
+  height: 1em;
+  transform: translateX(25%) rotate(-135deg);
+}
+
+.dli-chevron-round-left::before, .dli-chevron-round-left::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  border-radius: 0.1em;
+}
+
+.dli-chevron-round-left::before {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.1em;
+}
+
+.dli-chevron-round-left::after {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0.1em;
+}
+
+.dli-chevron-round-right {
+  display: inline-block;
+  vertical-align: middle;
+  color: #333;
+  line-height: 1;
+  position: relative;
+  width: 1em;
+  height: 1em;
+  transform: translateX(-25%) rotate(45deg);
+}
+
+.dli-chevron-round-right::before, .dli-chevron-round-right::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  border-radius: 0.1em;
+}
+
+.dli-chevron-round-right::before {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.1em;
+}
+
+.dli-chevron-round-right::after {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0.1em;
+}
+
+
+
+
+
+</style>
+<!-- ▼item_list▼ -->
+<div class="ec-shelfRole plugin_rankingmanual">
+	{% if config.rankingmanual_product_title != "" %}
+        <div class="ni-pageHeader">
+<h3>{{ config.rankingmanual_product_title }}
+</h3>
+
+        </div>
+    {% endif %}
+    <ul class="ec-shelfGrid">
+        {% for RankingmanualProduct in rankingmanual_products %}
+            <li class="ec-shelfGrid__item ranking_number{{loop.index}}">
+                <a href="{{ url('product_detail', {'id': RankingmanualProduct.Product.id}) }}">
+					<p>
+                    <img src="{{ asset(RankingmanualProduct.Product.mainFileName|no_image_product, "save_image") }}">
+					</p>
+                    <dl>
+                        {% if config.rankingmanual_product_disp_title == 1 %}
+							<dt class="item_name">{{ RankingmanualProduct.Product.name }}</dt>
+						{% endif %}
+						{% if config.rankingmanual_product_disp_price == 1 %}
+							<dd class="item_price">
+								{% if RankingmanualProduct.Product.hasProductClass %}
+									{% if RankingmanualProduct.Product.getPrice02Min == RankingmanualProduct.Product.getPrice02Max %}
+										{{ RankingmanualProduct.Product.getPrice02IncTaxMin|price }}
+									{% else %}
+										{{ RankingmanualProduct.Product.getPrice02IncTaxMin|price }} ～ {{ RankingmanualProduct.Product.getPrice02IncTaxMax|price }}
+									{% endif %}
+								{% else %}
+									{{ RankingmanualProduct.Product.getPrice02IncTaxMin|price }}
+								{% endif %}
+							</dd>
+						{% endif %}
+						{% if config.rankingmanual_product_disp_code == 1 %}
+							<p>{{ RankingmanualProduct.Product.code_min }}{% if RankingmanualProduct.Product.code_min != RankingmanualProduct.Product.code_max %} ～ {{ RankingmanualProduct.Product.code_max }}{% endif %}</p>
+						{% endif %}
+						{% if config.rankingmanual_product_rankingmanual_comment == 1 %}
+							{% if RankingmanualProduct.comment %}
+								<p>{{ RankingmanualProduct.comment|raw|nl2br }}</p>
+							{% endif %}
+						{% endif %}
+						{% if config.rankingmanual_product_disp_description_detail == 1 %}
+							<p>{{ RankingmanualProduct.Product.description_detail|raw|nl2br }}</p>
+						{% endif %}
+                    </dl>
+					<span class="ranking_number">{{loop.index}}</span>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<!-- ▲item_list▲ -->
+
+
+{# <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> #}
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+{% endif %}
+{% endif %}

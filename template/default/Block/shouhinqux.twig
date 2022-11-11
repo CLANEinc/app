@@ -1,0 +1,18 @@
+{% if Products is defined and Products  %}
+<div class="ec-shelfRole">
+    <ul class="ec-shelfGrid">
+        {% for Product in Products %}
+        <li class="ec-shelfGrid__item">
+                <img src="{{ asset(Product.getMainListImage|no_image_product, 'save_image') }}">
+            <p>{{Product.getName()}}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% if SingleProduct is defined and SingleProduct %}
+    <img src="{{asset(SingleProduct.getMainListImage()|no_image_product,'save_image')}}">
+    <p>{{ SingleProduct.getName() }}</p>
+    {% endif  %}
+    <a href="http://goodcomasset.interior-partners.jp/new/page2qux?name=バナナ">バナナ</a>
+    <a href="{{url('new_page2qux',{'name':'バナナ'})}}" >バナナ</a>
+</div>
+{% endif %}

@@ -1,0 +1,451 @@
+
+{% block stylesheet %}
+	<style>
+	    .order-ui {
+	        margin: 3em;
+	        padding: 1em;
+	        background-color: lightgrey;
+	    }
+        body {
+            counter-reset: number 0;
+        }
+	    .option-form {
+	        margin-top: 2em;
+	        background-color: white;
+	    }
+	    .option-form-title:before {
+            color: white;
+            background-color: grey;
+            counter-increment: number 1;
+            content: counter(number);
+	    }
+	    .option-form-title {
+	        font-size: 1.2em;
+	        color: white;
+	        background-color: black;
+	    }
+	    .option-form-body {
+	        padding: 1em;
+	    }
+	    .option-subform-title {
+	        padding: 5px;
+	        font-weight: bold;
+	        color: black;
+	        background-color: ghostwhite;
+	    }
+	    .option-subform-title div {
+	        font-weight: normal;
+	    }
+	    .annotation {
+	        font-size: 80%;
+	    }
+	    .show-description {
+            cursor: pointer;
+	    }
+	    #rendering-box {
+	        border: 2px lightgrey solid;
+	        padding: 1em;
+	    }
+	    #selected-options-in-option-group {
+	        border: 1px grey solid;
+	    }
+	    #finish-width, #finish-height {
+	        font-weight: bold;
+	        font-size: 120%;
+	    }
+	    .vertical-alignment-helper {
+            display:table;
+            height: 100%;
+            width: 100%;
+            pointer-events:none;
+        }
+
+        .vertical-align-center {
+            /* To center vertically */
+            display: table-cell;
+            vertical-align: middle;
+            pointer-events:none;
+        }
+
+        .lining-group-item {
+            display: inline-block;
+            color: white;
+            background-color: grey;
+            margin: 5px;
+        }
+        #lining-list li {
+            cursor: pointer;
+            display: inline-block;
+            width: 100px;
+            margin: 10px;
+        }
+        #lining-list li * {
+            cursor: pointer;
+        }
+
+        .modal-content {
+            /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+            width:inherit;
+            max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching
+            full width */
+            height:inherit;
+            /* To center horizontally */
+            margin: 0 auto;
+            pointer-events:all;
+        }
+	</style>
+{% endblock %}
+
+{% if Product.isCurtain %}
+    {% set optionList = eccube_config['option_list']['カーテン'] %}
+{% endif %}
+{% if Product.isShade %}
+    {% set optionList = eccube_config['option_list']['シェード'] %}
+{% endif %}
+{% set priceList = eccube_config['price_list'][Product.getCategoryNameForPrice] %}
+{% set priceList = eccube_config['price_list'][Product.getCategoryNameForPrice] %}
+{% set taxRate = repository('Eccube\\Entity\\TaxRule').getByRule().taxRate %}
+
+{% block javascript %}
+	<script>
+		$(function () {
+            var optionList = {{ optionList|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}
+            var priceList = {{ priceList|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}
+            var taxRate = {{ taxRate }}
+            var isSE = {% if Product.isSE %} true {% else %} false {% endif %} ;
+            var state = {
+                optionSelected: {},
+                optionsHtml: {},
+                optionsInOptionGroupHtml: {},
+                renderingImgSrc: '',
+                finishWidth: '',
+                tasselPrice: '',
+            }
+
+            function initOptionList () {
+                {% if Product.isSE001 %}
+                    delete optionList['shadetype'].items['double']
+                {% endif %}
+                for (key in optionList) {
+                    if (optionList[key].type === 'number') {
+                        state.optionSelected[key] = 0
+                        continue
+                    }
+                    if (key === 'lining') {
+                        state.optionSelected[key] = ''
+                        continue
+                    }
+                    var defaultItem = ''
+                    var checkedValues = []
+                    var input = $(`input[name=${key}]:checked`).each(function() {
+                       defaultItem = $(this).val()
+                       checkedValues.push(defaultItem)
+                   })
+                   state.optionSelected[key] = defaultItem
+                   $(`input[name=order-ui-${key}]`).val(checkedValues)
+                }
+
+            }
+            function calcOptionPrice () {
+                var totalOptionPrice = 0
+                for (var optionKey in state.optionSelected) {
+                    if (optionList[optionKey].type === 'number') {
+                        continue
+                    }
+                    var itemKey = state.optionSelected[optionKey]
+                    if (itemKey === '') {
+                        continue
+                    }
+                    var selectedItem = optionList[optionKey].items[itemKey]
+                    var optionPrice = selectedItem.price || 0
+                    if (
+                        optionKey === 'tassel' &&
+                        state.optionSelected['handing'] === 'double'
+                    ) {
+                        // 両開きカーテンの共生地タッセルは2本なので
+                        optionPrice *= 2
+                    }
+                    totalOptionPrice += optionPrice
+                }
+                return totalOptionPrice
+            }
+            function calcCurtainPrice () {
+                var houseigradeValue = state.optionSelected['houseigrade'];
+                var houseigradeLabel = optionList.houseigrade.items[houseigradeValue].label;
+                priceArray = priceList[houseigradeLabel]
+                for (var sizeAndPrice of priceArray) {
+                    if (
+                        state.optionSelected['width'] <= sizeAndPrice['width_max'] &&
+                        state.optionSelected['height'] <= sizeAndPrice['height_max']
+                    ) {
+                        return sizeAndPrice['price'];
+                    }
+                }
+            }
+            function calcShadePrice () {
+                var shadetypeValue = state.optionSelected['shadetype']
+                var shadetypeLabel = optionList.shadetype.items[shadetypeValue].label
+                var houseistyleValue = state.optionSelected['houseistyle']
+                var houseistyleLabel = optionList.houseistyle.items[houseistyleValue].label
+                var handletypeValue = state.optionSelected['handletype']
+                var handletypeLabel = optionList.handletype.items[handletypeValue].label
+                if (
+                    shadetypeLabel === 'ダブルシェード' &&
+                    isSE === false &&
+                    state.optionSelected['lining'].slice(0, 1) === 'J' &&
+                    state.optionSelected['lining'].slice(-1) === 'H'
+                ) {
+                    var priceArray = priceList[shadetypeLabel][houseistyleLabel][handletypeLabel + 'JH']
+                } else {
+                    var priceArray = priceList[shadetypeLabel][houseistyleLabel][handletypeLabel];
+                }
+
+                for (var sizeAndPrice of priceArray) {
+                    if (state.optionSelected['width'] <= sizeAndPrice['width_max']) {
+                        return sizeAndPrice['price'];
+                    }
+                }
+            }
+            function calcPrice () {
+                // カーテン価格　TODO: シェード
+                {% if Product.isCurtain %}
+                    var basePrice = calcCurtainPrice()
+                {% else %}
+                    var basePrice = calcShadePrice()
+                {% endif %}
+                var optionPrice = calcOptionPrice()
+                return Math.floor((basePrice + optionPrice) * (100 + taxRate) / 100)
+            }
+
+            function updateUI () {
+                // 幅
+                {% if Product.isCurtain %}
+                    // カーテンは仕上がり幅を算出
+                    var inputVal = $('#order-ui-width').val()
+                    var rate = 1.03
+                    if ($('#order-ui-houseigrade-flat').prop('checked')) {
+                        // 縫製グレード：フラット
+                        rate = 1.2
+                    }
+                    state.finishWidth = Math.round(inputVal * rate)
+                    if (
+                        $('#order-ui-handing-double').prop('checked') &&
+                        state.finishWidth % 2 !== 0
+                    ) {
+                        // 両開きかつ仕上がり幅が奇数の場合、偶数cmに切り上げる
+                        state.finishWidth += 1
+                    }
+                    $('.finish-width').text(state.finishWidth)
+                    $('.finish-height').text($('#order-ui-height').val() || 0)
+
+                    // タッセル料金を算出
+                    var tasselPrice = optionList.tassel.items[1].price
+                    if ($('#order-ui-handing-double').prop('checked')) {
+                        state.tasselPrice = `（2本${tasselPrice * 2}円）`
+                    } else {
+                        state.tasselPrice = `（1本${tasselPrice}円）`
+                    }
+                    $('#tassel-price').text(state.tasselPrice)
+                {% else %}
+                    $('.finish-width').text($('#order-ui-width').val() || 0)
+                    $('.finish-height').text($('#order-ui-height').val() || 0)
+                {% endif %}
+
+                {% if Product.isShade %}
+                    if (state.optionSelected['shadetype'] === 'single') {
+                        $('.option-houseistyle').show()
+                        $('.option-lining').hide()
+                    }
+                    if (state.optionSelected['shadetype'] === 'double') {
+                        $('.option-houseistyle').hide()
+                        $('.option-lining').show()
+                    }
+                    // 裏生地
+                    if (state.optionSelected['lining']) {
+                        var liningId = state.optionSelected['lining']
+                        $('.selected-lining-label').text(optionList.lining.items[liningId].label)
+                        $('.selected-lining-img').attr('src', `/html/user_data/assets/option_image/lining/${liningId}.jpg`)
+
+                        $('.selected-lining-none').hide()
+                        $('.selected-lining-label').show()
+                        $('.selected-lining-img').show()
+                    } else {
+                        $('.selected-lining-none').show()
+                        $('.selected-lining-label').hide()
+                        $('.selected-lining-img').hide()
+                    }
+                {% endif %}
+
+                // 仕上がりイメージの画像を開き方と同じにする
+                var checkedImgId = [
+                    '#img',
+                    'handing',
+                    $(`input[name=order-ui-handing]:checked`).val()
+                ].join('-')
+                $('#rendering-image').attr('src', $(checkedImgId).attr('src'))
+
+                // 仕上がりイメージのオプション選択値を更新
+                for (var key in optionList) {
+                    var renderingOptionId = '#rendering-' + key
+                    if (key === 'mountingheight') {
+                        $(renderingOptionId).text(state.optionSelected[key])
+                        continue
+                    }
+                    if (
+                        optionList[key].type === 'number' ||
+                        state.optionSelected[key] === ''
+                    ) {
+                        continue
+                    }
+                    $(renderingOptionId).text(optionList[key].items[state.optionSelected[key]].label)
+                }
+
+                $('.finish-price').text(calcPrice().toLocaleString())
+            }
+
+            function validateNumber (val, optionName) {
+                if (
+                    val < optionList[optionName].min ||
+                    val > optionList[optionName].max
+                ) {
+                    var message = `${optionList[optionName].min}cm ～ ${optionList[optionName].max}cm の間で指定してください。`
+                    alert(message)
+                    return false
+                }
+                return true
+            }
+
+            $('.order-ui-input').change( function() {
+                var targetName = $(this).attr('name').split('order-ui-')[1]
+                var newVal = $(this).val()
+                state.optionSelected[targetName] = newVal
+                if ($(this).attr('type') === 'number') {
+                    if (!validateNumber(newVal, targetName)) {
+                        return
+                    }
+                    $('#' + targetName).val(newVal)
+                } else {
+                    $('input[name=' + targetName + ']').val([newVal])
+                }
+                if (targetName === 'shadetype' && newVal === 'double') {
+                    state.optionSelected['houseistyle'] = 'plain'
+                    $('input[name=houseistyle]').val(['plain'])
+                }
+                {% if Product.isSE001 %}
+                    // 要確認　SE001 シャープ にはコード式がないので表示を制御する？
+                    if (targetName === 'houseistyle') {
+                        if (newVal === 'sharp') {
+                            $(`input[name=order-ui-handletype][value=code]`).parent().hide()
+                            if (state.optionSelected['handletype'] === 'code') {
+                                state.optionSelected['handletype'] = 'drum'
+                                $(`input[name=order-ui-handletype]`).val(['drum'])
+                                $(`input[name=handletype]`).val(['drum'])
+                            }
+                        } else {
+                            $(`input[name=order-ui-handletype][value=code]`).parent().show()
+                        }
+                    }
+                {% endif %}
+
+                updateUI()
+            })
+            $('.show-description').on('click', function () {
+                var id = $(this).attr('data-content')
+                $('.modal-header').html($(this).attr('data-title'))
+                $('.modal-body').html($(id).html())
+            })
+            $('#order-ui-submit').on('click', function () {
+                // 数値項目の範囲チェックをしてsubmit
+                for (var key in optionList) {
+                    if (optionList[key].type === 'number') {
+                        if (!validateNumber(state.optionSelected[key], key)) {
+                            return
+                        }
+                    }
+                }
+
+                {% if Product.isShade %}
+                    if (
+                        state.optionSelected['shadetype'] === 'double' &&
+                        !state.optionSelected['lining']
+                    ) {
+                        alert('裏生地が選択されていません')
+                        return
+                    }
+                    // 選択できないオプションに仮の値を入れておく
+                    if (state.optionSelected['shadetype'] === 'single') {
+                        $('input[name=lining]').val([Object.keys(optionList['lining'].items)[0]])
+                    } else {
+                        $('input[name=houseistyle]').val([Object.keys(optionList['houseistyle'].items)[0]])
+                    }
+                {% endif %}
+
+                var form = $('#form1')
+                form.submit()
+            })
+            $('.lining-group-item').on('click', function () {
+                var liningGroupId = $(this).attr('data-lining-group-id')
+                $('#lining-list').empty()
+                for (var liningId in optionList.lining.items) {
+                    var lining = optionList.lining.items[liningId]
+                    if (lining.group.indexOf(liningGroupId) === -1) {
+                        continue
+                    }
+                    var li = $('<li></li>', {
+                        'data-lining-id': liningId,
+                        'data-dismiss': 'modal'
+                    })
+                    var img = $('<img>', {
+                        src: `/html/user_data/assets/option_image/lining/${liningId}.jpg`
+                    })
+                    var labelImg = $(`<label></label>`).append(img)
+                    var label1 = $(`<label>${lining.label}</label>`)
+                    var label2 = $('<label>この生地を選択</label>')
+                    li.append(labelImg).append(label1).append(label2)
+                    li.on('click', function () {
+                        var newVal = $(this).attr('data-lining-id')
+                        state.optionSelected['lining'] = newVal
+                        $('input[name=lining]').val([newVal])
+                        updateUI()
+                    })
+                    $('#lining-list').append(li)
+                }
+            })
+            initOptionList()
+            updateUI()
+        })
+
+	</script>
+{% endblock %}
+
+{% block main %}
+{% if (Product.arrival_date is not empty and Product.arrival_date >= date()) or (Product.endsell_date is not empty and Product.endsell_date < date()) %}
+    <div class="text-danger" style="margin:10px 0;">
+        期間限定商品：現在ご購入いただけません。
+    </div>
+{% else %}
+    {% if Product.isCurtain %}
+        {{ include('Product/option_curtain.twig') }}
+    {% elseif Product.isShade %}
+        {{ include('Product/option_shade.twig') }}
+    {% endif %}
+
+    {# 説明モーダル（中身は各項目のtemplateから）　#}
+    <div class="modal" id="description-modal" tabindex="-1" role="dialog" aria-labelledby="discontinuance" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body text-left">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-ec-sub" type="button" data-dismiss="modal">閉じる</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}

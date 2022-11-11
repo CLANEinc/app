@@ -1,0 +1,535 @@
+
+<div class="order-ui">
+
+    <form id="form2" name="form2">
+
+        {% set productStr = app.session.flashbag.get('eccube.front.request.product') %}
+        {% for error in app.session.flashbag.get('eccube.front.request.error') %}
+            {% set idx = loop.index0 %}
+            <div class="ec-cartRole__error">
+                <div class="ec-alert-warning">
+                    <div class="ec-alert-warning__icon"><img src="{{ asset('assets/icon/exclamation-white.svg') }}"></div>
+                    <div class="ec-alert-warning__text">
+                        {% if productStr[idx] is defined %}
+                            {{ error|trans({'%product%':productStr[idx]})|nl2br }}
+                        {% else %}
+                            {{ error|trans|nl2br }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {# シェードのタイプ　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                シェードのタイプ
+            </div>
+            <div class="option-form-body">
+                <div class="ec-radio" style="margin-top: 10px;">
+                    {% for optionValue, optionItem in optionList['shadetype'].items %}
+                        {% if Product.isSE001 and optionValue != 'single' %}
+                            {# シェードSE001はシングルシェードのみなので出力しない #}
+                        {% else %}
+                            <div style="display: inline-block">
+                                <input
+                                    type="radio" class="order-ui-input"
+                                    id="order-ui-shadetype-{{ optionValue }}"
+                                    name="order-ui-shadetype"
+                                    value="{{ optionValue }}"
+                                    {% if optionItem.default is defined %}
+                                        checked="checked"
+                                    {% endif %}
+                                >
+                                <label for="order-ui-shadetype-{{ optionValue }}">
+                                    <img src="{{ asset('assets/option_image/shade_shadetype_' ~ optionValue ~ '.jpg', 'user_data') }}"
+                                        id="img-shadetype-{{ optionValue }}"
+                                    />
+                                    {{ optionItem.label }}
+                                </label>
+                                <div class="show-description"
+                                    data-title="{{ optionItem.label }}"
+                                    data-content="#description-shadetype-{{ optionValue }}"
+                                    data-toggle="modal"
+                                    data-target="#description-modal"
+                                >
+                                    <div style="width: 1em;">
+                                        <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <template id="description-shadetype-single">
+                <div>生地1枚のシェード。光の調整をする必要のない小窓や、外からの視線を遮る必要のない窓でおすすめです。</div>
+            </template>
+            <template id="description-shadetype-double">
+                <div>前後2枚の生地を付けるシェード。カーテンのように厚地・レースのコーディネートを楽しんだり、外からの視線や光を調整できます。</div>
+            </template>
+        </div>
+
+        {# 縫製スタイル （シェードタイプ：シングルのときのみ）　#}
+        <div class="option-form option-houseistyle">
+            <div class="option-form-title">
+                縫製スタイル
+            </div>
+            <div class="option-form-body">
+                <div class="ec-radio" style="margin-top: 10px;">
+                    {% for optionValue, optionItem in optionList['houseistyle'].items %}
+                        <div style="display: inline-block">
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-houseistyle-{{ optionValue }}"
+                                name="order-ui-houseistyle"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined or Product.isSE001 %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-houseistyle-{{ optionValue }}">
+                                <img src="{{ asset('assets/option_image/shade_houseistyle_' ~ optionValue ~ '.jpg', 'user_data') }}"
+                                    id="img-houseistyle-{{ optionValue }}"
+                                />
+                                {{ optionItem.label }}
+                            </label>
+                            <div class="show-description"
+                                data-title="{{ optionItem.label }}"
+                                data-content="#description-houseistyle-{{ optionValue }}"
+                                data-toggle="modal"
+                                data-target="#description-modal"
+                            >
+                                <div style="width: 1em;">
+                                    <div class="ec-icon"><img src="{{ asset('assets/icon/question.svg') }}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <template id="description-houseistyle-plain">
+                <div>フラットな生地面が一定の横ヒダを作りながら畳み上がるスタイル。</div>
+                <div>生地の持つ素材感・風合い、柄が生きるベーシックなスタイルです。</div>
+            </template>
+            <template id="description-houseistyle-sharp">
+                <div>シェード裏のバーがシャープな横のラインを作るスタイル。</div>
+                <div>窓辺がすっきりとして、モダンで引き締まった印象になるスタイルです。</div>
+            </template>
+        </div>
+
+        {# 裏生地 （シェードタイプ：ダブルのときのみ）　#}
+        <div class="option-form option-lining">
+            <div class="option-form-title">
+                裏生地
+            </div>
+            <div class="option-form-body">
+                <div class="ec-grid2">
+                    <div class="ec-grid2__cell">
+                        <div class="selected-lining">
+                            <div class="selected-lining-none">選択した生地が表示されます。</div>
+                            <div class="selected-lining-label"></div>
+                            <img class="selected-lining-img"></img>
+                        </div>
+                    </div>
+                    <div class="ec-grid2__cell">
+                        <div>
+                            こちらの項目では窓側に配置される後ろ生地を選択します。
+                            厚地生地を選択した場合は窓側に厚地生地が配置指定された状態となります。生地のご選択には十分ご注意ください。
+                        </div>
+                    </div>
+                </div>
+                <div class="ec-productRole__btn">
+                    <a
+                        id="lining-selector" class="ec-inlineBtn--top"
+                        data-toggle="modal"
+                        data-target="#lining-modal"
+                    >
+                        生地を選ぶ
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# メカ　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                メカ（操作タイプ）
+            </div>
+            <div class="option-form-body">
+                <div class="ec-grid2">
+                    <div class="ec-grid2__cell">
+                        <div class="ec-radio" style="margin-top: 10px;">
+                            {% for optionValue, optionItem in optionList['handletype'].items %}
+                                <div style="display: inline-block">
+                                    <input
+                                        type="radio" class="order-ui-input"
+                                        id="order-ui-handletype-{{ optionValue }}"
+                                        name="order-ui-handletype"
+                                        value="{{ optionValue }}"
+                                        {% if optionItem.default is defined or Product.isSE001%}
+                                            checked="checked"
+                                        {% endif %}
+                                    >
+                                    <label for="order-ui-handletype-{{ optionValue }}">
+                                        {{ optionItem.label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="ec-grid2__cell">
+                        <div>
+                            <dl>
+                                <dt>
+                                    コード式
+                                </dt>
+                                <dd>
+                                    より軽やかに操作でき、スリット窓などの細長い窓にも最適なタイプ
+                                </dd>
+                                <dt>
+                                    ドラム式
+                                </dt>
+                                <dd>
+                                    誰でも片手で楽に使える操作性で、あらゆるシーンに最適なタイプ
+                                </dd>
+                                <dt>
+                                    ループレス式
+                                </dt>
+                                <dd>
+                                   ループ状の操作チェーンやコードがないので、小さなお子さまがいるご家庭でも安心安全なタイプ
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 幅　#}
+        <div class="option-form" id="option-form-size">
+            <div class="option-form-title">
+                幅
+            </div>
+            <div class="option-form-body">
+                <div class="ec-grid2">
+                    <div class="ec-grid2__cell">
+                        <div class="ec-numberInput">
+                            <div>
+                                <input type="number" class="form-control order-ui-input" required="required"
+                                    name="order-ui-width"
+                                    id="order-ui-width"
+                                    min="{{ optionList.width.min }}"
+                                    max="{{ optionList.width.max }}"
+                                    maxlength="3"
+                                >
+                                cm
+                                1cm単位でのご指定が可能です。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ec-grid2__cell">
+                        正面付けの場合
+                        窓枠より左右+5cmずつ大きく作るときれいに見せることができます。
+                        家具やエアコンなどを設置する際は、サイズをご考慮の上、ご指定ください。
+
+                        天付けの場合
+                        窓枠内から左右-1cmずつ小さく作ることをおすすめします。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 高さ　#}
+        <div class="option-form" id="option-form-size">
+            <div class="option-form-title">
+                高さ
+            </div>
+            <div class="option-form-body">
+                <div class="ec-grid2">
+                    <div class="ec-grid2__cell">
+                        <div class="ec-numberInput">
+                            <div>
+                                <input type="number" class="form-control order-ui-input" required="required"
+                                    name="order-ui-height"
+                                    id="order-ui-height"
+                                    min="{{ optionList.height.min }}"
+                                    max="{{ optionList.height.max }}"
+                                    maxlength="3"
+                                >
+                                cm
+                                1cm単位でのご指定が可能です。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ec-grid2__cell">
+                        正面付けの場合
+                        壁に取付ける際は、窓枠より5cm～10cm上に取付けます。
+                        木枠に取付ける際は、床までの高さから-1cmしてご指定下さい。
+
+                        天付けの場合
+                        窓枠の内側～内側までを測り、-1cmしてご指定下さい。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 取り付け方　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                取り付け方
+            </div>
+            <div class="option-form-body">
+                <div class="ec-radio" style="margin-top: 10px;">
+                    {% for optionValue, optionItem in optionList['mountingstyle'].items %}
+                        <div style="display: inline-block">
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-mountingstyle-{{ optionValue }}"
+                                name="order-ui-mountingstyle"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-mountingstyle-{{ optionValue }}">
+                                <img src="{{ asset('assets/option_image/shade_mountingstyle_' ~ optionValue ~ '.jpg', 'user_data') }}"
+                                    id="img-mountingstyle-{{ optionValue }}"
+                                />
+                                {{ optionItem.label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {# 取付高　#}
+        <div class="option-form" id="option-form-size">
+            <div class="option-form-title">
+                取付高
+            </div>
+            <div class="option-form-body">
+                <div class="ec-grid2">
+                    <div class="ec-grid2__cell">
+                        <div class="ec-numberInput">
+                            <div>
+                                取り付け高さ
+                                <input type="number" class="form-control order-ui-input" required="required"
+                                    name="order-ui-mountingheight"
+                                    id="order-ui-mountingheight"
+                                    min="{{ optionList.mountingheight.min }}"
+                                    max="{{ optionList.mountingheight.max }}"
+                                    maxlength="3"
+                                >
+                                cm
+                                操作部（コードもしくはチェーン）の長さを決めるため入力頂いております。
+                                ご希望の長さがある場合、お問い合わせください。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ec-grid2__cell">
+                        正面付けの場合
+                        取付箇所から床までの高さをご入力ください。
+
+                        天付けの場合
+                        取付箇所から床までの高さをご入力ください。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# 操作方法　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                操作方法
+            </div>
+            <div class="option-form-body">
+                <div class="ec-radio" style="margin-top: 10px;">
+                    {% for optionValue, optionItem in optionList['handing'].items %}
+                        <div style="display: inline-block">
+                            <input
+                                type="radio" class="order-ui-input"
+                                id="order-ui-handing-{{ optionValue }}"
+                                name="order-ui-handing"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label for="order-ui-handing-{{ optionValue }}">
+                                <img src="{{ asset('assets/option_image/shade_handing_' ~ optionValue ~ '.jpg', 'user_data') }}"
+                                    id="img-handing-{{ optionValue }}"
+                                />
+                                {{ optionItem.label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {# オプション設定　#}
+        <div class="option-form">
+            <div class="option-form-title">
+                オプション設定
+            </div>
+            <div class="option-form-body">
+                <div>
+                    ご希望のオプションを選んでください。
+                </div>
+                <div class="option-subform">
+                    <div class="option-subform-title">
+                        カーテンレール取付金具（無料）
+                    </div>
+                    <div class="ec-radio" style="margin-top: 10px;">
+                        {% for optionValue, optionItem in optionList['railattachment'].items %}
+                            <input
+                                type="radio" class="order-ui-input -radioButton"
+                                id="order-ui-railattachment-{{ optionValue }}"
+                                name="order-ui-railattachment"
+                                value="{{ optionValue }}"
+                                {% if optionItem.default is defined %}
+                                    checked="checked"
+                                {% endif %}
+                            >
+                            <label class="-radioFrame" for="order-ui-railattachment-{{ optionValue }}">
+                                {{ optionItem.label }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        カーテンレールがすでに取り付けられている場合は、そのまま設置することが可能です。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{# 裏生地選択モーダル　#}
+<div class="modal" id="lining-modal" tabindex="-1" role="dialog" aria-labelledby="discontinuance" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    裏生地を選ぶ
+                </div>
+                <div class="modal-body text-left">
+                    <div>
+                        <div>品番から選ぶ</div>
+                        <div>
+                            <input type="text" placeholder="数字５桁を入力し検索をクリック"
+                            class="form-control">
+                        </div>
+                    </div>
+                    <div>
+                        <div>おすすめ生地から選ぶ</div>
+                        <div>
+                            <ul>
+                                {% set liningGroupList = eccube_config['lining_group'] %}
+                                {% for groupKey, liningGroup in liningGroupList %}
+                                    <li class="lining-group-item" style="cursor: pointer;"
+                                        data-lining-group-id="{{ groupKey }}"
+                                    >
+                                        {{ liningGroup.label|replace({',': '<br>'})|raw }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <ul id="lining-list">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-ec-sub" type="button" data-dismiss="modal">閉じる</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# 仕上がりイメージ #}
+<div style="background-color: white; padding:2em;">
+    <div class="ec-grid2">
+        <div class="ec-grid2__cell">
+            <div id="rendering-box" class="ec-grid2">
+                <div id="detail-cell1" class="ec-grid2__cell">
+                    <div>
+                        シェードのタイプ
+                        <span id="rendering-shadetype"></span>
+                    </div>
+                    <div class="option-houseistyle">
+                        縫製スタイル
+                        <span id="rendering-houseistyle"></span>
+                    </div>
+                    <div>
+                        操作タイプ
+                        <span id="rendering-handletype"></span>
+                    </div>
+                    <div>
+                        取り付け方
+                        <span id="rendering-mountingstyle"></span>
+                    </div>
+                    <div>
+                        取り付け高さ
+                        <span id="rendering-mountingheight"></span> cm
+                    </div>
+                    <div>
+                        操作方法
+                        <span id="rendering-handing"></span>
+                    </div>
+                    <div class="option-lining">
+                        <div class="selected-lining-none" style="width: 50px; height: 50px; border: 1px solid grey; display: inline-block"></div>
+                        <img class="selected-lining-img" style="width: 50px; height: 50px; border: 1px solid grey"></img>
+                        後ろ生地
+                        <div class="selected-lining-label"></div>
+                    </div>
+                    <div style="border: 1px solid grey">
+                        オプション
+                        <div>
+                            カーテンレール取付金具（無料）：
+                            <span id="rendering-railattachment"></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="detail-cell2" class="ec-grid2__cell">
+                    <div>
+                        幅
+                        <span id="finish-width" class="finish-width">
+                            {# 幅がJSで生成されます#}
+                        </span>
+                        cm
+                    </div>
+                    <div>
+                        <img id="rendering-image" />
+                    </div>
+                    <div>
+                        丈
+                        <span id="finish-height" class="finish-height">
+                            {# 高さがJSで生成されます#}
+                        </span>
+                        cm
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ec-grid2__cell">
+            <div class="ec-productRole__price">
+                <div class="ec-price">
+                    <span class="price02-default">¥</span>
+                    <span class="ec-price__price price02-default finish-price">
+                        {# 計算された価格が出力されます #}
+                    </span>
+                    <span class="ec-price__tax">{{ '税込'|trans }}</span>
+                </div>
+            </div>
+            <div class="ec-productRole__btn">
+                <button id="order-ui-submit" class="ec-blockBtn--action add-cart">
+                    カートに入れる
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

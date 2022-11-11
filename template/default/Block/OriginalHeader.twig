@@ -1,0 +1,114 @@
+<header class="header">
+    <div class="header__inner">
+        <div class="header__left">
+            <a href="/" class="header__logoWrapper">
+                <img src="/logo/logo.svg" alt="ロゴ" class="header__logo">
+            </a>
+            <p class="header__subtitle">入居者専用<br>オーダーカーテンショップ</p>
+        </div>
+        <div class="header__right">
+            <a href="/faq" class="header__rightButton -qanda">
+                <span class="header__rightButtonImage -qanda"></span>
+                <span class="header__rightButtonCharacter -qanda">Q&A</span>
+            </a>
+            <a href="/cart" class="header__rightButton -cart">
+                <span class="header__rightButtonImage -cart"></span>
+                <span class="header__rightButtonCharacter -cart">カート</span>
+            </a>
+
+                     {% if is_granted('ROLE_USER') %}
+
+         <a href="/mypage" class="header__rightButton -register">
+                <span class="header__rightButtonImage -register"></span>
+                <span class="header__rightButtonCharacter -register">マイページ</span>
+            </a>
+{% else %}
+   <a href="/entry" class="header__rightButton -register">
+                <span class="header__rightButtonImage -register"></span>
+                <span class="header__rightButtonCharacter -register">新規会員登録</span>
+            </a>
+{% endif %}
+
+{# ログインしているかどうかを判断する #}
+         {% if is_granted('ROLE_USER') %}
+
+
+       <a href="/logout" class="header__rightButton -login">
+                <span class="header__rightButtonImage -login"></span>
+                <span class="header__rightButtonCharacter -login">ログアウト</span>
+            </a>
+
+{% else %}
+
+                           <a href="/shopping/login" class="header__rightButton -login">
+                <span class="header__rightButtonImage -login"></span>
+                <span class="header__rightButtonCharacter -login">ログイン</span>
+            </a>
+{% endif %}
+        </div>
+        <div class="header__hamburgerWrapper" >
+        <button type="button" class="Header__hamburger js__Header__hamburger" aria-controls="global-nav" aria-expanded="false">
+	        <span class="Header__hamburgerLine"></span>
+        </button>
+        </div>
+    </div>
+</header>
+<div class="globalNav" id="g-nav">
+    <div class="globalNav__inner">
+        <div class="globalNav__top">
+            <ul class="globalNav__curtainItems">
+                <li class="globalNav__curtainItem">
+                    <a class="globalNav__curtainItemLink" href="__TBD__">ドレープカーテン</a>
+                </li>
+                <li class="globalNav__curtainItem">
+                    <a class="globalNav__curtainItemLink" href="__TBD__">レースカーテン</a>
+                </li>
+                <li class="globalNav__curtainItem">
+                    <a class="globalNav__curtainItemLink" href="__TBD__">シェード</a>
+                </li>
+            </ul>
+            <div class="globalNav__qaAndCartWrapper">
+                <a href="/faq" class="globalNav__qaAndCartItem -qanda">
+                    <span class="globalNav__qaAndCartItemImage -qanda"></span>
+                    <span class="globalNav__qaAndCartItemCharacter -qanda">Q&A</span>
+                </a>
+                <a href="/cart" class="globalNav__qaAndCartItem -cart">
+                    <span class="globalNav__qaAndCartItemImage -cart"></span>
+                    <span class="globalNav__qaAndCartItemCharacter -cart">カート</span>
+                </a>
+            </div>
+            <div class="globalNav__bannersWrapper">
+                <div class="globalNav__banner"></div>
+                <div class="globalNav__banner"></div>
+            </div>
+        </div>
+        <div class="globalNav__loginAndRegisterWrapper">
+            {# <a href="" class="globalNav__loginAndRegisterItem -login">
+                <span class="globalNav__loginAndRegisterItemImage -login"></span>
+                <span class="globalNav__loginAndRegisterItemCharacter -login">ログイン</span>
+            </a> #}
+
+            {# ログインしているかどうかを判断する #}
+         {% if is_granted('ROLE_USER') %}
+
+
+                <a href="/logout" class="globalNav__loginAndRegisterItem -login">
+                <span class="globalNav__loginAndRegisterItemImage -login"></span>
+                <span class="globalNav__loginAndRegisterItemCharacter -login">ログアウト</span>
+            </a>
+
+
+{% else %}
+	    <a href="" class="globalNav__loginAndRegisterItem -login">
+                <span class="globalNav__loginAndRegisterItemImage -login"></span>
+                <span class="globalNav__loginAndRegisterItemCharacter -login">ログイン</span>
+            </a>
+
+{% endif %}
+            <a href="" class="globalNav__loginAndRegisterItem -register">
+                <span class="globalNav__loginAndRegisterItemImage -register"></span>
+                <span class="globalNav__loginAndRegisterItemCharacter -register">新規会員登録</span>
+            </a>
+        </div>
+    </div>
+</div>

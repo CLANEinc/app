@@ -1,0 +1,464 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+
+{% block stylesheet %}
+	<link rel="stylesheet" href="{{ asset('assets/css/style_faq.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/_goodcomassetQa.css') }}">
+{% endblock %}
+
+{% set body_class = 'faq_page' %}
+
+{% block main %}
+
+	<style>
+		.ec-layoutRole .ec-layoutRole__contents {
+			padding: 4.5rem 0;
+		}
+
+		@media only screen and(max-width: 768px) {
+			.ec-layoutRole .ec-layoutRole__contents {
+				padding: 6.5rem 0;
+			}
+		}
+
+
+		.ec-layoutRole .ec-layoutRole__mainWithColumn {
+			padding-top: 8rem;
+		}
+
+
+		.ec-.ec-headerSearch .ec-headerSearch__keyword {
+			border-radius: 0 !important;
+		}
+	</style>
+
+
+	<body id="page_user_data" class="faq">
+
+
+		<div class="container-fluid">
+
+
+			<div id="main">
+				<div id="main_middle"><link rel="stylesheet" href="/user_data/justcurtain/common/css/page.css"><link rel="stylesheet" href="/user_data/justcurtain/common/css/side.css?20210625"><script src="/user_data/justcurtain/common/js/category.js"></script>
+					<script src="/user_data/justcurtain/common/js/jquery.lmodal.js"></script>
+					<!-- コンテンツページ -->
+
+
+					<div id="page" class="in guide">
+						<div class="wrap">
+
+
+							<div class="under-sec-wrap">
+								<p class="underpage-heading-title">GUIDE</p>
+								<p class="underpage-heading">ご利用ガイド</p>
+								<p class="under-page-first-txt">
+									ご確認したい情報が下記「よくあるご質問」の項目から見つからない場合、お問い合わせフォームよりお寄せください。
+								</p>
+								<div class="pagelinkbox">
+									<a href="#under-sec01" class="pagelinkitem">
+										<p class="pagelinkitem__text">ご注文について</p>
+										<img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt="">
+									</a>
+									<a href="#under-sec02" class="pagelinkitem">
+										<p class="pagelinkitem__text">お支払いについて</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt="">
+									</a>
+									<a href="#under-sec03" class="pagelinkitem">
+										<p class="pagelinkitem__text">配送と送料について</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+									<a href="#under-sec04" class="pagelinkitem">
+										<p class="pagelinkitem__text">会員情報について</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+									<a href="#under-sec05" class="pagelinkitem">
+										<p class="pagelinkitem__text">保証・修理について</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+									<a href="#under-sec06" class="pagelinkitem">
+										<p class="pagelinkitem__text">よくあるご質問</p><img class="pagelinkitem__arrow" src="{{ asset('assets/img/common/anchor_link_arrow_1.png') }}" alt=""></a>
+
+									<a class="pagelinkitem pagelinkitem-kara -pc-only"></a>
+									<a class="pagelinkitem pagelinkitem-kara -pc-only"></a>
+
+									<!--<a class="pagelinkitem pagelinkitem-kara"></a><a class="pagelinkitem pagelinkitem-kara"></a>-->
+								</div>
+							</div>
+						</div>
+						<div class="gray-layer">
+							<div id="under-sec01"></div>
+							<div class="under-sec under-sec01">
+								<div class="wrap">
+									<p class="under-sec-ttl">ご注文について</p>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">ご注文の流れ</p>
+										<p class="under-sec-txt">
+											① 会員登録<br>
+											まず、ジャストカーテン　オンラインショップのサービスをご利用いただく際に「会員登録」をしていただくとスムーズです。<br>
+											「生地のお気に入り登録」や「無料サンプル請求」などが可能になります。<br><a href="../entry">会員登録はこちら &gt;</a><br><br>
+
+											② 商品/生地を選ぶ<br>
+											検索機能や絞り込み機能、特集から探すなどでお好みの商品・生地をお選びください。<br><br>
+
+											③ サイズを測る<br>
+											ご自宅の窓のサイズを測ってください。<br><a href="../measure">サイズの測り方はこちら &gt;</a><br><br>
+
+											④ オーダーする<br>
+											各商品ページからオーダーが可能です。<br>
+											商品ごとに入力が必要な項目が異なりますので、各商品ページで確認ください。<br><br>
+
+											⑤ ご注文完了<br>
+											オーダー完了のタイミングで、ご注文内容確定のメールをお送りいたします。<br><br>
+
+											⑥ ご発送・商品のお届け<br>
+											当店からの出荷タイミングで、出荷完了メールをお送りいたします。
+										</p>
+									</div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">ご注文の際、ご留意いただきたいこと</p>
+										<p class="under-sec-txt">
+											・全てオーダー商品になりますので、ご注文後の変更には費用がかかる場合がございます。<br>
+											・オーダーカーテンには巾継ぎ（つなぎ目）ができる場合がございます。<br>
+											・生地の性質により、カーテンの丈サイズはご指定サイズから±0.5cm変動する場合があります。<br>
+											・天然素材や海外の商品には特に、繊維特有のにおい、シワ、織りキズ、素材汚れがございます。<br>
+											また伸縮性がある為サイズが安定しません。自然の風合いとご理解いただいた上でご購入ください。<br>
+											・納品後の返品交換は致しかねます。詳しくは<a href="/faq#under-sec03" class="blue_link">こちら</a><br>
+											・納期に関しては生産工程及び運送状況の諸事情により、<br>
+											納期に納品できない場合がございますのでご了承くださいませ。
+										</p>
+									</div>
+								</div>
+							</div>
+							<div id="under-sec02" class="under-sec under-sec02">
+								<div class="wrap">
+									<p class="under-sec-ttl">お支払いについて</p>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">お支払方法</p>
+										<p class="under-sec-txt">
+											ジャストカーテン　オンラインショップでは下記のお支払方法をお選びいただけます。<br><br>
+											① クレジットカード決済<br>
+											② 銀行振込<br>
+											③ 代金引換<br>
+											④ 後払い決済<br>
+											⑤ PayPay決済<br><br>
+											銀行振込、代金引換、後払いの場合、手数料はお客様ご負担にてお願いしておりますのでご了承ください。
+
+
+										</p>
+									</div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">ご利用可能なクレジットカードについて</p>
+										<div class="guide-img01 under-sec-txt">
+											<img class="-pc-only" src="{{ asset('assets/img/page/guide/guide_card_pc_1.png') }}">
+
+											<img class="-sp-only" src="{{ asset('assets/img/page/guide/guide_card_sp_1.png') }}">
+
+										</div>
+										<p class="under-sec-txt">ジャストカーテン　オンラインショップでは、上記のクレジットカード決済がご使用いただけます。<br>
+											お支払方法は各カード会社によって異なりますので、下表をご確認ください。</p>
+										<p class="under-sec-txt">
+											【備考】<br>
+											・ご本人様名義のカードのみ有効とさせていただきます。<br>
+											・分割手数料は、カード発行会社によって異なりますので、ご利用のカード発行会社にご確認ください。<br>
+											・カード発行会社の承認が確認でき次第、商品発送の手配をさせていただきます。<br>
+											・カード審査結果によってはクレジットカードでのお支払いをご利用できない場合もございます。<br>
+											・セキュリティ上、当サイトにお客様のカード情報が残らないようにしているため、クレジットカード利用控えは原則としてお送りしておりません。<br>
+											※サイト上に表示される登録カード情報は、クレジットカード決済代行会社に保管されているデータとなります。こちらはマイページよりデータの削除ができます。<br>
+											・クレジットカードの承認確認後、当店よりご入金確認メールをお送りいたしますので、こちらをご利用控えとして代用ください。<br>
+											・当サイトでは、お客様の個人情報を「SSL暗号化通信」により保護しております。クレジットカード情報は暗号化して送信されます。また、当店及び当サイトにカード情報は一切残りません。安心してご利用ください。<br>
+											・カード決済でエラーが出た場合、詳細な理由につきましてはお客様がご契約されているカード発行会社へ直接お問い合わせください。エラーが出た場合には、他のカードをご利用いただくか、他の決済方法をご選択くださいませ。<br>
+											・クレジットカード決済をご利用の際に、ご注文いただいた商品に入荷待ちの商品が含まれている場合は「ご注文確認メール」をお送りしてから3日以内であれば商品のキャンセルを承ります。<br>
+											・クレジットカード決済をご利用の際に、ご注文いただいた商品に入荷未定・廃盤の商品が含まれている場合は該当する商品のご注文はキャンセルとさせていただきます。<br>
+											・ご指定の預金口座からの代金の決済日は、商品の出荷日完了日となります。
+										</p>
+										<p class="under-sec-txt">
+											エラーの理由としては下記が考えられますのでご確認ください。<br>
+											1.ご利用限度額を超えている。<br>
+											2.カードの有効期限が切れている。<br>
+											3.カードのセキュリティが高く設定されている為、インターネット上での支払いに制限がかかっている。<br>
+											※カード会社へご連絡いただき、一時的にセキュリティレベルを下げることで、ご利用可能となります。
+										</p>
+										<p class="under-sec-txt">
+											お客様のカードご契約内容の詳細については、恐れ入りますが当店では確認ができないため、カード発行会社にご連絡いただけますと、正確な回答が得られるかと存じます。
+										</p><!-- <p class="under-sec-txt">
+																																																							              【デビット機能付きクレジットカードのご利用について】<br>
+																																																							              デビット機能付きクレジットカードでお支払いただきますと、「注文を確定する」ボタンをクリックした後に即時にクレジットカードの認証が行われ、代金がご指定の預金口座から引き落とされます。 キャンセルやご返品、ご注文のエラーにより、決済の取り消し処理を弊社で行いましても、一時的に二重の引き落としが生じることや、口座へのご返金までお時間をいただくことがございます。恐れ入りますが、デビットカード機能付きクレジットカードのご利用はお控えください。
+																																																							            </p><p class="under-sec-txt">
+																																																							              【クレジットカード会社発行のプリペイドカード（Visaプリペイドカード、au WALLETなど）のご利用について】<br>
+																																																							              デビット機能付きクレジットカードと同様に、「注文を確定する」ボタンをクリックした後に即時にクレジットカードの認証が行われ、代金がご指定の預金口座から引き落とされます。 キャンセルやご返品、ご注文のエラーにより、決済の取り消し処理を弊社で行いましても、一時的に二重の引き落としが生じることや、口座へのご返金までお時間をいただくことがございます。恐れ入りますが、クレジットカード会社発行のプリペイドカードのご利用はお控えください。
+																																																							            </p> --></div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">銀行振込について</p>
+										<p class="under-sec-txt">
+											【お振込口座】<br>
+											銀行名　　三井住友銀行<br>
+											支店名　　ぼたん支店<br>
+											口座種別　普通<br>
+											口座番号　2000811<br>
+											口座名義　㈱インテリックス
+										</p>
+										<p class="under-sec-txt">
+											【お振込確認について】<br>
+											・ご注文日から7営業日以内にご入金を確認できない場合はご注文をキャンセルさせていただきます。<br>
+											・また、お振込み確認後に縫製開始となりますため、当日のご注文締切時間までに確認ができない場合は最短日程でのお届けはできかねますので予めご了承ください。<br>
+											・お受け取り希望日をご指定の場合などは、早めのお振込みをお願いいたします。<br>
+											・「ご注文締切時間」は商品によって異なります。<br>
+											・ご入金のタイミングによってお受取日に変更が生じる場合は、当店より別途ご連絡をさせていただきます。<br>
+											・誠に勝手ながら、振込手数料はお客様のご負担でお願いいたします。<br>
+											・他のお支払い方法へ変更をご希望の場合は、電話またはメールにてご連絡いただきますようお願いいたします。<br><a href="/contactus">＞お問い合わせはこちらから</a>
+										</p>
+									</div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">代金引換について</p>
+										<p class="under-sec-txt">
+											【お振込確認について】<br>
+											・商品をお届けの際に、配送業者に商品代金をお支払いください。<br>
+											代金引換手数料は下記になります。<br>
+											・お受け取り希望日をご指定の場合などは、早めのお振込みをお願いいたします。<br>
+											※お届け先がご注文者の住所と異なる場合は代金引換を利用できません。
+										</p>
+										<table class="tab02 under-sec-txt">
+											<tbody>
+												<tr>
+													<th>お買い物金額（税別）</th>
+													<th>代引手数料（税込）</th>
+												</tr>
+												<tr>
+													<td>1万円未満</td>
+													<td>297円</td>
+												</tr>
+												<tr>
+													<td>1万円～3万円未満</td>
+													<td>396円</td>
+												</tr>
+												<tr>
+													<td>3万円～10万円未満</td>
+													<td>594円</td>
+												</tr>
+												<tr>
+													<td>10万円～30万円未満</td>
+													<td>990円</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">後払い決済について</p>
+										<div class="guide-img01 under-sec-txt">
+
+											<img class="-pc-only" src="{{ asset('assets/img/page/guide/guide_sct_law_1.png') }}">
+											<img class="-sp-only" src="{{ asset('assets/img/page/guide/guide_sp_sct_law_1.png') }}">
+										</div>
+										<p class="under-sec-txt">
+											・上記の店舗にてお支払いが可能です。商品到着後に別送されるお振込用紙にて、記載されている期日までにお支払いください。<br>
+											・ご購入金額が100,000円（税抜）以上の場合は、後払い決済をご利用いただけません。<br>
+											・手数料（204円）はお客様のご負担にてお願いいたします。ご了承ください。
+										</p>
+									</div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">PayPayについて</p>
+										<p class="under-sec-txt">
+											スマートフォン決済サービスのPayPayがご使用いただけます。<br>
+											PayPayでのお支払いをされる場合は事前にスマートフォンでアプリのインストール・設定が必要になります。<br>
+											※パソコンではPayPayアプリのダウンロードはできません。<br><br>
+
+											・ご購入金額が500,000円（税込）以上の場合は、PayPay決済をご利用いただけません。<br>
+											・ご利用できるお支払い方法はPayPay残高のみとなります。<br>
+											※注文確認画面の前にPayPay残高へのチャージを行っていただくとスムーズです。<br>
+											※詳しくは、<a href="https://paypay.ne.jp/guide/net-service/" target="_blank" style="color: #0394c5;border-bottom: 1px solid #0394c5;">PayPay公式サイト</a>をご確認ください。
+										</p>
+									</div>
+								</div>
+							</div>
+							<div id="under-sec03" class="under-sec under-sec03">
+								<div class="wrap">
+									<p class="under-sec-ttl">配送と送料について</p>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">配送について</p>
+										<p class="under-sec-txt">
+											●出荷日について<br>
+											・商品ごとに出荷日目安が異なりますので、お求めの商品ページでご確認ください。<br>
+											また、繁忙期やご注文の量などにより、翌日に出荷できないこともございますので予めご了承ください。<br><br>
+
+											・出荷日目安が異なる商品をご購入された場合は、もっとも遅い商品に合わせての一括出荷となります。<br>
+											（一部商品はメーカー直送となり、別出荷となります。）<br><br>
+
+											・当日正午までのご注文は当日受注扱いとして、翌日から中営業日カウントします。<br>
+											例）オーダーカーテン（プリーツ加工ナシ）：中2営業日で出荷<br>
+											・月曜11:00のオーダー：月曜日受注　→　木曜日出荷<br>
+											・月曜13:00のオーダー：火曜日受注　→　金曜日出荷<br><br><a href="#nouki_modal" class="btn_nouki_modal guide-nouki-btn">出荷日について 詳しくはこちら</a><br><br>
+											●配送日時の指定について<br>
+											・ご注文日から起算して、商品によって指定が可能なお日にちが変わります。<br>
+											最短をご希望の方は、指定なしをご選択ください。<br><br>
+
+											※一部商品・お住いの地域によっては、お時間の指定をお受けできない場合がございます。予めご了承ください。
+										</p>
+									</div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">送料について</p>
+										<p class="under-sec-txt">
+											送料は一律825円（税込）です。<br>
+											※北海道・沖縄・離島のみ1,650円（税込）となりますのでご注意ください。<br><br>
+
+											1配送につき22,000円（税込）以上のご購入で送料無料です。<br><br>
+											※下記商品は、北海道・沖縄・離島への発送の場合、特別送料をいただきます。<br>
+											下記商品が複数含まれるご注文の場合、最も高い送料が適用されます。<br>
+
+											・シェード（幅100cm以上149cm以下）：￥3,300（税込）<br>
+											・シェード（幅150cm以上199cm以下）：￥6,600（税込）<br>
+											・シェード（幅200cm以上）：￥9,900（税込）<br>
+											・カーテンレール（2m）：￥3,300（税込）<br>
+											・カーテンレール（3m）：￥6,600（税込）<br></p>
+									</div>
+								</div>
+							</div>
+							<div id="under-sec04" class="under-sec under-sec04">
+								<div class="wrap">
+									<p class="under-sec-ttl">会員情報について</p>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">会員登録について</p>
+										<p class="under-sec-txt">
+											会員への登録に関するご利用規約については、下記をご確認ください。<br><a href="./agreement">ご利用規約はこちら &gt;</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div id="under-sec05" class="under-sec under-sec05">
+								<div class="wrap">
+									<p class="under-sec-ttl">保証・修理について</p>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">無償修理規定</p>
+										<p class="under-sec-txt">
+											カーテンのお取り扱いについて記載通りのご使用状態で、<br>
+											万一下記のような不良が生じた場合は、お買い上げ日より２年間は無償修理させていただきます。<br>
+											・縫製のホツレが生じた場合<br>
+											・フック等が破損した場合<br><br>
+
+											次のような場合は、保証対象外になります。<br>
+											・寸法の変化：カーテンは布地という性質上、自重で伸びたり、湿気を吸って収縮する場合があります。<br>
+											・色の変化：カーテンは日光により退色する場合があります。<br>
+											・風合いの変化：カーテンは布地という性質上、摩擦や洗濯等により、風合いが変化する場合があります。<br>
+											・取付上の誤り、使用上の誤り等による損傷<br></p>
+									</div>
+								</div>
+							</div>
+							<div id="under-sec06" class="under-sec under-sec06">
+								<div class="wrap">
+									<p class="under-sec-ttl">よくあるご質問</p>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">店舗と同じ商品をオンラインストアで購入できますか。</p>
+										<p class="under-sec-txt">
+											店舗で販売している商品で、オンラインショップで取り扱いのない商品に関しても電話・メールでご注文は可能な場合がございます。<br>
+											その際、通常の購入方法と手順が異なるため、お問い合わせフォームよりお問い合わせください。<br><a href="/contactus">お問い合わせフォームはこちら &gt;</a>
+										</p>
+									</div>
+									<div class="under-sec-wrap">
+										<p class="under-sec-subttl">お見積りに対応していますか？</p>
+										<p class="under-sec-txt">
+											対応可能です。<br>
+											【一軒分のお見積り】<br>
+											お電話にてご相談ください。<br>
+											お問い合わせ窓口：<a href="tel:0734623730">073-462-3730</a><br>
+
+											受付時間：09:30～18:00（13:00～14:00を除く）祝日休業<br><br>
+
+											【上記以外のお見積り】<br>
+											お問い合わせフォームよりお問い合わせください。<br><a href="/contactus">お問い合わせフォームはこちら &gt;</a>
+										</p>
+									</div>
+									<div class="under-sec-wrap" id="qa_rc">
+										<p class="under-sec-subttl">注文のキャンセル・変更はできますか？</p>
+										<p class="under-sec-txt">
+											オーダー商品につきましては、お客様のご注文により縫製する完全受注生産のため、キャンセル・変更はお受けできません。<br>
+											注文後のお問い合わせは下記からお願いします。<br><a href="/contactus">お問い合わせフォームはこちら &gt;</a>
+										</p>
+									</div>
+									<div class="under-sec-wrap" id="qa_receipt">
+										<p class="under-sec-subttl">領収書は発行できますか？</p>
+										<p class="under-sec-txt">
+											■クレジットカード決済の場合<br>
+											■PayPay決済の場合<br>
+											マイページより【ご注文履歴＞領収書発行】から必要に応じてダウンロードしてください。<br>
+											領収書の発行は、商品発送後3か月以内となります。<br><a href="https://www.justcurtain.com/mypage" class="blue_link">マイページ：https://www.justcurtain.com/mypage</a><br><br>
+											■銀行振込の場合<br>
+											ご入金確認後、当方より発行いたします。ご注文の際、お問い合わせ欄に『領収書希望』とご明記ください。<br>
+											下記内容を記した領収書を商品に同梱してお届けいたします。<br><br><b>
+												・決済金額全額<br>
+												・宛名（ご注文者様名）<br>
+												・但書（例．オーダーカーテン代として）<br></b><br>
+											■代金引換の場合<br>
+											配送業者が代金引換料金の受領時にお渡ししている送り状（伝票）の控えを領収書としてご利用ください。<br>
+											（税務署で認められている会計法規上正式な領収書となります。）<br>
+											お届け先のお名前が宛名となります。<br>
+											＜ご注意＞マイページより【ご注文履歴＞ご注文明細書発行】ができます。<br>
+											弊社では領収書の発行は承っておりません。<br><br>
+											■後払い決済の場合<br>
+											指定の請求書にてお支払いいただいた際の「払込受領証（半券）」を領収証としてご利用ください。<br>
+											（税務署で認められている会計法規上正式な領収書となります。）<br>
+											ご注文者様のお名前が宛名となります。<br>
+											＜ご注意＞マイページより【ご注文履歴＞ご注文明細書発行】ができます。<br>
+											弊社では領収書の発行は承っておりません。<br><br>
+											＜非会員のお客様へ＞<br>
+											ご注文の際、お問い合わせ欄に『領収書希望』とご明記ください。<br>
+											下記内容を記した領収書を商品に同梱してお届けいたします。<br><br><b>
+												・決済金額全額<br>
+												・宛名（ご注文者様名）<br>
+												・但書（例．オーダーカーテン代として）<br></b>
+										</p>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+
+				</body>
+			</div>
+		</div>
+	</body>
+</div></div><script type="text/javascript">
+$(function () { // #にダブルクォーテーションが必要
+var headerHight = 80; // ヘッダの高さ
+$('a[href^="#"]').click(function () {
+var speed = 400;
+var href = $(this).attr("href");
+var target = $(href == "#" || href == "" ? 'html' : href);
+var position = target.offset().top - headerHight;
+$('body,html').animate({
+scrollTop: position
+}, speed, 'swing');
+return false;
+});
+
+
+$(function () {
+$('.tabnav li').click(function () { // 押されたのがリストの何番目か調べる
+var index = $('.tabnav li').index(this);
+// 表示領域を全部非表示にする
+$('.tabcontent .tabcontent_list').hide();
+// 押されたのと同じ番目のを表示する
+$('.tabcontent .tabcontent_list').eq(index).fadeIn();
+// .activeがついてるのを外す
+$('.tabnav li').removeClass('active');
+// 押したやつにactiveを付与してる
+$(this).addClass('active');
+});
+});
+
+
+$(function () {
+$(".under-sec-subttl ").click(function () {
+$(this).siblings(".under-sec-txt").slideToggle();
+if ($(this).hasClass("clicked")) {
+$(this).removeClass("clicked");
+} else {
+$(this).addClass("clicked");
+}
+});
+});
+});</script></body>{% endblock %}
